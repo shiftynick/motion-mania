@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile, readdir, rm, mkdir, symlink } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { initProject, loadProject, withBuild, validateManifest } from '../src/project.js';
 import { parseTimes, reviewTimes, validateMedia } from '../src/operations.js';
 import { run } from '../src/process.js';
@@ -21,6 +22,10 @@ test('initialization preserves existing files and succeeds in an empty directory
   await assert.rejects(initProject(target), /nonempty/);
   assert.deepEqual(await readFile(path.join(target, 'src/index.html')), original);
   assert.ok((await readFile(path.join(target, 'assets/score.wav'))).length > 1000);
+  const gsapVersion = createRequire(import.meta.url)('gsap/package.json').version;
+  assert.match(await readFile(path.join(target, 'assets/vendor/GSAP-LICENSE.txt'), 'utf8'), new RegExp(`GSAP ${gsapVersion.replaceAll('.', '\\.')}`));
+  const assetsManifest = JSON.parse(await readFile(path.join(target, 'assets/manifest.json'), 'utf8'));
+  assert.equal(assetsManifest.assets.find(asset => asset.path === 'vendor/gsap.min.js').origin, `gsap npm package ${gsapVersion}`);
   assert.deepEqual((await readdir(root)).filter(p => p.startsWith('.motion-init')), []);
 });
 
