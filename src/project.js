@@ -7,6 +7,7 @@ import { synthesize } from './sound.js';
 
 const require = createRequire(import.meta.url);
 const starter = fileURLToPath(new URL('../templates/starter/', import.meta.url));
+const gsapVersion = require('gsap/package.json').version;
 export const writeJson = (file, value) => writeFile(file, JSON.stringify(value, null, 2) + '\n');
 export const exists = async file => access(file).then(() => true, () => false);
 
@@ -52,7 +53,11 @@ export async function initProject(directory) {
     await rename(path.join(staging, 'gitignore'), path.join(staging, '.gitignore'));
     await mkdir(path.join(staging, 'assets/vendor'), { recursive: true });
     await cp(require.resolve('gsap/dist/gsap.min.js'), path.join(staging, 'assets/vendor/gsap.min.js'));
-    await writeFile(path.join(staging, 'assets/vendor/GSAP-LICENSE.txt'), 'GSAP 3.14.2. Copyright GreenSock. Original license header preserved in gsap.min.js.\nLicense terms: https://gsap.com/standard-license/\n');
+    await writeFile(path.join(staging, 'assets/vendor/GSAP-LICENSE.txt'), `GSAP ${gsapVersion}. Copyright GreenSock. Original license header preserved in gsap.min.js.\nLicense terms: https://gsap.com/standard-license/\n`);
+    const assetsManifestPath = path.join(staging, 'assets/manifest.json');
+    const assetsManifest = JSON.parse(await readFile(assetsManifestPath, 'utf8'));
+    assetsManifest.assets.find(asset => asset.path === 'vendor/gsap.min.js').origin = `gsap npm package ${gsapVersion}`;
+    await writeJson(assetsManifestPath, assetsManifest);
     await synthesize(path.join(staging, 'assets/score.wav'));
     await rename(staging, root);
     return { ok: true, project: root, manifest: path.join(root, 'motion.json') };
