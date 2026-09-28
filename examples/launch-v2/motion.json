@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "name": "Motion Mania — make the next thing move",
+  "engine": "hyperframes@0.8.81",
+  "duration": 15,
+  "fps": 30,
+  "audioRequired": true,
+  "formats": {
+    "landscape": { "width": 1920, "height": 1080 },
+    "vertical": { "width": 1080, "height": 1920 }
+  }
+}

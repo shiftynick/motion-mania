@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.tgz
+.motion/
+# Local client production; not part of the reusable open-source toolkit.
+examples/afterthat/
+coverage/

@@ -1,0 +1,8 @@
+{
+  "name": "Motion Mania",
+  "palette": { "paper": "#f3f0e7", "ink": "#191b19", "accent": "#ff5a2b" },
+  "font": "Liberation Sans",
+  "logo": "assets/logo.svg",
+  "voice": "Direct, playful, practical",
+  "provenance": "Original demo identity created for this repository"
+}

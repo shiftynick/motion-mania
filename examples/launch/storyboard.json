@@ -1,0 +1,9 @@
+{
+  "bpm": 120,
+  "shots": [
+    { "from": 0, "to": 3, "name": "Hook", "copy": "YOUR CODE. IN MOTION.", "action": "Type rises into place; a small orange mark expands into the next scene." },
+    { "from": 3, "to": 6.5, "name": "Build", "copy": "BRIEF. BUILD. MAKE IT MOVE.", "action": "Brief and source file cards assemble; an orange playhead traverses the timeline." },
+    { "from": 6.5, "to": 10.5, "name": "Review", "copy": "LOOK. TWEAK. REPEAT.", "action": "Three frames arrive as a contact sheet; the middle composition improves." },
+    { "from": 10.5, "to": 15, "name": "Deliver", "copy": "MOTION MANIA. FROM REPO TO REEL.", "action": "Vertical and landscape frames resolve into the mark and final wordmark." }
+  ]
+}

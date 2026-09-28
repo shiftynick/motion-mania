@@ -1,0 +1,44 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, readFile, writeFile, rm, access } from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { run } from '../../src/process.js';
+
+test('an external repo can initialize, review, render, and retain its last good export after failure', { timeout: 240_000 }, async t => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), 'motion-consumer-'));
+  t.after(() => rm(cwd, { recursive: true, force: true }));
+  await run('git', ['init', '--quiet'], { cwd, quiet: true });
+  const cli = path.resolve('src/cli.js');
+  const invoke = async (args, allowFailure = false) => {
+    const r = await run(process.execPath, [cli, ...args, '--json'], { cwd, quiet: true, allowFailure });
+    return { code: r.code, ...JSON.parse(r.stdout) };
+  };
+  const project = path.join(cwd, 'videos', 'test film');
+  assert.equal((await invoke(['init', project])).ok, true);
+  const manifest = JSON.parse(await readFile(path.join(project, 'motion.json')));
+  Object.assign(manifest, { duration: 2, fps: 12, audioRequired: false, formats: { landscape: { width: 640, height: 360 } } });
+  await writeFile(path.join(project, 'motion.json'), JSON.stringify(manifest));
+  await writeFile(path.join(project, 'src/index.html'), `<!doctype html><html><head><style>html,body{margin:0}#stage{width:100%;height:100%;background:#f3f0e7;position:relative}.box{position:absolute;top:100px;left:60px;width:80px;height:80px;background:#ff5a2b}</style></head><body><div id="stage" data-composition-id="test" data-width="__WIDTH__" data-height="__HEIGHT__" data-duration="__DURATION__" data-fps="__FPS__"><div class="box"></div></div><script src="assets/vendor/gsap.min.js"></script><script src="scene.js"></script></body></html>`);
+  const validScript = `const tl=gsap.timeline({paused:true});tl.fromTo('.box',{x:0},{x:350,duration:2,ease:'none'});window.__timelines=window.__timelines||{};window.__timelines.test=tl;`;
+  await writeFile(path.join(project, 'src/scene.js'), validScript);
+  await writeFile(path.join(project, 'storyboard.json'), JSON.stringify({ shots: [{ from: 0, to: 1, name: 'Start', action: 'Move right', reviewAt: .25 }, { from: 1, to: 2, name: 'End', action: 'Arrive' }] }));
+  const options = ['--project', 'videos/test film'];
+  assert.equal((await invoke(['plan', ...options])).shots.length, 2);
+  const report = await invoke(['review', ...options, '--draft']);
+  assert.equal(report.ok, true);
+  for (const file of ['contact', 'phone', 'report', 'draft']) await access(report.results[0][file]);
+  assert.equal(report.results[0].creativeReview, 'pending');
+  assert.deepEqual(report.results[0].transitionTimes, [1]);
+  assert.ok(report.results[0].frames.some(f => f.time === .25));
+  assert.equal(report.results[0].strips.length, 1);
+  assert.equal((await invoke(['verify', ...options])).ok, true);
+  const rendered = await invoke(['render', ...options, '--quality', 'draft']);
+  assert.equal(rendered.ok, true);
+  assert.equal(rendered.results[0].duration, 2);
+  const output = rendered.results[0].output, previous = await readFile(output);
+  await writeFile(path.join(project, 'src/scene.js'), 'throw new Error("intentional broken fixture");');
+  const failed = await invoke(['render', ...options], true);
+  assert.equal(failed.code, 1);
+  assert.deepEqual(await readFile(output), previous);
+});

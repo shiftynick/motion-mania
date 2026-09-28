@@ -1,0 +1,77 @@
+{
+  "bpm": 120,
+  "shots": [
+    {
+      "from": 0,
+      "to": 2.5,
+      "name": "Hook",
+      "copy": "MAKE IT MOVE.",
+      "action": "Huge type snaps upward on beats. An orange slash grows into the persistent hero surface.",
+      "goal": "Create curiosity about making an idea move.",
+      "focalPoint": "Large headline, then the orange slash.",
+      "transition": "The slash widens into the code panel.",
+      "sound": "Opening impact and rhythmic bass.",
+      "reviewAt": 1.25
+    },
+    {
+      "from": 2.5,
+      "to": 4.5,
+      "name": "Code",
+      "copy": "A LITTLE CODE.",
+      "action": "The slash opens into a dark code panel; a readable timeline call enters line by line.",
+      "goal": "Connect editable code with the animation that follows.",
+      "focalPoint": "The readable timeline call.",
+      "transition": "The panel keeps its position as code dissolves into motion.",
+      "sound": "Small code-entry clicks.",
+      "reviewAt": 3.5
+    },
+    {
+      "from": 4.5,
+      "to": 6.5,
+      "name": "Motion",
+      "copy": "A LOT OF MOTION.",
+      "action": "Code becomes an orange motion study: nested panels rotate, slide and settle around a bold monogram.",
+      "goal": "Show the visual payoff from code.",
+      "focalPoint": "Bold M within rotating outlines.",
+      "transition": "The same surface shrinks into a review frame.",
+      "sound": "Percussion opens up with a motion accent.",
+      "reviewAt": 5.5
+    },
+    {
+      "from": 6.5,
+      "to": 9.5,
+      "name": "Review",
+      "copy": "LOOK AGAIN.",
+      "action": "The surface joins two graphic frames in a contact-sheet arrangement. A selected frame changes composition.",
+      "goal": "Show that iteration changes the composition.",
+      "focalPoint": "Selected orange frame among two alternatives.",
+      "transition": "Other cards leave; the selected frame becomes a tall export.",
+      "sound": "Short rhythmic notes support the variations.",
+      "reviewAt": 8
+    },
+    {
+      "from": 9.5,
+      "to": 12,
+      "name": "Formats",
+      "copy": "EVERY FORMAT.",
+      "action": "The same visual becomes a tall frame and a wide frame; their layouts settle on the beat.",
+      "goal": "Show that one idea can be recomposed for two formats.",
+      "focalPoint": "Tall orange output and wide cream output.",
+      "transition": "An orange wipe carries the identity into the ending.",
+      "sound": "Rising accent followed by resolution.",
+      "reviewAt": 10.75
+    },
+    {
+      "from": 12,
+      "to": 15,
+      "name": "Brand",
+      "copy": "MOTION MANIA.",
+      "action": "An orange wipe fills the frame, the motif lands in the identity, and the headline resolves to a stable closing shot.",
+      "goal": "Leave a memorable name and invitation to create.",
+      "focalPoint": "Motion Mania wordmark, then signoff.",
+      "transition": "Hold the resolved wordmark through the final frame.",
+      "sound": "Final chord with a clean decay.",
+      "reviewAt": 13.5
+    }
+  ]
+}

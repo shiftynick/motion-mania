@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "name": "Motion Mania — from repo to reel",
+  "engine": "hyperframes@0.8.81",
+  "duration": 15,
+  "fps": 30,
+  "audioRequired": true,
+  "formats": {
+    "vertical": { "width": 720, "height": 1280 },
+    "landscape": { "width": 1280, "height": 720 }
+  }
+}

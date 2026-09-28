@@ -1,0 +1,57 @@
+{
+  "name": "motion-mania",
+  "version": "0.1.0",
+  "description": "An agent skill and review toolkit for HyperFrames motion videos",
+  "type": "module",
+  "bin": {
+    "motion-mania": "src/cli.js"
+  },
+  "files": [
+    "src",
+    "templates",
+    "skills",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:integration": "node --test test/integration/*.test.js",
+    "demo:render": "node src/cli.js render --project examples/launch --format all",
+    "demo:review": "node src/cli.js review --project examples/launch",
+    "test:package": "node scripts/package-smoke.mjs",
+    "prepublishOnly": "npm test",
+    "check": "npm test && npm run test:integration && npm run test:package"
+  },
+  "dependencies": {
+    "gsap": "3.14.2",
+    "hyperframes": "0.8.81",
+    "sharp": "0.35.5"
+  },
+  "license": "MIT",
+  "author": "Motion Mania contributors",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shiftynick/motion-mania.git"
+  },
+  "homepage": "https://github.com/shiftynick/motion-mania#readme",
+  "bugs": {
+    "url": "https://github.com/shiftynick/motion-mania/issues"
+  },
+  "keywords": [
+    "video",
+    "motion-design",
+    "ai-agents",
+    "agent-skills",
+    "hyperframes",
+    "cli",
+    "gsap"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
