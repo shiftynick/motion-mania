@@ -19,6 +19,8 @@ The starter's CSS uses the shorter canvas dimension for typography and an orient
 
 Use transforms for animated movement, not `left`, `top`, or other properties that require layout. Make reference-led visual decisions; the demo's orange identity and editing rhythm are examples rather than universal requirements.
 
-Audio needs a unique `id`, local `src`, and explicit timing. The starter's 120 BPM score is generated locally at initialization. Replace it with appropriate supplied or authorized audio for other products. Beat detection and loudness mastering are not built into this first release.
+Audio needs a unique `id`, local `src`, and explicit timing. The starter's 120 BPM score is generated locally at initialization and mixes to about -14 LUFS. Replace it with appropriate supplied or authorized audio for other products. Adjust levels with `data-volume` or the source files, then measure the export with `motion-mania audio`. A mono file measures about 3 LU quieter than the same signal rendered to stereo. Motion Mania measures loudness but does not master or limit audio.
+
+Captions from `captions.json` are added at build time as `.mm-caption` clips on a free track, with tweens attached to the timeline registered under the root's `data-composition-id`. Register that timeline synchronously; captions fail the build if they cannot find it. Style them with the custom properties in [narration and captions](narration.md), not by editing the prepared copy.
 
 Portrait and landscape must each be inspected. Check entrance and exit boundaries, actual phone-size readability, and the first and last frames. A planned loop needs explicit continuity work; the starter is a finite film, not a seamless loop.

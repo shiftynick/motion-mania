@@ -2,9 +2,11 @@ import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:f
 import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import sharp from 'sharp';
-import { backendVersion, hf, run } from './process.js';
+import { backendVersion, hf, probe, run } from './process.js';
 import { buildProject, withBuild, writeJson } from './project.js';
 import { readStoryboard, critiqueTemplate } from './storyboard.js';
+import { analyzeAudio } from './audio.js';
+import { captionSampleTimes, readCaptions } from './captions.js';
 
 export function parseTimes(value, duration) {
   const times = String(value).split(',').map(s => s.trim() === '' ? NaN : Number(s));
@@ -64,32 +66,29 @@ export async function captureFrame(project, format, time) {
 
 export async function review(project, format, { around, draft = false } = {}) {
   const storyboard = await readStoryboard(project, { optional: true });
+  const captions = await readCaptions(project);
   const parent = path.join(project.root, 'reviews');
   await mkdir(parent, { recursive: true });
   const output = await mkdtemp(path.join(parent, `${format}-`));
   return withBuild(project, format, async build => {
-    const times = reviewTimes(project.manifest.duration, project.manifest.fps, around ?? storyboard?.automaticTransitions ?? [], storyboard?.shots.map(s => s.reviewAt) ?? []);
+    const times = reviewTimes(project.manifest.duration, project.manifest.fps, around ?? storyboard?.automaticTransitions ?? [], [...storyboard?.shots.map(s => s.reviewAt) ?? [], ...(captions ? captionSampleTimes(captions.captions) : [])]);
     const frames = await snapshot(build, path.join(output, 'frames'), times.all);
     const at = list => list.map(t => frames.find(f => f.time === t));
     const contact = await sheet(at(times.overview), path.join(output, 'contact-sheet.png'));
     const phone = await sheet(at(times.overview), path.join(output, 'phone-preview.png'), { width: 360, columns: 3 });
     const strips = [];
     for (const [i, sequence] of times.strips.entries()) strips.push(await sheet(at(sequence), path.join(output, `transition-${i + 1}.png`), { width: 200, columns: 9 }));
-    let draftPath;
+    let draftPath, audio;
     if (draft) {
       draftPath = path.join(output, 'draft.mp4');
       await renderBuild(build, draftPath, project, format, 'draft');
+      audio = await analyzeAudio(draftPath, { manifest: project.manifest, storyboard, output, label: `${format} draft` });
     }
-    const report = { ok: true, format, createdAt: new Date().toISOString(), manifest: project.manifest, contact, phone, strips, frames, storyboard, transitionTimes: around ?? storyboard?.automaticTransitions ?? [], ...(draftPath ? { draft: draftPath } : {}), creativeReview: 'pending', audioReview: 'pending', notes: 'Open the images and play the draft. Successful capture is not creative approval.' };
+    const report = { ok: true, format, createdAt: new Date().toISOString(), manifest: project.manifest, contact, phone, strips, frames, storyboard, transitionTimes: around ?? storyboard?.automaticTransitions ?? [], ...(captions ? { captions: { groups: captions.groups, warnings: captions.warnings } } : {}), ...(draftPath ? { draft: draftPath, audio } : {}), creativeReview: 'pending', audioReview: 'pending', notes: 'Open the images and play the draft. Successful capture is not creative approval.' };
     await writeJson(path.join(output, 'report.json'), report);
-    await writeFile(path.join(output, 'critique.md'), critiqueTemplate(storyboard, format));
+    await writeFile(path.join(output, 'critique.md'), critiqueTemplate(storyboard, format, audio));
     return { ...report, report: path.join(output, 'report.json'), critique: path.join(output, 'critique.md') };
   });
-}
-
-export async function probe(file) {
-  const result = await run('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', file], { quiet: true });
-  return JSON.parse(result.stdout);
 }
 
 export function validateMedia(metadata, manifest, format) {

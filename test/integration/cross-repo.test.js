@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { run } from '../../src/process.js';
 
-test('an external repo can initialize, review, render, and retain its last good export after failure', { timeout: 240_000 }, async t => {
+test('an external repo can initialize, caption, review, render, measure audio, and retain its last good export after failure', { timeout: 240_000 }, async t => {
   const cwd = await mkdtemp(path.join(os.tmpdir(), 'motion-consumer-'));
   t.after(() => rm(cwd, { recursive: true, force: true }));
   await run('git', ['init', '--quiet'], { cwd, quiet: true });
@@ -25,6 +25,10 @@ test('an external repo can initialize, review, render, and retain its last good 
   await writeFile(path.join(project, 'storyboard.json'), JSON.stringify({ shots: [{ from: 0, to: 1, name: 'Start', action: 'Move right', reviewAt: .25 }, { from: 1, to: 2, name: 'End', action: 'Arrive' }] }));
   const options = ['--project', 'videos/test film'];
   assert.equal((await invoke(['plan', ...options])).shots.length, 2);
+  await writeFile(path.join(cwd, 'words.json'), JSON.stringify([{ text: 'Move', start: 0.2, end: 0.5 }, { text: 'right.', start: 0.55, end: 0.9 }, { text: 'Arrive.', start: 1.2, end: 1.6 }]));
+  const captions = await invoke(['captions', ...options, '--input', 'words.json']);
+  assert.equal(captions.groups, 2);
+  assert.equal((await invoke(['plan', ...options])).captions.groups, 2);
   const report = await invoke(['review', ...options, '--draft']);
   assert.equal(report.ok, true);
   for (const file of ['contact', 'phone', 'report', 'draft']) await access(report.results[0][file]);
@@ -36,6 +40,10 @@ test('an external repo can initialize, review, render, and retain its last good 
   const rendered = await invoke(['render', ...options, '--quality', 'draft']);
   assert.equal(rendered.ok, true);
   assert.equal(rendered.results[0].duration, 2);
+  const audio = await invoke(['audio', ...options]);
+  assert.equal(audio.ok, true);
+  assert.equal(audio.results[0].hasAudio, false);
+  assert.equal((await invoke(['audio', ...options, '--input', 'missing.wav'], true)).code, 1);
   const output = rendered.results[0].output, previous = await readFile(output);
   await writeFile(path.join(project, 'src/scene.js'), 'throw new Error("intentional broken fixture");');
   const failed = await invoke(['render', ...options], true);

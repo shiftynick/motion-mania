@@ -7,6 +7,7 @@ Deliverables: 15 seconds, 30 fps, vertical and landscape MP4, poster and review 
 Visual direction: oversized typography, warm paper, charcoal and signal orange.
 Motion: purposeful scale changes, moving editorial layouts, staggered typography.
 Audio: original synthesized 120 BPM score; scene changes land on its beat grid.
+Narration: none. On-screen type carries the message; captions are not needed.
 
 This is a designed explanation of the toolkit, not a recording of a graphical editor.
 Use the actual CLI names and local source artifacts. Do not invent customer metrics.

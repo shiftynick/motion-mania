@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/v/motion-mania)](https://www.npmjs.com/package/motion-mania)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Motion Mania gives coding agents a repeatable workflow for product films, launch reels, and motion graphics. The agent develops the idea, writes the animation, and critiques rendered evidence. The CLI handles project setup, storyboard checks, contact sheets, transition strips, verification, and MP4 exports using [HyperFrames](https://github.com/heygen-com/hyperframes).
+Motion Mania gives coding agents a repeatable workflow for product films, launch reels, and motion graphics. The agent develops the idea, writes the animation, and critiques rendered evidence. The CLI handles project setup, storyboard checks, contact sheets, transition strips, audio loudness checks, captions, verification, and MP4 exports using [HyperFrames](https://github.com/heygen-com/hyperframes).
 
 [![Motion Mania demo](https://raw.githubusercontent.com/shiftynick/motion-mania/main/docs/assets/motion-mania.png)](https://github.com/shiftynick/motion-mania/releases/latest)
 
@@ -25,6 +25,7 @@ npx motion-mania@latest init ./videos/launch
 npx motion-mania@latest plan --project ./videos/launch --json
 npx motion-mania@latest review --project ./videos/launch --json
 npx motion-mania@latest render --project ./videos/launch --format all --json
+npx motion-mania@latest audio --project ./videos/launch --format all --json
 ```
 
 The starter is a working **15-second Motion Mania demo**. It does not invent a film about your product. Ask your agent to replace the brief, identity, storyboard, source, and audio, inspect the review images, and revise before export. Final videos land in `videos/launch/out/`.
@@ -53,10 +54,12 @@ Example prompt:
 
 ## Production loop
 
-1. **Brief and plan:** identify the audience, observable product benefit, brand assets, shot intent, and sound direction. `plan` checks timing and surfaces missing decisions.
+1. **Brief and plan:** identify the audience, observable product benefit, brand assets, shot intent, sound direction, and any narration. `plan` checks timing, narration pace, unsourced figures, and asset provenance, and surfaces missing decisions.
 2. **Author:** edit local HTML/CSS and a paused GSAP timeline. HyperFrames renders the composition.
-3. **Review and revise:** inspect exact frames, whole-film sheets, phone-size previews, and adjacent-frame strips. Record specific changes by timestamp.
-4. **Verify and export:** check runtime/layout behavior, sampled seek stability, and encoded media metadata. Technical success is separate from creative approval.
+3. **Review and revise:** inspect exact frames, whole-film sheets, phone-size previews, adjacent-frame strips, and a waveform marked with the cuts. Record specific changes by timestamp.
+4. **Verify and export:** check runtime/layout behavior, sampled seek stability, encoded media metadata, and loudness (default -14 LUFS, -1 dBTP). Technical success is separate from creative approval.
+
+For a voiceover, write each shot's line in the storyboard, produce the voice with any tool you choose, then import a word-timed transcript with `captions`. Motion Mania renders it as animated captions and compares what was said with the script. See [narration and captions](skills/motion-mania/references/narration.md).
 
 ## Commands
 
@@ -71,6 +74,8 @@ Example prompt:
 | `review [--around 3,6.5] [--draft]` | Generate contact sheets, shot keyframes, transition strips, critique notes, and an optional draft MP4 |
 | `verify` | Run HyperFrames checks and compare three sampled forward/reverse seeks |
 | `render [--quality draft\|looks\|delivery]` | Encode and validate an MP4 before replacing the previous export |
+| `audio [--input file]` | Measure loudness and true peak against the target; report silences, cut accents, and abrupt endings; draw a waveform |
+| `captions --input transcript.json` | Import a JSON, SRT, or VTT transcript as burned-in, word-highlighted captions |
 | `prepare` | Create a prepared composition snapshot for HyperFrames Studio |
 | `--version` | Print the installed version |
 
@@ -86,6 +91,7 @@ videos/launch/
   brief.md
   brand.json
   storyboard.json
+  captions.json        # Optional imported captions
   src/                 # Editable HTML, CSS, and animation timeline
   assets/              # Local media, fonts, libraries, and provenance
   reviews/             # Generated evidence and critique notes
@@ -116,7 +122,7 @@ Checks cover unit behavior, a real cross-repository review/render cycle, export 
 
 ## Scope and limitations
 
-This is an early release with one backend. It does not orchestrate models, judge creative quality automatically, offer a separate editing UI, or render in the cloud. Three sampled seek comparisons are not exhaustive or a cross-machine reproducibility guarantee. Audio stream and metadata checks do not replace listening. A screenshot does not establish smooth playback.
+This is an early release with one backend. It does not orchestrate models, generate voices or media, transcribe speech, master audio, judge creative quality automatically, offer a separate editing UI, or render in the cloud. Bring generated or external media with its provenance recorded. Three sampled seek comparisons are not exhaustive or a cross-machine reproducibility guarantee. Loudness, waveform, and metadata checks do not replace listening. A screenshot does not establish smooth playback.
 
 Projects contain executable HTML/JavaScript. Treat unfamiliar projects as code and use isolation when appropriate; see [SECURITY.md](SECURITY.md). The CLI disables HyperFrames usage telemetry and automatic snapshot model analysis. Authored project code may still make network requests.
 

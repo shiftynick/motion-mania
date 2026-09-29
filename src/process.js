@@ -33,3 +33,8 @@ export function run(command, args, { cwd, quiet = false, allowFailure = false, t
 }
 
 export const hf = (args, options) => run(process.execPath, [backendPath, ...args], options);
+
+export async function probe(file) {
+  const result = await run('ffprobe', ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', file], { quiet: true });
+  return JSON.parse(result.stdout);
+}

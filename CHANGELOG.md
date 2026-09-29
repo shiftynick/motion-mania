@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- `audio` command: EBU R128 integrated loudness and true peak against a target (default -14 LUFS, -1 dBTP; `loudness` in `motion.json`), plus silences, per-shot levels, energy rises near cuts, abrupt-ending detection, and a waveform image marked with shots. `review --draft` includes the same analysis.
+- `captions` command: import whisper.cpp/OpenAI-style JSON, word arrays, SRT, or VTT through the pinned backend; builds add word-highlighted caption clips from `captions.json`.
+- Storyboard `narration` field: pace, spoken-fragment, and unsourced-figure warnings, and a per-shot comparison of heard words with the script when captions exist.
+- `plan` reports asset provenance gaps, including generator and license details for generated and external media.
+- Starter score mixes to about -14 LUFS.
+- New skill reference for narration and captions.
+
 ## 0.1.0
 
 First public release.

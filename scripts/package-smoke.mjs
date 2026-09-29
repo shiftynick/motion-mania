@@ -10,7 +10,7 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 try {
   const packed = JSON.parse((await run(npm, ['pack', '--json', '--pack-destination', sandbox], { cwd: root, quiet: true })).stdout)[0];
   const files = packed.files.map(f => f.path);
-  for (const needed of ['LICENSE','THIRD_PARTY_NOTICES.md','src/cli.js','templates/starter/gitignore','templates/starter/assets/fonts/OFL.txt','skills/motion-mania/references/creative-direction.md']) assert.ok(files.includes(needed), `Missing ${needed}`);
+  for (const needed of ['LICENSE','THIRD_PARTY_NOTICES.md','src/cli.js','templates/starter/gitignore','templates/starter/assets/fonts/OFL.txt','skills/motion-mania/references/creative-direction.md','skills/motion-mania/references/narration.md','src/audio.js','src/captions.js']) assert.ok(files.includes(needed), `Missing ${needed}`);
   assert.ok(!files.some(f => /(^|\/)(\.env[^/]*|\.npmrc|out|reviews|node_modules|examples)(\/|$)/.test(f)), 'Unexpected private or generated files in tarball');
   const consumer = path.join(sandbox, 'consumer');
   await mkdir(consumer);

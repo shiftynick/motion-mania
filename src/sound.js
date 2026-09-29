@@ -1,6 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 
 // Original, deterministic 120 BPM demo score. No model API or external music.
+// Soft saturation keeps peaks under the ceiling while the rendered mix lands near -14 LUFS.
 export async function synthesize(file, duration = 15) {
   const rate = 48000, samples = Math.round(duration * rate);
   const signal = new Float64Array(samples);
@@ -28,7 +29,7 @@ export async function synthesize(file, duration = 15) {
   wav.write('data', 36); wav.writeUInt32LE(samples * 2, 40);
   for (let i = 0; i < samples; i++) {
     const fade = Math.min(1, i / (rate * 0.02), (samples - i) / (rate * 0.5));
-    wav.writeInt16LE(Math.round(Math.tanh(signal[i]) * fade * 26000), 44 + i * 2);
+    wav.writeInt16LE(Math.round(Math.tanh(signal[i] * 4) * fade * 30000), 44 + i * 2);
   }
   await writeFile(file, wav);
 }

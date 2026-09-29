@@ -30,7 +30,7 @@ In GSAP, `fromTo` can apply its initial state before its scheduled start. Hidden
 
 Decide whether sound supplies rhythm, emphasis, atmosphere, explanation, or intentional silence. Align a few meaningful changes with musical accents; avoid adding a whoosh to every move. Keep provenance for music and effects. Use a held tail or intentional ending rather than an abrupt truncation.
 
-Audio stream presence, loudness measurements, and listening are different checks. Report which actually happened. The revised demo's score script demonstrates seeded synthesis and loudness normalization; it is not a requirement to synthesize every soundtrack.
+Audio stream presence, loudness measurements, and listening are different checks. Report which actually happened. `motion-mania audio` measures loudness against the target and draws a waveform with shot boundaries: use it to confirm that planned accents land on cuts and that the ending resolves rather than truncates. For a voiceover, write the narration before animating to it; see [narration and captions](narration.md). The revised demo's score script demonstrates seeded synthesis and loudness normalization; it is not a requirement to synthesize every soundtrack.
 
 ## Critique observable defects
 
@@ -42,6 +42,7 @@ Read the shot's intent, then inspect the corresponding keyframe and transition s
 | “More dynamic” | “The last three shots use the same slide entrance; carry the selected frame into the export layout.” |
 | “Feels cramped” | “At phone size the bottom label touches the edge; recompose that card for portrait.” |
 | “Audio is good” | “Audio was not auditioned; metadata and loudness only were checked.” |
+| “Sound is off” | “The 6.5s cut has no accent within 200 ms; move the hit to the cut or cut on the next beat.” |
 
 Prioritize: wrong message or weak proof; unreadable/colliding content; disconnected shots; timing and sound; then small finishing details. Pick a few high-impact revisions, render the affected moments, and compare against the earlier evidence. Preserve earlier exports when the user may want a comparison. Do not label a film “premium” or “approved” because the renderer passed or a self-assigned score increased.
 

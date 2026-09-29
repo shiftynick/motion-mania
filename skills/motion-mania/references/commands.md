@@ -13,9 +13,13 @@ All operations report JSON on stdout; `--json` also requests structured error ou
 | `review --around 3,6.5 --draft` | Capture uniform samples plus storyboard keyframes; cuts get automatic strips unless --around selects them; optionally encode a draft |
 | `verify` | Run HyperFrames checks and compare decoded pixels at three times in forward/reverse seek order |
 | `render --quality looks` | Encode an MP4, verify size/duration/frame rate and required audio presence, then atomically replace the named export |
+| `audio [--input file]` | Measure integrated loudness and true peak against the target; report silences, per-shot levels, energy rises near cuts, and an abrupt ending; draw a waveform marked with shots |
+| `captions --input transcript.json` | Import a word-timed transcript (JSON, SRT, or VTT) into `captions.json`; add `--max-words <n>` or `--replace` |
 | `prepare` | Produce a persistent prepared copy that native HyperFrames Studio can open |
 
-Project commands accept `--project <directory>`; rendering commands also accept `--format <name|all>`. `plan` is independent of format. See [storyboard preflight](storyboard.md) for its schema and review behavior. The default project is the current directory; the default format is the first entry in the manifest. Time arguments are seconds within `[0, duration)`. `render` accepts `draft`, `looks`, or `delivery`.
+Project commands accept `--project <directory>`; rendering commands also accept `--format <name|all>`. `plan` and `captions` are independent of format. See [storyboard preflight](storyboard.md) for its schema and review behavior. The default project is the current directory; the default format is the first entry in the manifest. Time arguments are seconds within `[0, duration)`. `render` accepts `draft`, `looks`, or `delivery`.
+
+`audio` reads `out/<format>.mp4` by default, so run it after `render`. `--input` measures any other media file, resolved from the current directory, such as a voice take or score; it needs a single format. The command fails when loudness is off target or true peak exceeds the ceiling, and returns advice for the gain change. Silences, cut accents, and ending warnings are evidence, not failures. `review --draft` runs the same analysis on its draft and adds `waveform.png` to the bundle. Measurements use ffmpeg's EBU R128 meter and a mono envelope; none of them replace listening. See [narration and captions](narration.md) for the caption workflow.
 
 Use `prepare` to get the directory for a Studio preview. From the toolkit checkout:
 
@@ -27,8 +31,25 @@ Open the reported Studio URL. Prepared copies are snapshots of source: after edi
 
 ## Manifest v1
 
-`motion.json` contains `schemaVersion: 1`, a nonempty `name`, `engine: "hyperframes@0.8.81"`, `duration` in seconds (0 < duration <= 600), integer `fps` (1–120), optional boolean `audioRequired`, and a `formats` map. Each format has even integer `width` and `height` between 64 and 3840. Format names contain lowercase letters, digits, and hyphens, begin with a letter, and cannot be `all`.
+`motion.json` contains `schemaVersion: 1`, a nonempty `name`, `engine: "hyperframes@0.8.81"`, `duration` in seconds (0 < duration <= 600), integer `fps` (1–120), optional boolean `audioRequired`, optional `loudness`, and a `formats` map. `loudness` overrides the audio target: `integrated` LUFS (default -14, suited to web and social video), `truePeak` dBTP ceiling (default -1), and `tolerance` LU (default 1). Use -16 for speech-led films on podcast-style platforms or -23 for EBU broadcast delivery. Each format has even integer `width` and `height` between 64 and 3840. Format names contain lowercase letters, digits, and hyphens, begin with a letter, and cannot be `all`.
 
-Project paths are resolved from the project directory, independent of the caller's working directory. Source folders are fixed as `src/` and `assets/`. Generated files go into `.motion/`, `reviews/`, and `out/`. Review runs have unique directories so prior evidence survives. MP4 metadata checks do not assess audio loudness, clipping, or creative quality.
+Project paths are resolved from the project directory, independent of the caller's working directory. Source folders are fixed as `src/` and `assets/`. An optional `captions.json` in the project root is added to every build. Generated files go into `.motion/`, `reviews/`, and `out/`. Review runs have unique directories so prior evidence survives. MP4 metadata checks do not assess audio loudness, clipping, or creative quality.
 
 Change the starter's dimensions to 1080×1920 and 1920×1080 for full HD, then inspect both layouts. The included sample uses 720×1280 and 1280×720 for quick iteration.
+
+## Asset provenance
+
+`assets/manifest.json` lists every file in `assets/` with its origin. `plan` warns about unlisted files and entries whose file is gone. Files named as another entry's `license` need no entry of their own.
+
+```json
+{
+  "assets": [
+    { "path": "logo.svg", "origin": "Supplied by the product team", "usage": "Brand identity" },
+    { "path": "voice.wav", "origin": "Generated for this film", "generator": { "tool": "hyperframes tts", "model": "Kokoro-82M", "voice": "am_michael", "prompt": "Script revision 3" }, "usage": "Narration" },
+    { "path": "keyframes/hero.png", "origin": "Generated for this film", "generator": { "tool": "image model name", "model": "version", "prompt": "Full prompt text", "date": "2026-09-29" }, "usage": "Shot 2 background" },
+    { "path": "clips/city.mp4", "origin": "Wikimedia Commons", "sourceUrl": "https://commons.wikimedia.org/…", "license": "CC BY 4.0", "attribution": "Creator name", "usage": "Shot 3 b-roll" }
+  ]
+}
+```
+
+Generated media should record the generator's `model` and `prompt` so it can be reproduced or replaced. External media needs a `license`; CC BY licenses also need `attribution`, which must appear in the film or its description. Use only media the user is authorized to use; a checker cannot establish rights, and a Creative Commons label on a download page is not proof of the uploader's authority.
