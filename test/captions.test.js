@@ -58,6 +58,8 @@ test('injection adds escaped clips on a free track and attaches tweens after the
   assert.ok(out.indexOf('<style>') < out.indexOf('</head>'));
   assert.ok(out.indexOf('src="scene.js"') < out.indexOf('window.__timelines[id]'));
   assert.ok(out.includes('[[0.5,[0.5,1]]]'));
+  // Project rules like `#film > .clip { inset: 0 }` must not pull captions to the top.
+  assert.match(out, /\.mm-caption \{ position: absolute !important; inset: auto 0 var\(--mm-caption-bottom, 8%\) 0 !important;/);
   assert.throws(() => injectCaptions('<main></main>', { groups: [] }), /data-composition-id/);
 });
 

@@ -123,9 +123,12 @@ export async function importCaptions(project, input, { maxWords = 5, replace = f
   return { ok: true, captions: target, format, ...analysis, warnings: [...analysis.warnings, ...(narration?.warnings ?? [])], ...(narration ? { narration: narration.shots } : {}), note: 'Edit captions.json to correct misheard words or regroup lines, then review frames at caption times.' };
 }
 
+// Placement is !important: project rules such as `#film > .clip { inset: 0 }` outrank a class selector.
+// Display is left alone because the runtime controls clip visibility.
 const captionCss = `
-.mm-caption { position: absolute; left: 0; right: 0; bottom: var(--mm-caption-bottom, 8%); text-align: center; z-index: 100; pointer-events: none; }
-@media (orientation: portrait) { .mm-caption { bottom: var(--mm-caption-bottom-portrait, 20%); } }
+.mm-caption { position: absolute !important; inset: auto 0 var(--mm-caption-bottom, 8%) 0 !important; width: auto !important; height: auto !important;
+  justify-content: center; text-align: center; z-index: 100; pointer-events: none; }
+@media (orientation: portrait) { .mm-caption { bottom: var(--mm-caption-bottom-portrait, 20%) !important; } }
 .mm-caption-line { display: inline-block; max-width: var(--mm-caption-width, 84%); box-sizing: border-box; padding: .22em .55em; border-radius: .35em;
   font-family: var(--mm-caption-font, inherit); font-weight: var(--mm-caption-weight, 700); font-size: var(--mm-caption-size, var(--mm-caption-auto, 5vmin)); line-height: 1.25;
   color: var(--mm-caption-color, #fff); background: var(--mm-caption-bg, rgba(0, 0, 0, .64)); }
