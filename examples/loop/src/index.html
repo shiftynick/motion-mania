@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>The loop — Motion Mania, start to finish</title>
+  <style>
+    @font-face { font-family: 'Inter'; src: url('assets/fonts/Inter-Variable.ttf') format('truetype'); font-weight: 100 900; }
+    @font-face { font-family: 'JetBrains Mono'; src: url('assets/fonts/JetBrainsMono-Variable.ttf') format('truetype'); font-weight: 100 800; }
+  </style>
+  <link rel="stylesheet" href="scene.css">
+</head>
+<body>
+  <main id="film" data-composition-id="loop" data-width="__WIDTH__" data-height="__HEIGHT__" data-duration="__DURATION__" data-fps="__FPS__">
+    <div id="paper" class="clip" data-start="0" data-duration="36" data-track-index="0"><div class="grain"></div></div>
+
+    <!-- 1 · Brief -->
+    <section id="brief" class="clip shot" data-start="0" data-duration="6.6" data-track-index="1">
+      <div class="doc">
+        <div class="doc-tab">brief.md</div>
+        <div class="doc-body">
+          <p class="line h"># The loop</p>
+          <p class="line"><span class="k">Audience</span>developers who ship with coding agents</p>
+          <p class="line benefit"><span class="k">Benefit</span>a repo becomes a film you can check</p>
+          <p class="line"><span class="k">Formats</span>1920×1080 · 1080×1920 · 36s</p>
+          <p class="line"><span class="k">Voice</span>a patient engineer, no slogans</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · Plan -->
+    <section id="plan" class="clip shot" data-start="5.8" data-duration="6.9" data-track-index="2">
+      <div class="board">
+        <div class="cell c1"><div class="thumb t-doc"><i></i><i></i><i></i><i></i></div><p><b>01</b> Brief <small>0–6.5s</small></p></div>
+        <div class="cell c2"><div class="thumb t-grid"><i></i><i></i><i></i><i></i><i></i><i></i></div><p><b>02</b> Plan <small>6.5–12.5s</small></p></div>
+        <div class="cell c3"><div class="thumb t-code"><i></i><i></i><i></i><span></span></div><p><b>03</b> Build <small>12.5–19s</small></p></div>
+        <div class="cell c4"><div class="thumb t-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><p><b>04</b> Evidence <small>19–26s</small></p></div>
+        <div class="cell c5"><div class="thumb t-list"><i></i><i></i><i></i></div><p><b>05</b> Second opinion <small>26–32s</small></p></div>
+        <div class="cell c6"><div class="thumb t-mark"><img src="assets/logo.svg" alt=""></div><p><b>06</b> Ship <small>32–36s</small></p></div>
+      </div>
+      <div class="detail">
+        <div class="detail-head"><span class="sel sel-1">Shot 01 · Brief</span><span class="sel sel-3">Shot 03 · Build</span></div>
+        <div class="field"><span class="k">goal</span><span class="v v-1">The film begins from written intent.</span><span class="v v-3">Each line of code causes one motion.</span></div>
+        <div class="field"><span class="k">focalPoint</span><span class="v v-1">The highlighted benefit line.</span><span class="v v-3">The highlighted line, then what it moves.</span></div>
+        <div class="field"><span class="k">transition</span><span class="v v-1">The highlight lifts off as the frame.</span><span class="v v-3">The preview becomes the contact sheet.</span></div>
+      </div>
+      <div class="term plan-term"><span class="prompt">$</span><span class="cmd">motion-mania plan</span><span class="result">✓ timing valid · 0 open questions</span></div>
+    </section>
+
+    <!-- 3 · Build -->
+    <section id="build" class="clip shot" data-start="11.9" data-duration="7.5" data-track-index="3">
+      <div class="editor">
+        <div class="editor-tab">src/scene.js</div>
+        <div class="code">
+          <p class="ln l1"><i>1</i><span class="kw">const</span> tl = gsap.<span class="fn">timeline</span>({ paused: <span class="kw">true</span> });</p>
+          <p class="ln l2"><i>2</i>tl.<span class="fn">from</span>(<span class="st">'.title'</span>, { y: <span class="nu">60</span>, opacity: <span class="nu">0</span> }, <span class="nu">0.2</span>);</p>
+          <p class="ln l3"><i>3</i>tl.<span class="fn">from</span>(<span class="st">'.bars i'</span>, { scaleY: <span class="nu">0</span>, stagger: <span class="nu">0.1</span> }, <span class="nu">0.8</span>);</p>
+          <p class="ln l4"><i>4</i>tl.<span class="fn">to</span>(<span class="st">'.dot'</span>, { x: <span class="nu">360</span>, ease: <span class="st">'power3.inOut'</span> }, <span class="nu">1.6</span>);</p>
+          <p class="ln l5"><i>5</i>window.__timelines[<span class="st">'loop'</span>] = tl;</p>
+        </div>
+        <div class="term build-term"><span class="prompt">$</span><span class="cmd">motion-mania review --draft</span><span class="result">rendering draft…</span></div>
+      </div>
+      <div class="preview">
+        <p class="p-title">Hello, motion.</p>
+        <div class="p-bars"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="p-track"><span class="p-dot"></span></div>
+      </div>
+    </section>
+
+    <!-- 4 · Evidence -->
+    <section id="evidence" class="clip shot" data-start="18.4" data-duration="8.1" data-track-index="4">
+      <div class="sheet"><p class="cap">contact-sheet.png</p><div class="thumbs"></div></div>
+      <div class="strip"><p class="cap">transition-2.png · 12.37–12.63s</p><div class="frames"></div></div>
+      <div class="chart wave-chart"><p class="chart-title wave-title">waveform.png</p><svg class="plot"></svg></div>
+      <div class="chart activity-chart"><p class="chart-title activity-title">activity.png</p><svg class="plot"></svg><p class="frozen-note">frozen · no hold intended</p></div>
+    </section>
+
+    <!-- 5 · Second opinion -->
+    <section id="critic" class="clip shot" data-start="25.6" data-duration="6.9" data-track-index="5">
+      <div class="critique">
+        <div class="doc-tab">critique.md</div>
+        <div class="crit-head"><span class="round r1" data-layout-allow-overlap>Round 1 · three findings</span><span class="round r2" data-layout-allow-overlap>Round 2 · verification</span><span class="badge-critic">critic</span></div>
+        <div class="finding f1"><span class="ts">2.1–3.2s</span><span class="what">Frozen stretch; no hold intended</span><span class="status open" data-layout-allow-overlap>OPEN</span><span class="status fixed" data-layout-allow-overlap>FIXED</span></div>
+        <div class="finding f2"><span class="ts">18.9s</span><span class="what">Shutter piles thumbnails over the code</span><span class="status open" data-layout-allow-overlap>OPEN</span><span class="status fixed" data-layout-allow-overlap>FIXED</span></div>
+        <div class="finding f3"><span class="ts">every cut</span><span class="what">Headline slot empties for 0.4s</span><span class="status open" data-layout-allow-overlap>OPEN</span><span class="status fixed" data-layout-allow-overlap>FIXED</span></div>
+      </div>
+      <div class="verdict">
+        <span class="v-label">verdict</span>
+        <div class="v-slot"><span class="vw n3" data-layout-allow-overlap>3 open</span><span class="vw n2" data-layout-allow-overlap>2 open</span><span class="vw n1" data-layout-allow-overlap>1 open</span><span class="vw ship" data-layout-allow-overlap>SHIP</span></div>
+      </div>
+      <div class="cursor"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.6-7.9L21 10.5z"/></svg><span>critic</span></div>
+    </section>
+
+    <!-- 6 · Ship -->
+    <section id="ship" class="clip shot" data-start="31.6" data-duration="4.4" data-track-index="6">
+      <div class="export ex-land"><div class="ex-screen"><img src="assets/evidence/export-landscape.jpg" alt=""></div><p>landscape.mp4 · 1920×1080</p></div>
+      <div class="export ex-vert"><div class="ex-screen"><img src="assets/evidence/export-vertical.jpg" alt=""></div><p>vertical.mp4 · 1080×1920</p></div>
+      <div class="lockup">
+        <img class="lock-mark" src="assets/logo.svg" alt="Motion Mania mark">
+        <h2 class="lock-word">Motion Mania</h2>
+        <p class="lock-tag">From repo to reel.</p>
+        <p class="lock-cmd"><span>npx motion-mania init</span></p>
+      </div>
+      <p class="footer">A designed illustration of the workflow · Narration by Kokoro TTS · Made with Motion Mania</p>
+    </section>
+
+    <!-- One title position for every shot -->
+    <section id="titles" class="clip" data-start="0" data-duration="36" data-track-index="7">
+      <div class="title-mask">
+        <div class="title t1" data-layout-allow-overlap data-layout-allow-overflow><p class="path">01 · brief.md</p><h1>Start with intent.</h1></div>
+        <div class="title t2" data-layout-allow-overlap data-layout-allow-overflow><p class="path">02 · storyboard.json</p><h1>Plan every shot.</h1></div>
+        <div class="title t3" data-layout-allow-overlap data-layout-allow-overflow><p class="path">03 · src/scene.js</p><h1>Motion as code.</h1></div>
+        <div class="title t4" data-layout-allow-overlap data-layout-allow-overflow><p class="path">04 · reviews/landscape-xLiKL3/</p><h1>See what rendered.</h1></div>
+        <div class="title t5" data-layout-allow-overlap data-layout-allow-overflow><p class="path">05 · reviews/…/critique.md</p><h1>Get a second opinion.</h1></div>
+      </div>
+    </section>
+
+    <!-- The frame carries through the whole film -->
+    <section id="actor" class="clip" data-start="0" data-duration="36" data-track-index="8">
+      <div class="frame f-main" data-layout-ignore></div>
+      <div class="frame f-twin" data-layout-ignore></div>
+    </section>
+
+    <div id="flash" class="clip" data-start="18.8" data-duration="0.6" data-track-index="11"></div>
+
+    <audio id="score" src="assets/score.wav" data-start="0" data-duration="36" data-track-index="9" data-volume="1"></audio>
+    <audio id="voice" src="assets/narration.wav" data-start="0" data-duration="36" data-track-index="10" data-volume="1"></audio>
+  </main>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="assets/evidence/draft.js"></script>
+  <script src="scene.js"></script>
+</body>
+</html>

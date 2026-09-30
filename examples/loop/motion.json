@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "name": "The loop — Motion Mania, start to finish",
+  "engine": "hyperframes@0.8.81",
+  "duration": 36,
+  "fps": 30,
+  "audioRequired": true,
+  "formats": {
+    "landscape": { "width": 1920, "height": 1080 },
+    "vertical": { "width": 1080, "height": 1920 }
+  }
+}

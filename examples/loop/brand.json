@@ -1,0 +1,8 @@
+{
+  "name": "Motion Mania",
+  "palette": { "paper": "#f3f0e7", "ink": "#191b19", "orange": "#ff5a2b", "panel": "#191b19", "muted": "#5f5b52", "critic": "#2459c9", "fixed": "#1b7a43", "frozen": "#3a2a2a" },
+  "fonts": { "display": "Inter", "interface": "Inter", "code": "JetBrains Mono" },
+  "logo": "assets/logo.svg",
+  "voice": "Patient and specific. Explains the workflow rather than selling it.",
+  "provenance": "Motion Mania's own identity; the orange and chart colors match the CLI's review images"
+}

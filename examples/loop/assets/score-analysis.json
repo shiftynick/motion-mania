@@ -1,0 +1,14 @@
+{
+  "targetLufs": -21.5,
+  "before": {
+    "integrated": -26.1,
+    "range": 11.7,
+    "truePeak": -7.7
+  },
+  "gain": 4.6,
+  "after": {
+    "integrated": -21.5,
+    "range": 11.7,
+    "truePeak": -3.1
+  }
+}

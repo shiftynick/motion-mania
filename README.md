@@ -8,9 +8,9 @@
 
 Motion Mania gives coding agents a repeatable workflow for product films, launch reels, and motion graphics. The agent develops the idea, writes the animation, and critiques rendered evidence. The CLI handles project setup, storyboard checks, contact sheets, transition strips, frozen-frame detection, audio loudness checks, captions, verification, and MP4 exports using [HyperFrames](https://github.com/heygen-com/hyperframes).
 
-[![Motion Mania demo](https://raw.githubusercontent.com/shiftynick/motion-mania/main/docs/assets/motion-mania.png)](https://github.com/shiftynick/motion-mania/releases/latest)
+[![The loop: a 36-second film about Motion Mania, made with Motion Mania](https://raw.githubusercontent.com/shiftynick/motion-mania/main/docs/assets/the-loop.png)](https://github.com/shiftynick/motion-mania/releases/download/v0.3.0/the-loop-landscape.mp4)
 
-[Watch the demo / download videos](https://github.com/shiftynick/motion-mania/releases/latest) · [Agent skill](skills/motion-mania/SKILL.md) · [Contributing](CONTRIBUTING.md)
+[▶ Watch *The loop* (36 s, with sound)](https://github.com/shiftynick/motion-mania/releases/download/v0.3.0/the-loop-landscape.mp4) · [Vertical cut](https://github.com/shiftynick/motion-mania/releases/download/v0.3.0/the-loop-vertical.mp4) · [How it was made](examples/loop/review.md) · [Agent skill](skills/motion-mania/SKILL.md) · [Contributing](CONTRIBUTING.md)
 
 ## Quick start
 
@@ -112,6 +112,7 @@ Clone the repository for complete production examples; examples and videos are n
 - [Original launch demo](examples/launch): simple workflow introduction.
 - [Connected motion study](examples/launch-v2): a graphic surface becomes code, motion, review frames, and multiple formats. [Review notes](docs/video-v2-review.md).
 - [Lull](examples/lull): a 28-second film for a fictional notification app, with a local TTS voiceover, word-highlighted captions from a transcript, an original score timed to the animation, and a loudness-checked mix. [Review notes](examples/lull/review.md).
+- [The loop](examples/loop): a 36-second film about Motion Mania that uses every part of the toolkit. One frame carries through brief, storyboard, code, the draft's own review evidence, and a critic's findings to both exports. It was revised over four measured and critic-reviewed rounds. [Review notes](examples/loop/review.md).
 
 ```sh
 git clone https://github.com/shiftynick/motion-mania.git

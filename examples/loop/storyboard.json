@@ -1,0 +1,72 @@
+{
+  "bpm": 120,
+  "shots": [
+    {
+      "from": 0, "to": 6.5, "name": "Brief",
+      "copy": "Start with intent.",
+      "narration": "Your coding agent starts from a brief, and plans every shot before it animates anything.",
+      "action": "brief.md types in line by line. The benefit line is picked out by an orange highlight: the frame. It lifts off the page and flies to the storyboard.",
+      "goal": "The film begins from written intent, not from animation.",
+      "focalPoint": "The orange highlight on the benefit line.",
+      "transition": "The highlight lifts off as the frame and lands on the first storyboard cell, already in place.",
+      "sound": "Sparse pads and a soft pulse; one soft whoosh as the frame lifts.",
+      "reviewAt": 4.2
+    },
+    {
+      "from": 6.5, "to": 12.5, "name": "Plan",
+      "copy": "Plan every shot.",
+      "narration": "Each shot records its goal, its focal point, and what carries forward.",
+      "action": "A six-cell storyboard strip. The frame selects a cell and its goal, focal point, and transition fill in; it moves to the next cell and the fields change in place. motion-mania plan returns timing valid, no open questions.",
+      "goal": "Each shot has a written job before anything moves.",
+      "focalPoint": "The selected cell, then its filled-in fields.",
+      "transition": "The frame pushes into the third cell and becomes the preview beside the code.",
+      "sound": "Kick and shaker enter; a light tick as each field lands, a soft confirm on the plan result.",
+      "reviewAt": 10.2
+    },
+    {
+      "from": 12.5, "to": 19, "name": "Build",
+      "copy": "Motion as code.",
+      "narration": "The animation is ordinary code, rendered into real frames you can inspect.",
+      "action": "A code editor beside the preview frame. As each timeline line is highlighted, its element moves in the preview. motion-mania review --draft is typed; the preview flashes like a shutter.",
+      "goal": "Show that each line of code causes a specific motion.",
+      "focalPoint": "The highlighted code line, then the element it moves.",
+      "transition": "A camera flash and a hard cut: the frame shrinks from the preview onto one frame of the draft's contact sheet.",
+      "sound": "Bass arpeggio joins; the shutter lands on the cut.",
+      "reviewAt": 16.2
+    },
+    {
+      "from": 19, "to": 26, "name": "Evidence",
+      "copy": "See what rendered.",
+      "narration": "Contact sheets, cut strips, and charts of the sound and motion show what actually rendered.",
+      "action": "A contact sheet, a nine-frame cut strip, a waveform and an activity chart marked with the cuts draw in. The frame selects one thumbnail, then settles on a red frozen stretch in the activity chart.",
+      "goal": "The evidence is concrete and inspectable, and it can find a problem.",
+      "focalPoint": "The contact sheet, then the frozen stretch the frame lands on.",
+      "transition": "The frozen stretch becomes the first finding in the critique.",
+      "sound": "Full groove; a low accent when the frozen stretch is marked.",
+      "reviewAt": 24.2,
+      "hold": "Reading time for the evidence panels."
+    },
+    {
+      "from": 26, "to": 32, "name": "Second opinion",
+      "copy": "Get a second opinion.",
+      "narration": "Then a second agent reviews each round, and checks that every fix really landed.",
+      "action": "critique.md lists three real findings from this film's earlier drafts: the frozen stretch, the shutter, the empty headline slot. A blue critic cursor verifies each; they flip to fixed while the verdict counts down from three open to ship.",
+      "goal": "A separate reviewer, not the builder, decides the film is done.",
+      "focalPoint": "Each finding as it flips to fixed, then the verdict.",
+      "transition": "The frame around the verdict grows and splits into the two delivered formats.",
+      "sound": "Drums thin out; a clean tick on each fixed, a soft chime on ship.",
+      "reviewAt": 30.6
+    },
+    {
+      "from": 32, "to": 36, "name": "Ship",
+      "copy": "Motion Mania. From repo to reel.",
+      "action": "The frame splits into landscape and portrait exports, which fold into the Motion Mania lockup and the init command.",
+      "goal": "Leave the viewer with the name and the first command to run.",
+      "focalPoint": "The wordmark, then the command.",
+      "transition": "Hold the lockup to the end.",
+      "sound": "A resolving chord on the lockup, then ring-out; no narration.",
+      "reviewAt": 35,
+      "hold": "The lockup and command need reading time."
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "voice": "af_heart",
+  "speed": 0.82,
+  "lines": [
+    {
+      "at": 0.6,
+      "text": "Your coding agent starts from a brief, and plans every shot before it animates anything.",
+      "seconds": 5.74
+    },
+    {
+      "at": 6.9,
+      "text": "Each shot records its goal, its focal point, and what carries forward.",
+      "seconds": 4.69
+    },
+    {
+      "at": 12.9,
+      "text": "The animation is ordinary code, rendered into real frames you can inspect.",
+      "seconds": 5.63
+    },
+    {
+      "at": 19.3,
+      "text": "Contact sheets, cut strips, and charts of the sound and motion show what actually rendered.",
+      "seconds": 6.19
+    },
+    {
+      "at": 26.3,
+      "text": "Then a second agent reviews each round, and checks that every fix really landed.",
+      "seconds": 5.29
+    }
+  ],
+  "targetLufs": -15.5,
+  "measurement": {
+    "before": {
+      "integrated": -22.1,
+      "truePeak": -2.3
+    },
+    "gain": 6.6,
+    "after": {
+      "integrated": -16.5,
+      "truePeak": -3.4
+    }
+  }
+}
