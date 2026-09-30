@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- `picture` command: finds frozen stretches (block-based frame difference, so slow pushes and small moving details count as motion) and near-black frames, with per-shot held time and an activity chart marked with shots. `review --draft` includes the same analysis.
+- Storyboard `hold` field marks intended held frames so they are not flagged.
+- Each `critique.md` links the previous review of the same format and copies its prioritized revisions for FIXED / PARTLY / STILL PRESENT verification.
+- `audio` warns when the loudness range is below 1.5 LU.
+- The starter score has an arrangement that follows its storyboard (a sparse hook, a build, the full groove, and a resolving chord), giving it about 3 LU of loudness range instead of a flat loop.
+- The launch-v2 and Lull example storyboards mark their intended reading holds.
+- New skill reference for independent review, with critic prompts. Creative direction adds transition mechanisms, common defects, sound-effect guidance, and loudness targets for calm films.
+
 ## 0.2.0
 
 - `audio` command: EBU R128 integrated loudness and true peak against a target (default -14 LUFS, -1 dBTP; `loudness` in `motion.json`), plus silences, per-shot levels, energy rises near cuts, abrupt-ending detection, and a waveform image marked with shots. `review --draft` includes the same analysis.

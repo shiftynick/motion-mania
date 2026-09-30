@@ -36,6 +36,7 @@ export function analyzeStoryboard(board, manifest) {
     if (!meaningful(shot.name) || !meaningful(shot.action)) throw new Error(`${label}: name and action are required`);
     if (shot.reviewAt !== undefined && (!Number.isFinite(shot.reviewAt) || shot.reviewAt < shot.from || shot.reviewAt >= shot.to)) throw new Error(`${label}: reviewAt must fall inside this shot`);
     if (shot.narration !== undefined && typeof shot.narration !== 'string') throw new Error(`${label}: narration must be a string`);
+    if (shot.hold !== undefined && typeof shot.hold !== 'boolean' && !meaningful(shot.hold)) throw new Error(`${label}: hold must be true or a reason for the held frame`);
     end = shot.to;
     const questions = Object.entries(fields).filter(([key]) => !meaningful(shot[key])).map(([field, question]) => ({ field, question }));
     const length = shot.to - shot.from, words = countWords(shot.copy), spoken = countWords(shot.narration);
@@ -76,16 +77,24 @@ export async function plan(project) {
   };
 }
 
-export function critiqueTemplate(board, format, audio) {
+const cell = text => String(text).replaceAll('|', '\\|');
+
+export function critiqueTemplate(board, format, { audio, picture, previous } = {}) {
+  const verification = !previous ? [] : ['## Previous findings', '', `Previous review: ${previous.critique}`, '',
+    ...(previous.findings.length
+      ? ['Verify each item against this review\'s evidence: FIXED, PARTLY, or STILL PRESENT. Carry anything unresolved into the prioritized revisions below, and look for regressions the fixes caused.', '',
+        '| Timestamp | Previous problem | Status | Evidence in this review |', '| --- | --- | --- | --- |', ...previous.findings.map(f => `| ${cell(f.timestamp)} | ${cell(f.problem)} | | |`)]
+      : ['It recorded no prioritized revisions. Read it before judging this round.']), ''];
   const measured = !audio ? [] : audio.hasAudio
     ? ['## Audio measurements', '', `Draft: ${audio.loudness.integrated ?? '-inf'} LUFS integrated, ${audio.loudness.truePeak ?? '-inf'} dBTP true peak (target ${audio.target.integrated} ±${audio.target.tolerance} LUFS, <= ${audio.target.truePeak} dBTP). ${audio.advice}`, `Waveform with cuts: ${path.basename(audio.waveform)}`, ...audio.warnings.map(w => `- ${w}`), '', 'Measurements do not replace listening.', '']
     : ['## Audio measurements', '', ...audio.warnings, ''];
+  const pictured = !picture ? [] : ['## Picture measurements', '', `Draft: ${picture.heldSeconds}s frozen in holds of 0.6s or more; ${picture.dark.length} near-black range(s).`, `Activity chart with cuts: ${path.basename(picture.chart)}`, ...picture.warnings.map(w => `- ${w}`), '', 'These find frozen and dark frames; they do not judge pacing.', ''];
   const lines = [`# Review — ${format}`, '', 'Status: pending. Record only inspections actually performed.', '',
-    'Inspection: [ ] full-size frames [ ] phone-size sheet [ ] transition strips [ ] video playback [ ] audio audition', '', ...measured,
+    'Inspection: [ ] full-size frames [ ] phone-size sheet [ ] transition strips [ ] video playback [ ] audio audition', '', ...verification, ...measured, ...pictured,
     '## Film-level decisions', '', 'Does the opening give a reason to watch? Is the product benefit demonstrated? Does the final hold make the next action clear?', '',
     '## Shot findings', ''];
   for (const shot of board?.shots ?? []) {
-    lines.push(`### ${shot.from}–${shot.to}s · ${shot.name}`, '', `Intended action: ${shot.action}`, `Viewer goal: ${shot.goal || 'Not specified — establish this before judging the shot.'}`, `Focal point: ${shot.focalPoint || 'Not specified.'}`, `Transition: ${shot.transition || 'Not specified.'}`, `Sound: ${shot.sound || 'Not specified.'}`, ...(meaningful(shot.narration) ? [`Narration: ${shot.narration}`] : []), '', 'Observed evidence / timestamp:', '', 'Highest-impact change:', '', 'Evidence after revision:', '');
+    lines.push(`### ${shot.from}–${shot.to}s · ${shot.name}`, '', `Intended action: ${shot.action}`, `Viewer goal: ${shot.goal || 'Not specified — establish this before judging the shot.'}`, `Focal point: ${shot.focalPoint || 'Not specified.'}`, `Transition: ${shot.transition || 'Not specified.'}`, `Sound: ${shot.sound || 'Not specified.'}`, ...(shot.hold ? [`Intended hold: ${shot.hold === true ? 'yes' : shot.hold}`] : []), ...(meaningful(shot.narration) ? [`Narration: ${shot.narration}`] : []), '', 'Observed evidence / timestamp:', '', 'Highest-impact change:', '', 'Evidence after revision:', '');
   }
   lines.push('## Prioritized revisions', '', '| Timestamp | Observable problem | Specific change | Evidence after revision |', '| --- | --- | --- | --- |', '', '## Remaining limitations', '', 'List uninspected playback/audio, unresolved defects, and any intentional tradeoffs.', '');
   return lines.join('\n');

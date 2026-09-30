@@ -23,6 +23,7 @@
       "focalPoint": "The readable timeline call.",
       "transition": "The panel keeps its position as code dissolves into motion.",
       "sound": "Small code-entry clicks.",
+      "hold": "Reading time for the finished timeline code.",
       "reviewAt": 3.5
     },
     {
@@ -59,6 +60,7 @@
       "focalPoint": "Tall orange output and wide cream output.",
       "transition": "An orange wipe carries the identity into the ending.",
       "sound": "Rising accent followed by resolution.",
+      "hold": "Both layouts settle so the viewer can compare them.",
       "reviewAt": 10.75
     },
     {

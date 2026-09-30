@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { run } from '../../src/process.js';
 
-test('an external repo can initialize, caption, review, render, measure audio, and retain its last good export after failure', { timeout: 240_000 }, async t => {
+test('an external repo can initialize, caption, review, render, measure audio and picture, and retain its last good export after failure', { timeout: 240_000 }, async t => {
   const cwd = await mkdtemp(path.join(os.tmpdir(), 'motion-consumer-'));
   t.after(() => rm(cwd, { recursive: true, force: true }));
   await run('git', ['init', '--quiet'], { cwd, quiet: true });
@@ -36,6 +36,9 @@ test('an external repo can initialize, caption, review, render, measure audio, a
   assert.deepEqual(report.results[0].transitionTimes, [1]);
   assert.ok(report.results[0].frames.some(f => f.time === .25));
   assert.equal(report.results[0].strips.length, 1);
+  await access(report.results[0].picture.chart);
+  assert.equal(report.results[0].picture.holds.length, 0);
+  assert.equal(report.results[0].previousCritique, undefined);
   assert.equal((await invoke(['verify', ...options])).ok, true);
   const rendered = await invoke(['render', ...options, '--quality', 'draft']);
   assert.equal(rendered.ok, true);
@@ -43,6 +46,12 @@ test('an external repo can initialize, caption, review, render, measure audio, a
   const audio = await invoke(['audio', ...options]);
   assert.equal(audio.ok, true);
   assert.equal(audio.results[0].hasAudio, false);
+  const picture = await invoke(['picture', ...options]);
+  assert.equal(picture.ok, true);
+  assert.equal(picture.results[0].dark.length, 0);
+  const second = await invoke(['review', ...options, '--around', '1.5']);
+  assert.equal(second.results[0].previousCritique, report.results[0].critique);
+  assert.match(await readFile(second.results[0].critique, 'utf8'), /## Previous findings/);
   assert.equal((await invoke(['audio', ...options, '--input', 'missing.wav'], true)).code, 1);
   const output = rendered.results[0].output, previous = await readFile(output);
   await writeFile(path.join(project, 'src/scene.js'), 'throw new Error("intentional broken fixture");');

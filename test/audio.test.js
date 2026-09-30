@@ -6,6 +6,7 @@ import path from 'node:path';
 import { analyzeAudio, audioAdvice, audioChecks, cutAccents, defaultLoudness, envelope, parseLoudness, silences } from '../src/audio.js';
 import { validateManifest } from '../src/project.js';
 import { synthesize } from '../src/sound.js';
+import { run } from '../src/process.js';
 
 const summary = `[Parsed_ebur128_0 @ 0x1] t: 14.9 M: -27.2
 [Parsed_ebur128_0 @ 0x1] Summary:
@@ -78,8 +79,18 @@ test('the starter score meets the default target once mixed to stereo', async t 
   assert.equal(result.cuts[0].cut, 7.5);
   assert.equal(result.shots.length, 2);
   assert.deepEqual(result.warnings, []);
+  assert.ok(result.loudness.range >= 1.5, `${result.loudness.range}`);
   assert.ok((await readFile(result.waveform)).length > 1000);
   const silent = await analyzeAudio(file, { manifest: { duration: 15, fps: 30, loudness: { integrated: -30 } }, output: dir, label: 'strict' });
   assert.equal(silent.ok, false);
   assert.equal(silent.checks[0].ok, false);
+});
+
+test('a mix with almost no loudness variation is called out', async t => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'motion-audio-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'tone.wav');
+  await run('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=12', '-af', 'volume=0.3,afade=t=out:st=11.5:d=0.5', file], { quiet: true });
+  const result = await analyzeAudio(file, { manifest: { duration: 12, fps: 30 }, output: dir, label: 'tone' });
+  assert.ok(result.warnings.some(w => w.includes('flat wall')), JSON.stringify(result.warnings));
 });

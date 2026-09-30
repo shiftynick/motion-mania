@@ -147,6 +147,8 @@ export async function analyzeAudio(file, { manifest, storyboard, output, label }
   }
   if (endingLevel > -30) warnings.push(`Final 0.1s is still at about ${endingLevel} dBFS; the ending may cut off abruptly. Use a fade or a held tail.`);
   if (audioEnd < duration - 0.25) warnings.push(`Audio stream ends at ${round(audioEnd, 2)}s; the film runs ${duration}s.`);
+  // A mix that barely varies reads as a flat wall of sound; calm beds sit around 1.5–3 LU, energetic scores higher.
+  if (loudness.range !== null && loudness.range < 1.5 && duration >= 10) warnings.push(`Loudness range is only ${loudness.range} LU; the mix barely varies and may sound like a flat wall. Calm beds usually vary 1.5–3 LU and energetic scores 3 LU or more.`);
   if (loudness.samplePeak !== null && loudness.samplePeak >= -0.1) warnings.push(`Sample peak reaches ${loudness.samplePeak} dBFS; listen for clipping.`);
   const checks = audioChecks(loudness, target);
   const title = `${label} · ${loudness.integrated ?? '-inf'} LUFS integrated · ${loudness.truePeak ?? '-inf'} dBTP · target ${target.integrated} LUFS / ${target.truePeak} dBTP`;

@@ -6,6 +6,7 @@ import { backendVersion, hf, probe, run } from './process.js';
 import { buildProject, withBuild, writeJson } from './project.js';
 import { readStoryboard, critiqueTemplate } from './storyboard.js';
 import { analyzeAudio } from './audio.js';
+import { analyzePicture } from './picture.js';
 import { captionSampleTimes, readCaptions } from './captions.js';
 
 export function parseTimes(value, duration) {
@@ -64,11 +65,36 @@ export async function captureFrame(project, format, time) {
   return withBuild(project, format, async build => ({ ok: true, format, frames: await snapshot(build, output, [time]) }));
 }
 
+// Pull the prioritized-revisions table rows out of a critique.md written from critiqueTemplate.
+export function priorFindings(markdown) {
+  const section = markdown.split(/^## Prioritized revisions\s*$/m)[1]?.split(/^## /m)[0] ?? '';
+  return section.split('\n').filter(line => line.trim().startsWith('|')).map(line => line.trim().replace(/^\||\|$/g, '').split('|').map(cell => cell.trim()))
+    .filter(cells => cells.some(Boolean) && !cells.every(cell => /^:?-+:?$/.test(cell)) && cells[0] !== 'Timestamp')
+    .map(([timestamp = '', problem = '', change = '']) => ({ timestamp, problem, change }));
+}
+
+// The most recent earlier review of this format, so the next critique can verify its findings.
+async function previousReview(parent, format) {
+  let latest = null;
+  for (const entry of await readdir(parent, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !entry.name.startsWith(`${format}-`)) continue;
+    const directory = path.join(parent, entry.name);
+    try {
+      const report = JSON.parse(await readFile(path.join(directory, 'report.json'), 'utf8'));
+      if (report.format !== format || (latest && report.createdAt <= latest.createdAt)) continue;
+      const critique = path.join(directory, 'critique.md');
+      latest = { createdAt: report.createdAt, critique, findings: priorFindings(await readFile(critique, 'utf8')) };
+    } catch { /* incomplete or foreign directory */ }
+  }
+  return latest;
+}
+
 export async function review(project, format, { around, draft = false } = {}) {
   const storyboard = await readStoryboard(project, { optional: true });
   const captions = await readCaptions(project);
   const parent = path.join(project.root, 'reviews');
   await mkdir(parent, { recursive: true });
+  const previous = await previousReview(parent, format);
   const output = await mkdtemp(path.join(parent, `${format}-`));
   return withBuild(project, format, async build => {
     const times = reviewTimes(project.manifest.duration, project.manifest.fps, around ?? storyboard?.automaticTransitions ?? [], [...storyboard?.shots.map(s => s.reviewAt) ?? [], ...(captions ? captionSampleTimes(captions.captions) : [])]);
@@ -78,15 +104,16 @@ export async function review(project, format, { around, draft = false } = {}) {
     const phone = await sheet(at(times.overview), path.join(output, 'phone-preview.png'), { width: 360, columns: 3 });
     const strips = [];
     for (const [i, sequence] of times.strips.entries()) strips.push(await sheet(at(sequence), path.join(output, `transition-${i + 1}.png`), { width: 200, columns: 9 }));
-    let draftPath, audio;
+    let draftPath, audio, picture;
     if (draft) {
       draftPath = path.join(output, 'draft.mp4');
       await renderBuild(build, draftPath, project, format, 'draft');
       audio = await analyzeAudio(draftPath, { manifest: project.manifest, storyboard, output, label: `${format} draft` });
+      picture = await analyzePicture(draftPath, { manifest: project.manifest, storyboard, output, label: `${format} draft` });
     }
-    const report = { ok: true, format, createdAt: new Date().toISOString(), manifest: project.manifest, contact, phone, strips, frames, storyboard, transitionTimes: around ?? storyboard?.automaticTransitions ?? [], ...(captions ? { captions: { groups: captions.groups, warnings: captions.warnings } } : {}), ...(draftPath ? { draft: draftPath, audio } : {}), creativeReview: 'pending', audioReview: 'pending', notes: 'Open the images and play the draft. Successful capture is not creative approval.' };
+    const report = { ok: true, format, createdAt: new Date().toISOString(), manifest: project.manifest, contact, phone, strips, frames, storyboard, transitionTimes: around ?? storyboard?.automaticTransitions ?? [], ...(captions ? { captions: { groups: captions.groups, warnings: captions.warnings } } : {}), ...(draftPath ? { draft: draftPath, audio, picture } : {}), ...(previous ? { previousCritique: previous.critique } : {}), creativeReview: 'pending', audioReview: 'pending', notes: 'Open the images and play the draft. Successful capture is not creative approval.' };
     await writeJson(path.join(output, 'report.json'), report);
-    await writeFile(path.join(output, 'critique.md'), critiqueTemplate(storyboard, format, audio));
+    await writeFile(path.join(output, 'critique.md'), critiqueTemplate(storyboard, format, { audio, picture, previous }));
     return { ...report, report: path.join(output, 'report.json'), critique: path.join(output, 'critique.md') };
   });
 }
