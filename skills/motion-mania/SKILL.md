@@ -7,7 +7,7 @@ description: Create and revise short product films, launch reels, and motion gra
 
 Use the installed `motion-mania` CLI for project setup, review artifacts, checks, and exports. HyperFrames is the renderer; the calling agent provides creative judgment. No separate model API is required.
 
-Run `motion-mania --help` and `motion-mania doctor --json` before the first production in an environment. If the command is unavailable, prefix each command with `npx --yes motion-mania@0.2.0` in place of `motion-mania`, or use `node /path/to/motion-mania/src/cli.js` from a toolkit checkout. Run `motion-mania browser` if doctor reports a missing browser. A copied SKILL.md alone does not include the renderer or CLI dependencies.
+Run `motion-mania --help` and `motion-mania doctor --json` before the first production in an environment. If the command is unavailable, prefix each command with `npx --yes motion-mania@0.3.0` in place of `motion-mania`, or use `node /path/to/motion-mania/src/cli.js` from a toolkit checkout. Run `motion-mania browser` if doctor reports a missing browser. A copied SKILL.md alone does not include the renderer or CLI dependencies.
 
 ## Establish the film
 

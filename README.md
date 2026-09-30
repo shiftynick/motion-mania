@@ -33,7 +33,7 @@ The starter is a working **15-second Motion Mania demo**. It does not invent a f
 
 `npx` installs the package and its dependencies when needed. Install FFmpeg separately through your OS package manager. `browser` delegates browser setup to the pinned HyperFrames version; `HYPERFRAMES_BROWSER_PATH` can select an existing binary. If Sharp tries to compile against an incompatible system libvips, set `SHARP_IGNORE_GLOBAL_LIBVIPS=1` when installing or running through npx.
 
-For reproducible work, use `npx motion-mania@0.2.0 …`, or add it to your project with `npm install --save-dev --save-exact motion-mania@0.2.0`. A global install with `npm install -g motion-mania` is also supported.
+For reproducible work, use `npx motion-mania@0.3.0 …`, or add it to your project with `npm install --save-dev --save-exact motion-mania@0.3.0`. A global install with `npm install -g motion-mania` is also supported.
 
 ## Give your agent the skill
 

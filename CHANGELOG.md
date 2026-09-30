@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
 - `picture` command: finds frozen stretches (block-based frame difference, so slow pushes and small moving details count as motion) and near-black frames, with per-shot held time and an activity chart marked with shots. `review --draft` includes the same analysis.
 - Storyboard `hold` field marks intended held frames so they are not flagged.
