@@ -8,7 +8,7 @@
 
 Motion Mania gives coding agents a repeatable workflow for product films, launch reels, and motion graphics. The agent develops the idea, writes the animation, and critiques rendered evidence. The CLI handles project setup, storyboard checks, contact sheets, transition strips, frozen-frame detection, audio loudness checks, captions, verification, and MP4 exports using [HyperFrames](https://github.com/heygen-com/hyperframes).
 
-[![The loop: a 36-second film about Motion Mania, made with Motion Mania](https://raw.githubusercontent.com/shiftynick/motion-mania/main/docs/assets/the-loop.png)](https://github.com/shiftynick/motion-mania/releases/download/v0.3.0/the-loop-landscape.mp4)
+https://github.com/user-attachments/assets/7be55d57-d7f8-4b97-a478-cedf00f4b4eb
 
 [▶ Watch *The loop* (36 s, with sound)](https://github.com/shiftynick/motion-mania/releases/download/v0.3.0/the-loop-landscape.mp4) · [Vertical cut](https://github.com/shiftynick/motion-mania/releases/download/v0.3.0/the-loop-vertical.mp4) · [How it was made](examples/loop/review.md) · [Agent skill](skills/motion-mania/SKILL.md) · [Contributing](CONTRIBUTING.md)
 
