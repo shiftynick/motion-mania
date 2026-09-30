@@ -1,11 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { analyzeStoryboard, critiqueTemplate, plan, staccatoRun } from '../src/storyboard.js';
 import { initProject, loadProject, provenanceWarnings } from '../src/project.js';
-import { priorFindings, reviewTimes } from '../src/operations.js';
+import { previousReview, priorFindings, reviewTimes } from '../src/operations.js';
 const manifest = { duration: 4, fps: 30 };
 const board = { shots: [
   { from: 0, to: 1, name: 'Hook', action: 'Open the panel', copy: 'One two three four', reviewAt: .8 },
@@ -89,6 +89,28 @@ test('a new critique carries the previous round\'s revisions forward for verific
   assert.equal(priorFindings(next).length, 0);
   const picture = { heldSeconds: 1.2, dark: [], chart: '/x/activity.png', warnings: ['Picture is frozen from 1s to 2.2s (1.2s, Hook).'] };
   assert.match(critiqueTemplate(report, 'landscape', { picture }), /## Picture measurements[\s\S]*1\.2s frozen[\s\S]*activity\.png[\s\S]*- Picture is frozen/);
+});
+
+test('the previous review is the latest one with findings, so an unfilled check does not break the chain', async t => {
+  const parent = await mkdtemp(path.join(os.tmpdir(), 'motion-reviews-'));
+  t.after(() => rm(parent, { recursive: true, force: true }));
+  const report = analyzeStoryboard(board, manifest);
+  const blank = critiqueTemplate(report, 'landscape');
+  const filled = blank.replace('| --- | --- | --- | --- |\n', '| --- | --- | --- | --- |\n| 1s | Title clipped | Move it | |\n');
+  const write = async (name, format, createdAt, critique) => {
+    await mkdir(path.join(parent, name));
+    await writeFile(path.join(parent, name, 'report.json'), JSON.stringify({ format, createdAt }));
+    await writeFile(path.join(parent, name, 'critique.md'), critique);
+  };
+  assert.equal(await previousReview(parent, 'landscape'), null);
+  await write('landscape-a', 'landscape', '2026-09-30T10:00:00Z', filled);
+  await write('landscape-b', 'landscape', '2026-09-30T11:00:00Z', blank);
+  await write('audio-landscape-c', 'landscape', '2026-09-30T12:00:00Z', filled);
+  const found = await previousReview(parent, 'landscape');
+  assert.equal(path.basename(path.dirname(found.critique)), 'landscape-a');
+  assert.equal(found.findings[0].problem, 'Title clipped');
+  await rm(path.join(parent, 'landscape-a'), { recursive: true });
+  assert.equal(path.basename(path.dirname((await previousReview(parent, 'landscape')).critique)), 'landscape-b');
 });
 
 test('provenance warnings cover unlisted, missing, external, and generated assets', async t => {

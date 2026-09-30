@@ -24,7 +24,7 @@ Project commands accept `--project <directory>`; rendering commands also accept 
 
 `picture` also reads `out/<format>.mp4` by default and accepts `--input`. It compares frames 0.1s apart on a small grayscale copy. A frame counts as frozen when no 8×8 block (5% of the width) changes by more than 1/255 on average. Measuring by block means one small moving element keeps a frame alive, and a slow push isn't mistaken for a freeze. Holds of 0.6s or more are reported with their shots. Holds that reach the end of the film, or fall entirely within shots marked `hold`, are not flagged. Frames with mean luma below about 8% are reported as near-black, except in a film that is mostly dark. Results are warnings, never failures. `review --draft` runs the same analysis and adds `activity.png`.
 
-Each `review` looks for the most recent earlier review of the same format. Its `critique.md` links that review and copies its prioritized revisions into a "Previous findings" table for verification; `report.json` records the path as `previousCritique`. See [narration and captions](narration.md) for the caption workflow.
+Each `review` looks for the most recent earlier review of the same format that recorded prioritized revisions, falling back to the latest review when none did, so a quick check in between does not break the chain. Its `critique.md` links that review and copies its prioritized revisions into a "Previous findings" table for verification; `report.json` records the path as `previousCritique`. See [narration and captions](narration.md) for the caption workflow.
 
 Use `prepare` to get the directory for a Studio preview. From the toolkit checkout:
 

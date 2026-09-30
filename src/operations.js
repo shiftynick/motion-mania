@@ -73,20 +73,23 @@ export function priorFindings(markdown) {
     .map(([timestamp = '', problem = '', change = '']) => ({ timestamp, problem, change }));
 }
 
-// The most recent earlier review of this format, so the next critique can verify its findings.
-async function previousReview(parent, format) {
-  let latest = null;
+// The most recent earlier review of this format that recorded findings, so the next critique can
+// verify them. A quick check in between (a review nobody filled in) must not break the chain.
+export async function previousReview(parent, format) {
+  let latest = null, reviewed = null;
   for (const entry of await readdir(parent, { withFileTypes: true })) {
     if (!entry.isDirectory() || !entry.name.startsWith(`${format}-`)) continue;
     const directory = path.join(parent, entry.name);
     try {
       const report = JSON.parse(await readFile(path.join(directory, 'report.json'), 'utf8'));
-      if (report.format !== format || (latest && report.createdAt <= latest.createdAt)) continue;
+      if (report.format !== format) continue;
       const critique = path.join(directory, 'critique.md');
-      latest = { createdAt: report.createdAt, critique, findings: priorFindings(await readFile(critique, 'utf8')) };
+      const found = { createdAt: report.createdAt, critique, findings: priorFindings(await readFile(critique, 'utf8')) };
+      if (!latest || found.createdAt > latest.createdAt) latest = found;
+      if (found.findings.length && (!reviewed || found.createdAt > reviewed.createdAt)) reviewed = found;
     } catch { /* incomplete or foreign directory */ }
   }
-  return latest;
+  return reviewed ?? latest;
 }
 
 export async function review(project, format, { around, draft = false } = {}) {
