@@ -1,0 +1,9 @@
+{
+  "name": "Lull",
+  "fictional": true,
+  "palette": { "night": "#0d0b24", "indigo": "#2a2466", "lavender": "#c9c2ff", "paper": "#f5f0e6", "ink": "#16143a", "gold": "#ffc861", "storm": "#eef0f4", "alarm": "#ff4d4f" },
+  "fonts": { "display": "Instrument Serif", "interface": "Inter" },
+  "logo": "assets/logo.svg",
+  "voice": "Calm, unhurried, specific. Explains rather than sells.",
+  "provenance": "Fictional product identity created for this Motion Mania example"
+}

@@ -8,6 +8,8 @@
 - `plan` reports asset provenance gaps, including generator and license details for generated and external media.
 - Starter score mixes to about -14 LUFS.
 - New skill reference for narration and captions.
+- Caption placement can no longer be overridden by project rules such as `#film > .clip { inset: 0 }`.
+- New example: Lull, a narrated and captioned film for a fictional product.
 
 ## 0.1.0
 

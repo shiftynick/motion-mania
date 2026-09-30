@@ -1,0 +1,58 @@
+{
+  "shots": [
+    {
+      "from": 0, "to": 6, "name": "Storm",
+      "copy": "",
+      "narration": "Every app on your phone insists its message matters most.",
+      "action": "A single notification lands, then forty more arrive faster and faster across a bright frame; the camera pushes in, the frame shakes, red creeps in at the edges.",
+      "goal": "Recognize the feeling of a phone that never stops asking for attention.",
+      "focalPoint": "The first centered card, then the whole crowded frame.",
+      "transition": "Everything stops dead; a dark wave opens from the center.",
+      "sound": "A ping on every card, a nervous pulse, a riser that cuts to silence.",
+      "reviewAt": 3
+    },
+    {
+      "from": 6, "to": 12.9, "name": "Lull",
+      "copy": "Held, not lost.",
+      "narration": "Lull holds those interruptions back, and gathers them into one quiet digest.",
+      "action": "The wave sweeps outward; every card is pulled into the center and folds into a single digest card whose count climbs to forty held.",
+      "goal": "See interruptions become one calm object without anything being thrown away.",
+      "focalPoint": "The digest card at the center of the ring.",
+      "transition": "The digest card moves aside and opens.",
+      "sound": "A soft sub swell at the cut, then a warm pad under the voice.",
+      "reviewAt": 9.5
+    },
+    {
+      "from": 12.9, "to": 18, "name": "Digest",
+      "copy": "Decisions first.",
+      "narration": "When you're ready, the digest is sorted by what needs you.",
+      "action": "The card expands into a sorted digest: people waiting on a decision, then things worth a look, then everything else grouped by app.",
+      "goal": "Understand that the digest is ordered by what needs a decision, not by arrival time.",
+      "focalPoint": "The gold-lit Needs you section.",
+      "transition": "The panel recedes and the ring returns as a boundary.",
+      "sound": "Soft plucks as each section opens.",
+      "reviewAt": 15.5
+    },
+    {
+      "from": 18, "to": 23.2, "name": "Break through",
+      "copy": "Everyone else waits.",
+      "narration": "Only the people you choose can still reach you, when it can't wait.",
+      "action": "Grey notifications drift toward the ring and dissolve at its edge; a gold card from Maya passes straight through and settles in the center.",
+      "goal": "Trust that quiet does not mean missing the person who needs you.",
+      "focalPoint": "The gold card crossing the ring.",
+      "transition": "The ring contracts behind the wordmark.",
+      "sound": "Muted taps for the ghosts, a bell when Maya breaks through.",
+      "reviewAt": 21
+    },
+    {
+      "from": 23.2, "to": 28, "name": "Wordmark",
+      "copy": "lull. Quiet by default.",
+      "action": "The wordmark rises letter by letter inside the dimmed ring; the tagline and a fictional-product note follow, then a long hold.",
+      "goal": "Remember the name and the promise.",
+      "focalPoint": "The lull wordmark.",
+      "transition": "Hold to the end.",
+      "sound": "Intentional silence from the voice; the final chord and a low bell resolve and fade.",
+      "reviewAt": 26
+    }
+  ]
+}

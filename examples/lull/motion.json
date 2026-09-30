@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "name": "Lull — quiet by default",
+  "engine": "hyperframes@0.8.81",
+  "duration": 28,
+  "fps": 30,
+  "audioRequired": true,
+  "formats": {
+    "landscape": { "width": 1920, "height": 1080 },
+    "vertical": { "width": 1080, "height": 1920 }
+  }
+}

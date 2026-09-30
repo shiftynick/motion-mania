@@ -1,0 +1,2 @@
+GSAP 3.15.0. Copyright GreenSock. Original license header preserved in gsap.min.js.
+License terms: https://gsap.com/standard-license/

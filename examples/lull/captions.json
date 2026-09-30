@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "source": "transcript.json",
+  "format": "words-json",
+  "groups": [
+    {
+      "start": 1.05,
+      "end": 2.45,
+      "words": [
+        {
+          "text": "Every",
+          "start": 1.05,
+          "end": 1.39
+        },
+        {
+          "text": "app",
+          "start": 1.39,
+          "end": 1.69
+        },
+        {
+          "text": "on",
+          "start": 1.69,
+          "end": 1.85
+        },
+        {
+          "text": "your",
+          "start": 1.85,
+          "end": 2.01
+        },
+        {
+          "text": "phone",
+          "start": 2.01,
+          "end": 2.45
+        }
+      ]
+    },
+    {
+      "start": 2.45,
+      "end": 5.7,
+      "words": [
+        {
+          "text": "insists",
+          "start": 2.45,
+          "end": 3.25
+        },
+        {
+          "text": "its",
+          "start": 3.25,
+          "end": 3.67
+        },
+        {
+          "text": "message",
+          "start": 3.67,
+          "end": 4.15
+        },
+        {
+          "text": "matters",
+          "start": 4.15,
+          "end": 4.59
+        },
+        {
+          "text": "most.",
+          "start": 4.59,
+          "end": 5.25
+        }
+      ]
+    },
+    {
+      "start": 6.74,
+      "end": 8.53,
+      "words": [
+        {
+          "text": "Lull",
+          "start": 6.74,
+          "end": 7.05
+        },
+        {
+          "text": "holds",
+          "start": 7.05,
+          "end": 7.53
+        },
+        {
+          "text": "those",
+          "start": 7.53,
+          "end": 7.81
+        },
+        {
+          "text": "interruptions",
+          "start": 7.81,
+          "end": 8.53
+        }
+      ]
+    },
+    {
+      "start": 8.53,
+      "end": 10.37,
+      "words": [
+        {
+          "text": "back,",
+          "start": 8.53,
+          "end": 8.95
+        },
+        {
+          "text": "and",
+          "start": 8.95,
+          "end": 9.63
+        },
+        {
+          "text": "gathers",
+          "start": 9.63,
+          "end": 10.05
+        },
+        {
+          "text": "them",
+          "start": 10.05,
+          "end": 10.37
+        }
+      ]
+    },
+    {
+      "start": 10.37,
+      "end": 12.72,
+      "words": [
+        {
+          "text": "into",
+          "start": 10.37,
+          "end": 10.71
+        },
+        {
+          "text": "one",
+          "start": 10.71,
+          "end": 11.11
+        },
+        {
+          "text": "quiet",
+          "start": 11.11,
+          "end": 11.65
+        },
+        {
+          "text": "digest.",
+          "start": 11.65,
+          "end": 12.27
+        }
+      ]
+    },
+    {
+      "start": 13.54,
+      "end": 14.65,
+      "words": [
+        {
+          "text": "When",
+          "start": 13.54,
+          "end": 13.71
+        },
+        {
+          "text": "you're",
+          "start": 13.71,
+          "end": 13.93
+        },
+        {
+          "text": "ready,",
+          "start": 13.93,
+          "end": 14.29
+        }
+      ]
+    },
+    {
+      "start": 14.65,
+      "end": 15.99,
+      "words": [
+        {
+          "text": "the",
+          "start": 14.65,
+          "end": 14.83
+        },
+        {
+          "text": "digest",
+          "start": 14.83,
+          "end": 15.37
+        },
+        {
+          "text": "is",
+          "start": 15.37,
+          "end": 15.67
+        },
+        {
+          "text": "sorted",
+          "start": 15.67,
+          "end": 15.99
+        }
+      ]
+    },
+    {
+      "start": 15.99,
+      "end": 17.72,
+      "words": [
+        {
+          "text": "by",
+          "start": 15.99,
+          "end": 16.35
+        },
+        {
+          "text": "what",
+          "start": 16.35,
+          "end": 16.57
+        },
+        {
+          "text": "needs",
+          "start": 16.57,
+          "end": 16.87
+        },
+        {
+          "text": "you.",
+          "start": 16.87,
+          "end": 17.27
+        }
+      ]
+    },
+    {
+      "start": 18.76,
+      "end": 20.19,
+      "words": [
+        {
+          "text": "Only",
+          "start": 18.76,
+          "end": 19.09
+        },
+        {
+          "text": "the",
+          "start": 19.09,
+          "end": 19.29
+        },
+        {
+          "text": "people",
+          "start": 19.29,
+          "end": 19.61
+        },
+        {
+          "text": "you",
+          "start": 19.61,
+          "end": 19.87
+        },
+        {
+          "text": "choose",
+          "start": 19.87,
+          "end": 20.19
+        }
+      ]
+    },
+    {
+      "start": 20.19,
+      "end": 21.49,
+      "words": [
+        {
+          "text": "can",
+          "start": 20.19,
+          "end": 20.49
+        },
+        {
+          "text": "still",
+          "start": 20.49,
+          "end": 20.79
+        },
+        {
+          "text": "reach",
+          "start": 20.79,
+          "end": 21.07
+        },
+        {
+          "text": "you,",
+          "start": 21.07,
+          "end": 21.49
+        }
+      ]
+    },
+    {
+      "start": 21.49,
+      "end": 23.1,
+      "words": [
+        {
+          "text": "when",
+          "start": 21.49,
+          "end": 21.93
+        },
+        {
+          "text": "it",
+          "start": 21.93,
+          "end": 22.07
+        },
+        {
+          "text": "can't",
+          "start": 22.07,
+          "end": 22.39
+        },
+        {
+          "text": "wait.",
+          "start": 22.39,
+          "end": 22.65
+        }
+      ]
+    }
+  ],
+  "note": "Hand-corrected: onsets from narration.wav, restored script punctuation, regrouped into phrases."
+}

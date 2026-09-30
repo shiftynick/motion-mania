@@ -1,0 +1,34 @@
+{
+  "voice": "af_heart",
+  "speed": 0.8,
+  "lines": [
+    {
+      "at": 1,
+      "text": "Every app on your phone insists its message matters most."
+    },
+    {
+      "at": 6.7,
+      "text": "Lull holds those interruptions back, and gathers them into one quiet digest."
+    },
+    {
+      "at": 13.5,
+      "text": "When you're ready, the digest is sorted by what needs you."
+    },
+    {
+      "at": 18.7,
+      "text": "Only the people you choose can still reach you, when it can't wait."
+    }
+  ],
+  "targetLufs": -17,
+  "measurement": {
+    "before": {
+      "integrated": -22.4,
+      "truePeak": -2
+    },
+    "gain": 5.4,
+    "after": {
+      "integrated": -17.4,
+      "truePeak": -3.9
+    }
+  }
+}

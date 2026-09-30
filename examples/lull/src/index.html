@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lull — quiet by default</title>
+  <style>
+    @font-face { font-family: 'Inter'; src: url('assets/fonts/Inter-Variable.ttf') format('truetype'); font-weight: 100 900; }
+    @font-face { font-family: 'Instrument Serif'; src: url('assets/fonts/InstrumentSerif-Regular.ttf') format('truetype'); font-style: normal; }
+    @font-face { font-family: 'Instrument Serif'; src: url('assets/fonts/InstrumentSerif-Italic.ttf') format('truetype'); font-style: italic; }
+  </style>
+  <link rel="stylesheet" href="scene.css">
+</head>
+<body>
+  <main id="film" data-composition-id="lull" data-width="__WIDTH__" data-height="__HEIGHT__" data-duration="__DURATION__" data-fps="__FPS__">
+    <div id="storm-bg" class="clip" data-start="0" data-duration="7.4" data-track-index="0"><div class="alarm"></div></div>
+
+    <div id="calm" class="clip" data-start="5.9" data-duration="22.1" data-track-index="1">
+      <div class="blob blob-a"></div><div class="blob blob-b"></div>
+      <div class="ring"></div>
+      <div class="shock"></div>
+    </div>
+
+    <div id="storm" class="clip" data-start="0" data-duration="7.6" data-track-index="2">
+      <div class="stage"></div>
+      <div class="wave"></div>
+    </div>
+
+    <section id="digest" class="clip" data-start="6.9" data-duration="11.7" data-track-index="3">
+      <div class="panel">
+        <header class="panel-head">
+          <img class="mark" src="assets/logo.svg" alt="">
+          <div class="head-copy"><b>Evening digest</b><small>5:00 PM · held since 9:00 AM</small></div>
+          <span class="held">0 held</span>
+        </header>
+        <div class="section needs">
+          <div class="needs-glow"></div>
+          <h3>Needs you</h3>
+          <div class="item"><span class="avatar gold">MC</span><div><b>Maya Chen</b><p>Can you approve the release notes?</p></div></div>
+          <div class="item"><span class="avatar">JO</span><div><b>Jonas Ortiz</b><p>Pick a time for Thursday's review</p></div></div>
+        </div>
+        <div class="section look">
+          <h3>Worth a look</h3>
+          <div class="item"><span class="app" style="--c:#2f5fe0">S</span><div><b>Stackline</b><p>Your pull request was merged</p></div></div>
+          <div class="item"><span class="app" style="--c:#0f7f58">M</span><div><b>Mailroom</b><p>Invoice from Northwind Studio</p></div></div>
+        </div>
+        <div class="section rest">
+          <h3>Everything else</h3>
+          <div class="pill">36 updates, grouped by app</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="through" class="clip" data-start="17.9" data-duration="5.7" data-track-index="4">
+      <div class="ghost g1"><span class="app" style="--c:#8a8aa3">P</span><div><b>Pingboard</b><p>Priya reacted to your message</p></div></div>
+      <div class="ghost g2"><span class="app" style="--c:#8a8aa3">S</span><div><b>Streakly</b><p>Don't lose your streak!</p></div></div>
+      <div class="ghost g3"><span class="app" style="--c:#8a8aa3">N</span><div><b>Newsdrop</b><p>Five stories you missed</p></div></div>
+      <div class="gold-card"><span class="avatar gold">MC</span><div><b>Maya Chen</b><p>The deploy is blocked. Can you approve?</p></div></div>
+      <p class="through-label">Maya is on your breakthrough list</p>
+    </section>
+
+    <section id="copy" class="clip" data-start="6.6" data-duration="16.8" data-track-index="5">
+      <h1 class="headline h-held">Held, <em>not lost.</em></h1>
+      <h1 class="headline h-first">Decisions <em>first.</em></h1>
+      <h1 class="headline h-wait">Everyone else <em>waits.</em></h1>
+    </section>
+
+    <section id="end" class="clip" data-start="23.2" data-duration="4.8" data-track-index="6">
+      <div class="lockup">
+        <div class="word"><span data-layout-allow-overlap>l</span><span data-layout-allow-overlap>u</span><span data-layout-allow-overlap>l</span><span data-layout-allow-overlap>l</span></div>
+        <p class="tagline">Quiet by default.</p>
+      </div>
+      <p class="footer">A fictional product · Made with Motion Mania</p>
+    </section>
+
+    <audio id="score" src="assets/score.wav" data-start="0" data-duration="28" data-track-index="7" data-volume="1"></audio>
+    <audio id="voice" src="assets/narration.wav" data-start="0" data-duration="28" data-track-index="8" data-volume="1"></audio>
+  </main>
+  <script src="assets/vendor/gsap.min.js"></script>
+  <script src="scene.js"></script>
+</body>
+</html>

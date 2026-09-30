@@ -109,6 +109,7 @@ Clone the repository for complete production examples; examples and videos are n
 
 - [Original launch demo](examples/launch): simple workflow introduction.
 - [Connected motion study](examples/launch-v2): a graphic surface becomes code, motion, review frames, and multiple formats. [Review notes](docs/video-v2-review.md).
+- [Lull](examples/lull): a 28-second film for a fictional notification app, with a local TTS voiceover, word-highlighted captions from a transcript, an original score timed to the animation, and a loudness-checked mix. [Review notes](examples/lull/review.md).
 
 ```sh
 git clone https://github.com/shiftynick/motion-mania.git

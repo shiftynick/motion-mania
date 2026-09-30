@@ -1,0 +1,17 @@
+{
+  "assets": [
+    { "path": "logo.svg", "origin": "Fictional Lull mark created for this example", "usage": "Digest header mark" },
+    { "path": "score.wav", "origin": "Original score synthesized by scripts/score.mjs", "usage": "Music and sound design" },
+    { "path": "score-analysis.json", "origin": "Written by scripts/score.mjs", "usage": "Score loudness and card arrival times" },
+    { "path": "narration.wav", "origin": "Assembled by scripts/voice.mjs from voice-takes/", "usage": "Narration track" },
+    { "path": "narration-analysis.json", "origin": "Written by scripts/voice.mjs", "usage": "Narration timing and loudness" },
+    { "path": "voice-takes/line-1.wav", "origin": "Generated for this film", "generator": { "tool": "hyperframes tts 0.8.81", "model": "Kokoro-82M", "voice": "af_heart", "speed": 0.8, "prompt": "Every app on your phone insists its message matters most." }, "usage": "Narration, shot 1" },
+    { "path": "voice-takes/line-2.wav", "origin": "Generated for this film", "generator": { "tool": "hyperframes tts 0.8.81", "model": "Kokoro-82M", "voice": "af_heart", "speed": 0.8, "prompt": "Lull holds those interruptions back, and gathers them into one quiet digest." }, "usage": "Narration, shot 2" },
+    { "path": "voice-takes/line-3.wav", "origin": "Generated for this film", "generator": { "tool": "hyperframes tts 0.8.81", "model": "Kokoro-82M", "voice": "af_heart", "speed": 0.8, "prompt": "When you're ready, the digest is sorted by what needs you." }, "usage": "Narration, shot 3" },
+    { "path": "voice-takes/line-4.wav", "origin": "Generated for this film", "generator": { "tool": "hyperframes tts 0.8.81", "model": "Kokoro-82M", "voice": "af_heart", "speed": 0.8, "prompt": "Only the people you choose can still reach you, when it can't wait." }, "usage": "Narration, shot 4" },
+    { "path": "fonts/Inter-Variable.ttf", "origin": "google/fonts repository, ofl/inter", "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/inter", "license": "fonts/Inter-OFL.txt" },
+    { "path": "fonts/InstrumentSerif-Regular.ttf", "origin": "google/fonts repository, ofl/instrumentserif", "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/instrumentserif", "license": "fonts/InstrumentSerif-OFL.txt" },
+    { "path": "fonts/InstrumentSerif-Italic.ttf", "origin": "google/fonts repository, ofl/instrumentserif", "sourceUrl": "https://github.com/google/fonts/tree/main/ofl/instrumentserif", "license": "fonts/InstrumentSerif-OFL.txt" },
+    { "path": "vendor/gsap.min.js", "origin": "gsap npm package 3.15.0", "license": "vendor/GSAP-LICENSE.txt" }
+  ]
+}
