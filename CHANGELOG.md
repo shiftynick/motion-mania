@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0
 
 - Upgrade the pinned HyperFrames renderer to 0.8.145, including compatible lint, checks, caption import, and seek capture.
 - Add source `lint`, local waivers, storyboard motion assertions, reading floors, grouped copy provenance, beat-grid advice, and measured narration timing. `verify` gates settled inspection frames and retains transition geometry as advice.

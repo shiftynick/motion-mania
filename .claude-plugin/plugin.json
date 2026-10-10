@@ -1,6 +1,6 @@
 {
   "name": "motion-mania",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Create product films with a local CLI and rendered review evidence.",
   "author": { "name": "Motion Mania contributors" },
   "homepage": "https://github.com/shiftynick/motion-mania",

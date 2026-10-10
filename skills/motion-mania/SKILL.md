@@ -2,14 +2,14 @@
 name: motion-mania
 description: Create and revise short product films, launch reels, and motion graphics using Motion Mania and HyperFrames, with rendered visual reviews, audio measurement, optional narration and captions, and portable source files. Not for interactive web/UI animation, editing existing footage, or Remotion projects.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Motion Mania
 
 Use the installed `motion-mania` CLI for project setup, review artifacts, checks, and exports. HyperFrames is the renderer; the calling agent provides creative judgment. No separate model API is required.
 
-Run `motion-mania --help` and `motion-mania doctor --json` before the first production in an environment. If the command is unavailable, prefix each command with `npx --yes motion-mania@0.3.0` in place of `motion-mania`, or use `node /path/to/motion-mania/src/cli.js` from a toolkit checkout. Run `motion-mania browser` if doctor reports a missing browser. A copied SKILL.md alone does not include the renderer or CLI dependencies.
+Run `motion-mania --help` and `motion-mania doctor --json` before the first production in an environment. If the command is unavailable, prefix each command with `npx --yes motion-mania@0.4.0` in place of `motion-mania`, or use `node /path/to/motion-mania/src/cli.js` from a toolkit checkout. Run `motion-mania browser` if doctor reports a missing browser. A copied SKILL.md alone does not include the renderer or CLI dependencies.
 
 ## Establish the film
 
