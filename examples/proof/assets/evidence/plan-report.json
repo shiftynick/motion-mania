@@ -1,0 +1,511 @@
+{
+  "ok": true,
+  "project": "/home/shifty/Work/motion-mania/examples/proof",
+  "shots": [
+    {
+      "from": 0,
+      "to": 5,
+      "name": "The challenge",
+      "copy": [
+        "A beautiful frame",
+        "isn’t proof."
+      ],
+      "narration": "A film can look right, and still be wrong.",
+      "action": "The complete frame-zero challenge is interrupted by a scan at 0.65s. By 1.45s a magnified actual controlled-draft candidate covers the beautiful ring, with readable controlled-test and frame labels.",
+      "goal": "Make the sceptic recognise the gap between a convincing still and a reliable film.",
+      "focalPoint": "The giant word proof and the luminous folded object.",
+      "transition": "The ribbon flattens into the waveform axis while the headline compresses upward.",
+      "sound": "A low opening pulse and glass harmonic; first phrase has room to breathe.",
+      "reviewAt": 3.7,
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#hook-title",
+          "bySec": 0.5
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#hook-title"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "A beautiful frame",
+            "floor": 1.25,
+            "comfortable": 2.4
+          },
+          {
+            "text": "isn’t proof.",
+            "floor": 0.9558823529411765,
+            "comfortable": 2.1
+          }
+        ],
+        "floor": 2.2058823529411766
+      },
+      "index": 1,
+      "questions": []
+    },
+    {
+      "from": 5,
+      "to": 11,
+      "name": "Measured sound",
+      "copy": [
+        "Sound, measured."
+      ],
+      "narration": "So this film checks its own sound, and masters the result.",
+      "action": "The production waveform grows out of the ribbon; measured before and after loudness values lock onto its edge.",
+      "goal": "Give mastered audio a visible, inspectable result.",
+      "focalPoint": "The waveform and its sourced loudness measurement.",
+      "transition": "The waveform collapses into a beat rail and the inspection light becomes the cut marker.",
+      "sound": "Bass and dry percussion enter. Voice band carve preserves the low pulse.",
+      "reviewAt": 9.5,
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#sound-title",
+          "bySec": 0.8
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#sound-title"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "Sound, measured.",
+            "floor": 1.1911764705882353,
+            "comfortable": 2.1
+          }
+        ],
+        "floor": 1.1911764705882353
+      },
+      "index": 2,
+      "questions": []
+    },
+    {
+      "from": 11,
+      "to": 16,
+      "name": "The pulse",
+      "copy": [
+        "Cuts on the pulse."
+      ],
+      "narration": "Its cuts sit on the score’s beat grid.",
+      "action": "One recognisable blue ribbon folds at the beat-rail gate, then opens into a rectangular aperture at the next gate. The aperture grows into the candidate boundary during 14.8–16s; the actual six-cut grid result is large enough to read.",
+      "goal": "Let the audience feel a beat-aligned edit before reading its check.",
+      "focalPoint": "One optical object at a time, then the beat rail.",
+      "transition": "The aperture expands and clears into the central draft inspection window.",
+      "sound": "Full syncopated groove; a clean kit tick marks each plate.",
+      "reviewAt": 14.8,
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#beat-title",
+          "bySec": 0.7
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#beat-title"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "Cuts on the pulse.",
+            "floor": 1.3088235294117647,
+            "comfortable": 2.7
+          }
+        ],
+        "floor": 1.3088235294117647
+      },
+      "index": 3,
+      "questions": []
+    },
+    {
+      "from": 16,
+      "to": 23,
+      "name": "The missing frame",
+      "copy": [
+        "One frame. Caught.",
+        "Controlled defect test"
+      ],
+      "narration": "A planted one frame glitch is caught in the draft, then removed.",
+      "action": "Actual cropped before, candidate and after captures isolate the ring without nested titles or captions. An opaque repaired capture appears beneath the candidate; fading only the top capture removes the rose patch without dimming unchanged pixels.",
+      "goal": "Show that a tiny defect produces concrete evidence before a human review.",
+      "focalPoint": "The isolated candidate and the corrected frame.",
+      "transition": "The candidate pointer draws into a source connection.",
+      "sound": "The groove thins to a heartbeat; a dry tick on detection and a soft landing on repair.",
+      "reviewAt": 21.8,
+      "hold": "Reading time for the real controlled-test frames.",
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#defect-title",
+          "bySec": 0.8
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#defect-title"
+        },
+        {
+          "kind": "appearsBy",
+          "selector": ".candidate",
+          "bySec": 1.2
+        },
+        {
+          "kind": "appearsBy",
+          "selector": ".candidate .repair",
+          "bySec": 5.6
+        },
+        {
+          "kind": "before",
+          "a": ".candidate .bad",
+          "b": ".candidate .repair"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "One frame. Caught.",
+            "floor": 1.3088235294117647,
+            "comfortable": 2.4
+          },
+          {
+            "text": "Controlled defect test",
+            "floor": 1.5441176470588236,
+            "comfortable": 2.4
+          }
+        ],
+        "floor": 2.8529411764705883
+      },
+      "index": 4,
+      "questions": []
+    },
+    {
+      "from": 23,
+      "to": 29,
+      "name": "Trace the claim",
+      "copy": [
+        "Follow the source."
+      ],
+      "narration": "Every number you see leads back to this film’s evidence.",
+      "action": "The candidate boundary grows into the report receipt. Its literal mastering / after / integrated nesting reveals the measured value in stages; a drawn connection terminates beside that value and the large on-screen figure. Portrait uses a tall side connection.",
+      "goal": "Make numerical honesty part of the film’s visible structure.",
+      "focalPoint": "The drawn claim-to-source connection.",
+      "transition": "The source line opens into two rectangular apertures.",
+      "sound": "Arpeggio returns in a higher register with one bright source-lock accent.",
+      "reviewAt": 27.7,
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#source-title",
+          "bySec": 0.8
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#source-title"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "Follow the source.",
+            "floor": 1.3088235294117647,
+            "comfortable": 2.4
+          }
+        ],
+        "floor": 1.3088235294117647
+      },
+      "index": 5,
+      "questions": []
+    },
+    {
+      "from": 29,
+      "to": 35,
+      "name": "Both layouts",
+      "copy": [
+        "Seek. Inspect. Repeat."
+      ],
+      "narration": "The motion is checked forwards and backwards, in both layouts.",
+      "action": "The receipt edge opens into the landscape preview alongside a portrait preview. Real rendered frames of this film from 11.0–15.5s scrub forward and reverse together, with a shared readable exact source timestamp. The portrait composition gives its tall preview the dominant area.",
+      "goal": "Show the separate compositions and the fact that rendered motion is checked.",
+      "focalPoint": "The two real film frames.",
+      "transition": "The two captures contract while the original ribbon resolves above the product lockup.",
+      "sound": "The largest harmonic lift; rhythmic elements peel away into the resolution.",
+      "reviewAt": 33.7,
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#layouts-title",
+          "bySec": 0.8
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#layouts-title"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "Seek. Inspect. Repeat.",
+            "floor": 1.5441176470588236,
+            "comfortable": 2.4
+          }
+        ],
+        "floor": 1.5441176470588236
+      },
+      "index": 6,
+      "questions": []
+    },
+    {
+      "from": 35,
+      "to": 40,
+      "name": "The invitation",
+      "copy": [
+        "Motion Mania",
+        "Make it prove itself.",
+        "npx motion-mania init ./film"
+      ],
+      "action": "The original ribbon resolves into the emblem, giant product name and one executable next step.",
+      "goal": "Leave developers with the product name and how to begin.",
+      "focalPoint": "Motion Mania, then the init command.",
+      "transition": "Resolve and hold the wordmark through the end.",
+      "sound": "Suspended harmony resolves to major; no narration; a long clean decay.",
+      "reviewAt": 38.7,
+      "hold": "Intentional final lockup reading hold.",
+      "assertions": [
+        {
+          "kind": "appearsBy",
+          "selector": "#end-title",
+          "bySec": 1
+        },
+        {
+          "kind": "staysInFrame",
+          "selector": "#end-title"
+        }
+      ],
+      "reading": {
+        "lines": [
+          {
+            "text": "Motion Mania",
+            "floor": 0.9558823529411765,
+            "comfortable": 2.1
+          },
+          {
+            "text": "Make it prove itself.",
+            "floor": 1.4852941176470589,
+            "comfortable": 2.7
+          },
+          {
+            "text": "npx motion-mania init ./film",
+            "floor": 1.8970588235294117,
+            "comfortable": 2.7
+          }
+        ],
+        "floor": 4.338235294117647
+      },
+      "index": 7,
+      "questions": []
+    }
+  ],
+  "automaticTransitions": [
+    5,
+    11,
+    16,
+    23,
+    29,
+    35
+  ],
+  "bpm": 120,
+  "beatOffset": 0,
+  "beatGrid": [
+    {
+      "shot": 2,
+      "time": 5,
+      "nearestBeat": 5,
+      "nearestFrame": 150,
+      "offsetFrames": 0,
+      "subdivision": 40
+    },
+    {
+      "shot": 3,
+      "time": 11,
+      "nearestBeat": 11,
+      "nearestFrame": 330,
+      "offsetFrames": 0,
+      "subdivision": 88
+    },
+    {
+      "shot": 4,
+      "time": 16,
+      "nearestBeat": 16,
+      "nearestFrame": 480,
+      "offsetFrames": 0,
+      "subdivision": 128
+    },
+    {
+      "shot": 5,
+      "time": 23,
+      "nearestBeat": 23,
+      "nearestFrame": 690,
+      "offsetFrames": 0,
+      "subdivision": 184
+    },
+    {
+      "shot": 6,
+      "time": 29,
+      "nearestBeat": 29,
+      "nearestFrame": 870,
+      "offsetFrames": 0,
+      "subdivision": 232
+    },
+    {
+      "shot": 7,
+      "time": 35,
+      "nearestBeat": 35,
+      "nearestFrame": 1050,
+      "offsetFrames": 0,
+      "subdivision": 280
+    }
+  ],
+  "warnings": [],
+  "unanswered": 0,
+  "narration": {
+    "words": 60,
+    "wordsPerMinute": 90
+  },
+  "copyProvenance": {
+    "findings": [],
+    "waived": [],
+    "note": "Version stamps, numbering, timecodes and metrics get grouped sourcing questions; other unlisted text gets one aggregate reminder. Visible HTML lines and literal JS text assignments only. Animation visibility, interpolated strings, images and computed labels require review. A question does not establish that copy is invented."
+  },
+  "sourceLint": {
+    "findings": [],
+    "waived": [
+      {
+        "file": "src/scene.js",
+        "line": 62,
+        "rule": "linear_spatial_ease",
+        "code": "linear_spatial_ease",
+        "severity": "warning",
+        "origin": "motion-mania",
+        "message": "Constant-speed spatial movement may drift through a reading hold; use an arrival/departure ease or document an intentional push, progress indicator, or shake.",
+        "waiver": "the marker is a uniform 120 BPM clock; crossing the gates triggers the ribbon states"
+      },
+      {
+        "file": "src/scene.js",
+        "line": 120,
+        "rule": "linear_spatial_ease",
+        "code": "linear_spatial_ease",
+        "severity": "warning",
+        "origin": "motion-mania",
+        "message": "Constant-speed spatial movement may drift through a reading hold; use an arrival/departure ease or document an intentional push, progress indicator, or shake.",
+        "waiver": "this inspection playhead follows the exact frame sequence in the captured atlas"
+      },
+      {
+        "file": "src/scene.js",
+        "line": 122,
+        "rule": "linear_spatial_ease",
+        "code": "linear_spatial_ease",
+        "severity": "warning",
+        "origin": "motion-mania",
+        "message": "Constant-speed spatial movement may drift through a reading hold; use an arrival/departure ease or document an intentional push, progress indicator, or shake.",
+        "waiver": "the playhead reverses through the same real frame sequence"
+      }
+    ]
+  },
+  "captions": {
+    "groups": 15,
+    "words": 60,
+    "narration": [
+      {
+        "index": 1,
+        "name": "The challenge",
+        "expectedWords": 9,
+        "heardWords": 9,
+        "similarity": 1,
+        "coverage": 1,
+        "boundsComplete": true,
+        "start": 0.38,
+        "end": 3.33,
+        "trailingPad": 1.67,
+        "leadingPad": 0.38
+      },
+      {
+        "index": 2,
+        "name": "Measured sound",
+        "expectedWords": 11,
+        "heardWords": 11,
+        "similarity": 1,
+        "coverage": 1,
+        "boundsComplete": true,
+        "start": 5.23,
+        "end": 9.91,
+        "trailingPad": 1.09,
+        "leadingPad": 0.23
+      },
+      {
+        "index": 3,
+        "name": "The pulse",
+        "expectedWords": 8,
+        "heardWords": 8,
+        "similarity": 1,
+        "coverage": 1,
+        "boundsComplete": true,
+        "start": 11.41,
+        "end": 14.19,
+        "trailingPad": 1.81,
+        "leadingPad": 0.41
+      },
+      {
+        "index": 4,
+        "name": "The missing frame",
+        "expectedWords": 12,
+        "heardWords": 12,
+        "similarity": 1,
+        "coverage": 1,
+        "boundsComplete": true,
+        "start": 16.31,
+        "end": 21.01,
+        "trailingPad": 1.99,
+        "leadingPad": 0.31
+      },
+      {
+        "index": 5,
+        "name": "Trace the claim",
+        "expectedWords": 10,
+        "heardWords": 10,
+        "similarity": 1,
+        "coverage": 1,
+        "boundsComplete": true,
+        "start": 23.4,
+        "end": 27.3,
+        "trailingPad": 1.7,
+        "leadingPad": 0.4
+      },
+      {
+        "index": 6,
+        "name": "Both layouts",
+        "expectedWords": 10,
+        "heardWords": 10,
+        "similarity": 1,
+        "coverage": 1,
+        "boundsComplete": true,
+        "start": 29.38,
+        "end": 33.44,
+        "trailingPad": 1.56,
+        "leadingPad": 0.38
+      },
+      {
+        "index": 7,
+        "name": "The invitation",
+        "expectedWords": 0,
+        "heardWords": 0,
+        "similarity": 1
+      }
+    ]
+  },
+  "creativeReview": "pending",
+  "note": "Timing is valid. Questions and warnings guide the agent; they are not a creative quality score."
+}

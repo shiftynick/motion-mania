@@ -1,5 +1,6 @@
-import { access, mkdir, mkdtemp, readFile, rm } from 'node:fs/promises';
+import { access, mkdir, mkdtemp, readFile, rename, rm } from 'node:fs/promises';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { probe, run } from './process.js';
 import { writeJson } from './project.js';
@@ -38,6 +39,13 @@ export function envelope(samples, rate = RATE) {
     peak[w] = max;
   }
   return { window: WINDOW, db, peak };
+}
+
+export function silenceThreshold(loudness, env) {
+  const active = env.db.filter(db => Number.isFinite(db) && db > -100).sort((a, b) => a - b);
+  const reference = active.length ? active[Math.floor(active.length * 0.8)] : null;
+  const programme = Number.isFinite(loudness.integrated) ? loudness.integrated : reference;
+  return round(Math.max(-90, Math.min(SILENCE_DB, programme === null ? SILENCE_DB : programme - 30, reference === null ? SILENCE_DB : reference - 24)));
 }
 
 export function silences(env, { threshold = SILENCE_DB, minimum = 0.5 } = {}) {
@@ -136,7 +144,8 @@ export async function analyzeAudio(file, { manifest, storyboard, output, label }
   } finally { await rm(raw, { force: true }); }
   const env = envelope(samples);
   const duration = manifest.duration, audioEnd = env.db.length * env.window;
-  const silent = silences(env);
+  const threshold = silenceThreshold(loudness, env);
+  const silent = silences(env, { threshold });
   const shots = storyboard?.shots ?? [];
   const accents = cutAccents(env, shots.slice(1).map(s => s.from));
   const endingLevel = levelBetween(env, Math.max(0, audioEnd - 0.1), audioEnd);
@@ -155,14 +164,14 @@ export async function analyzeAudio(file, { manifest, storyboard, output, label }
   const image = await waveform(env, path.join(output, 'waveform.png'), { duration, shots, silent, accents, title });
   return {
     ok: checks.every(c => c.ok), file, hasAudio: true, target, loudness, checks, advice: audioAdvice(loudness, target),
-    silences: silent, endingLevelDb: endingLevel,
+    silenceThresholdDb: threshold, silences: silent, endingLevelDb: endingLevel,
     shots: shots.map(s => ({ index: s.index, name: s.name, from: s.from, to: s.to, levelDb: levelBetween(env, s.from, s.to), sound: s.sound ?? null })),
     cuts: accents, waveform: image, warnings,
     scope: 'Loudness from ffmpeg ebur128; levels, silences, and cut accents from a mono 8 kHz envelope. Evidence only: listening is still required.',
   };
 }
 
-export async function audioReport(project, format, input) {
+export async function audioReport(project, format, input, { master = false } = {}) {
   const file = input ? path.resolve(input) : path.join(project.root, 'out', `${format}.mp4`);
   try { await access(file); }
   catch { throw new Error(input ? `Audio input not found: ${file}` : `No export at ${file}; run render first or pass --input <file>`); }
@@ -170,8 +179,52 @@ export async function audioReport(project, format, input) {
   const parent = path.join(project.root, 'reviews');
   await mkdir(parent, { recursive: true });
   const output = await mkdtemp(path.join(parent, `audio-${format}-`));
+  const mastering = master ? await masterAudio(file, project.manifest) : undefined;
   const result = await analyzeAudio(file, { manifest: project.manifest, storyboard, output, label: input ? path.basename(file) : format });
-  const report = { format, ...result, audioReview: 'pending' };
+  const report = { format, ...result, ...(mastering ? { mastering, warnings: [...mastering.warnings, ...result.warnings] } : {}), audioReview: 'pending' };
   await writeJson(path.join(output, 'report.json'), report);
   return { ...report, report: path.join(output, 'report.json') };
+}
+
+export async function measureLoudness(file) {
+  const measured = await run('ffmpeg', ['-hide_banner', '-nostats', '-i', file, '-map', '0:a:0', '-af', 'ebur128=peak=true+sample', '-f', 'null', '-'], { quiet: true });
+  return parseLoudness(measured.stderr);
+}
+
+export function parseNormalization(stderr) {
+  const matches = [...stderr.matchAll(/\{\s*"input_i"[\s\S]*?\}/g)];
+  if (!matches.length) throw new Error('ffmpeg did not report loudnorm measurements');
+  const values = JSON.parse(matches.at(-1)[0]);
+  for (const key of ['input_i', 'input_tp', 'input_lra', 'input_thresh', 'target_offset']) {
+    values[key] = Number(values[key]);
+    if (!Number.isFinite(values[key])) throw new Error('Audio is silent or too quiet for loudnorm; revise the source mix.');
+  }
+  return values;
+}
+
+export function masteringFilter(target, measured) {
+  const ceiling = target.truePeak - 0.5;
+  return `loudnorm=I=${target.integrated}:TP=${Math.max(-9, ceiling)}:LRA=11:measured_I=${measured.input_i}:measured_TP=${measured.input_tp}:measured_LRA=${measured.input_lra}:measured_thresh=${measured.input_thresh}:offset=${measured.target_offset}:linear=true,aresample=192000,alimiter=limit=${10 ** (ceiling / 20)}:attack=5:release=50:level=disabled:latency=1,aresample=48000`;
+}
+
+export async function masterAudio(file, manifest) {
+  if (path.extname(file).toLowerCase() !== '.mp4') throw new Error('--master requires a rendered MP4; it replaces that file atomically.');
+  const metadata = await probe(file);
+  if (!metadata.streams?.some(s => s.codec_type === 'video')) throw new Error('Mastering requires an MP4 with a video stream.');
+  if (!metadata.streams.some(s => s.codec_type === 'audio')) throw new Error('Cannot master a file with no audio stream.');
+  const target = { ...defaultLoudness, ...manifest.loudness }, before = await measureLoudness(file);
+  if (before.integrated === null || before.integrated <= -70) throw new Error('Audio is silent or below the loudness gate; revise the source mix.');
+  const gainDb = round(target.integrated - before.integrated), warnings = [];
+  if (gainDb > 18) warnings.push(`Normalization needs about ${gainDb} dB of gain; the mix may be too quiet or sparse. Inspect the source and listen for raised noise.`);
+  process.stderr.write(`Mastering ${path.basename(file)}: ${before.integrated} → ${target.integrated} LUFS; video stream copied.\n`);
+  const first = await run('ffmpeg', ['-hide_banner', '-nostats', '-i', file, '-map', '0:a:0', '-af', `loudnorm=I=${target.integrated}:TP=${Math.max(-9, target.truePeak - 0.5)}:LRA=11:print_format=json`, '-f', 'null', '-'], { quiet: true });
+  const measured = parseNormalization(first.stderr);
+  const temp = path.join(path.dirname(file), `.${path.basename(file)}-${randomUUID()}.mp4`);
+  try {
+    await run('ffmpeg', ['-hide_banner', '-v', 'error', '-y', '-i', file, '-map', '0:v', '-map', '0:a:0', '-map_metadata', '0', '-c:v', 'copy', '-af', masteringFilter(target, measured), '-c:a', 'aac', '-b:a', '320k', '-movflags', '+faststart', temp], { quiet: true });
+    const after = await measureLoudness(temp), checks = audioChecks(after, target);
+    if (!checks.every(c => c.ok)) throw new Error(`Mastered audio missed target (${after.integrated} LUFS, ${after.truePeak} dBTP); previous MP4 preserved. Revise the mix or target.`);
+    await rename(temp, file);
+    return { before, after, target, gainDb, checks, video: 'stream-copy', method: 'two-pass loudnorm; 192 kHz limiter with makeup gain disabled; 0.5 dB encoding headroom; measured AAC delivery', warnings };
+  } finally { await rm(temp, { force: true }); }
 }

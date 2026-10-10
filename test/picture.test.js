@@ -58,3 +58,76 @@ test('an encoded film yields its frozen stretch, black flash, and an activity ch
   assert.equal(result.warnings.length, 2);
   assert.ok((await readFile(result.chart)).length > 1000);
 });
+
+test('one-frame pops and flashes require two spikes and matching neighbours; a cut is exempt', async () => {
+  const { transientFindings } = await import('../src/picture.js');
+  const rate = 30, luma = Array(60).fill(100), adjacent = Array(60).fill(2), bridge = Array(60).fill(4);
+  adjacent[0] = bridge[0] = bridge[1] = null;
+  adjacent[15] = adjacent[16] = 60;
+  bridge[16] = 1;
+  let result = transientFindings({ rate, luma, adjacent, bridge });
+  assert.deepEqual(result.map(f => [f.frame, f.at, f.type]), [[15, 0.5, 'pop']]);
+  luma[15] = 240;
+  assert.equal(transientFindings({ rate, luma, adjacent, bridge })[0].type, 'flash');
+  adjacent[16] = 2;
+  assert.deepEqual(transientFindings({ rate, luma, adjacent, bridge }, [{ from: 0.5 }]), []);
+  adjacent[16] = 60;
+  result = transientFindings({ rate, luma, adjacent, bridge }, [{ from: 0.5 }]);
+  assert.equal(result[0].frame, 15);
+  assert.equal(result[0].adjacentToCut, true);
+  // Last frame before the cut still gets inspected too.
+  adjacent[14] = 60;
+  bridge[15] = 1;
+  adjacent[16] = 2;
+  assert.equal(transientFindings({ rate, luma, adjacent, bridge }, [{ from: 0.5 }])[0].frame, 14);
+  // Fast continuing movement has dissimilar neighbours, unlike an isolated pop.
+  adjacent[14] = 2;
+  adjacent[16] = 60;
+  bridge[16] = 80;
+  assert.deepEqual(transientFindings({ rate, luma, adjacent, bridge }), []);
+});
+
+test('loop seams allow ordinary motion but report jumps and changes in signed motion', async () => {
+  const { loopFindings } = await import('../src/picture.js');
+  assert.deepEqual(loopFindings({ seam: 3, entering: 3, leaving: 3, velocityDifference: 0 }).warnings, []);
+  assert.equal(loopFindings({ seam: 80, entering: 2, leaving: 2, velocityDifference: 0 }).jump, true);
+  assert.equal(loopFindings({ seam: 4, entering: 4, leaving: 4, velocityDifference: 8 }).velocityMismatch, true);
+  assert.equal(loopFindings({ seam: 0, entering: 0, leaving: 0, velocityDifference: 0 }).velocityMismatch, false);
+});
+
+test('native-rate decoding finds a single-frame flash above 30 fps and optionally checks the loop', async t => {
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'motion-picture-pop-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'pop.mp4');
+  await run('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=gray:s=160x90:d=1:r=60', '-vf', "drawbox=color=white:t=fill:enable='eq(n,31)'", '-c:v', 'libx264', '-pix_fmt', 'yuv420p', file], { quiet: true });
+  const result = await analyzePicture(file, { manifest: { duration: 1, fps: 60, loop: true }, output: dir, label: 'pop fixture' });
+  assert.equal(result.rate, 60);
+  assert.deepEqual(result.transients.map(f => [f.frame, f.at, f.type]), [[31, 0.516667, 'flash']]);
+  assert.equal(result.loop.jump, false);
+  assert.equal(result.loop.velocityMismatch, false);
+});
+
+test('a pop in an unchanged region adjacent to a hard cut is measured without flagging the cut', async () => {
+  const { isolatedChange, transientFindings } = await import('../src/picture.js');
+  const width = 32, height = 16, before = new Uint8Array(width * height).fill(100), clean = Uint8Array.from(before), pop = Uint8Array.from(before);
+  // Left half changes at the cut; the pop occupies a block in the unchanged right half.
+  for (let y = 0; y < height; y++) for (let x = 0; x < 16; x++) clean[y * width + x] = 240;
+  for (let y = 0; y < 8; y++) for (let x = 24; x < 32; x++) pop[y * width + x] = 200;
+  assert.equal(isolatedChange(before, before, clean, width, height), 0);
+  assert.equal(isolatedChange(before, pop, clean, width, height), 100);
+  const adjacent = Array(40).fill(2), bridge = Array(40).fill(4), isolated = Array(40).fill(0), luma = Array(40).fill(100);
+  adjacent[19] = 100; adjacent[20] = 140; bridge[20] = 140; isolated[19] = 100;
+  const result = transientFindings({ rate: 30, luma, adjacent, bridge, isolated }, [{ from: 20 / 30 }]);
+  assert.deepEqual(result.map(f => [f.frame, f.adjacentToCut]), [[19, true]]);
+});
+
+test('opening-state pops and bright empty gaps are warnings without requiring black pixels', () => {
+  const count = 90, luma = Array(count).fill(230), change = Array(count).fill(2), adjacent = Array(count).fill(1), detail = Array(count).fill(25), isolated = Array(count).fill(0);
+  adjacent[0] = null; adjacent[1] = 50; isolated[0] = 50;
+  detail.fill(0, 60, 72);
+  const result = pictureFindings({ rate: 30, luma, change, adjacent, detail, isolated }, { duration: 3 });
+  assert.equal(result.transients[0].frame, 0);
+  assert.equal(result.transients[0].endpoint, true);
+  assert.deepEqual(result.blank, [{ from: 2, to: 2.4 }]);
+  assert.equal(result.dark.length, 0);
+});

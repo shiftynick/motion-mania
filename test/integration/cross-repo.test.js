@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile, rm, access } from 'node:fs/promises';
+import { cp, mkdtemp, readFile, writeFile, rm, access } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { run } from '../../src/process.js';
@@ -58,4 +58,35 @@ test('an external repo can initialize, caption, review, render, measure audio an
   const failed = await invoke(['render', ...options], true);
   assert.equal(failed.code, 1);
   assert.deepEqual(await readFile(output), previous);
+});
+
+test('the planted fixture exposes its automated defects and a settled overflow still fails verification', { timeout: 240_000 }, async t => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'motion-defects-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const fixture = path.resolve('test/fixtures/flawed');
+  for (const file of ['src', 'assets', 'motion.json', 'storyboard.json', 'brief.md', 'brand.json']) await cp(path.join(fixture, file), path.join(root, file), { recursive: true });
+  const { loadProject } = await import('../../src/project.js');
+  const { plan } = await import('../../src/storyboard.js');
+  const { lint } = await import('../../src/lint.js');
+  const { review, verify } = await import('../../src/operations.js');
+  const { pictureReport } = await import('../../src/picture.js');
+  const project = await loadProject(root), planned = await plan(project);
+  assert.ok(planned.warnings.some(w => w.includes('Reading') && w.includes('short')));
+  for (const category of ['metric', 'version']) assert.ok(planned.copyProvenance.findings.some(f => f.category === category));
+  assert.ok(planned.sourceLint.findings.some(f => f.code === 'linear_spatial_ease'));
+  // The planted full-beat mismatch is within one frame of an accepted quarter-beat subdivision.
+  assert.ok(Math.abs(planned.beatGrid.find(b => b.shot === 3).offsetFrames) <= 1);
+  assert.ok((await lint(project, 'vertical')).findings.some(f => f.code === 'linear_spatial_ease'));
+  assert.equal((await verify(project, 'vertical')).ok, true);
+  const reviewed = await review(project, 'vertical', { draft: true });
+  assert.ok(reviewed.safeArea.findings.some(f => f.selector === 'p.unsafe' && f.edges.includes('bottom')));
+  for (const picture of [reviewed.picture, await pictureReport(project, 'vertical', reviewed.draft)]) {
+    assert.ok(picture.transients.some(f => f.frame === 0 && f.endpoint));
+    assert.ok(picture.blank.some(f => f.from <= 2 && f.to >= 2.4));
+  }
+  const css = path.join(root, 'src/scene.css');
+  await writeFile(css, `${await readFile(css, 'utf8')}\nh1{font-size:40vmin;white-space:nowrap}\n`);
+  const broken = await verify(project, 'vertical');
+  assert.equal(broken.ok, false);
+  assert.ok(broken.findings.some(f => f.code === 'text_box_overflow' && f.severity === 'error'));
 });

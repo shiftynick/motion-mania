@@ -1,0 +1,23 @@
+import {execFile} from 'node:child_process';
+import {mkdir,readFile,writeFile,rm} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {promisify} from 'node:util';
+const exec=promisify(execFile), asset=n=>fileURLToPath(new URL('../assets/'+n,import.meta.url));
+const backend=fileURLToPath(new URL('../../../node_modules/hyperframes/bin/hyperframes.mjs',import.meta.url));
+const board=JSON.parse(await readFile(new URL('../storyboard.json',import.meta.url)));
+const VOICE='bm_george', SPEED=0.84;
+const lines=board.shots.filter(s=>s.narration).map(s=>({at:s.from+0.38,text:s.narration}));
+await mkdir(asset('voice-takes'),{recursive:true});
+if(process.argv.includes('--takes')) for(const [i,l] of lines.entries()) await exec(process.execPath,[backend,'tts',l.text,'-v',VOICE,'-s',String(SPEED),'-o',asset(`voice-takes/line-${i+1}.wav`),'--json'],{env:{...process.env,HYPERFRAMES_NO_TELEMETRY:'1'},maxBuffer:1<<22});
+const duration=async p=>Number((await exec('ffprobe',['-v','error','-show_entries','format=duration','-of','csv=p=0',p])).stdout);
+const takes=await Promise.all(lines.map(async(l,i)=>({...l,duration:await duration(asset(`voice-takes/line-${i+1}.wav`))})));
+const inputs=lines.flatMap((_,i)=>['-i',asset(`voice-takes/line-${i+1}.wav`)]);
+const filters=lines.map((l,i)=>`[${i}:a]aresample=48000,adelay=${Math.round(l.at*1000)}[v${i}]`).join(';')+';'+lines.map((_,i)=>`[v${i}]`).join('')+`amix=inputs=${lines.length}:normalize=0,apad=whole_dur=40,atrim=0:40`;
+const raw=asset('narration-raw.wav'),out=asset('narration.wav');
+await exec('ffmpeg',['-v','error','-y',...inputs,'-filter_complex',filters,'-ac','1',raw]);
+async function measure(p){const r=await exec('ffmpeg',['-hide_banner','-nostats','-i',p,'-af','ebur128=peak=true','-f','null','-']);const s=r.stderr.slice(r.stderr.lastIndexOf('Summary:'));return {integrated:Number(s.match(/I:\s+(-?[\d.]+)/)[1]),truePeak:Number(s.match(/True peak:\s+Peak:\s+(-?[\d.]+)/)[1])};}
+const before=await measure(raw),gain=-18-before.integrated;
+await exec('ffmpeg',['-v','error','-y','-i',raw,'-af',`volume=${gain}dB,alimiter=limit=0.6:attack=2:release=60:level=disabled`,'-ar','48000',out]);
+await rm(raw);
+const result={voice:VOICE,speed:SPEED,lines:takes,before,gain,after:await measure(out)};
+await writeFile(asset('narration-analysis.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result,null,2));

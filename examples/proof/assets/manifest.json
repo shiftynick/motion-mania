@@ -1,0 +1,306 @@
+{
+  "assets": [
+    {
+      "path": "cues.wav",
+      "origin": "Original seeded Motion Mania sound-kit synthesis",
+      "generator": {
+        "tool": "motion-mania sound / cues.json",
+        "model": "sound-kit deterministic synthesis seed 731",
+        "prompt": "Sparse optical accents at the picture actions; measured absolute cue peaks"
+      },
+      "usage": "Designed effect stem"
+    },
+    {
+      "path": "evidence/after.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/before.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/data.js",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/defect.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/layout-landscape.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/layout-vertical.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/master-report.json",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/picture-report.json",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/plan-report.json",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/repaired.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/seek-landscape.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/seek-vertical.jpg",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "evidence/sources.json",
+      "origin": "Measured / captured from Proof controlled draft and own layout captures",
+      "generator": {
+        "tool": "scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg",
+        "model": "hyperframes@0.8.145 and working-tree Motion Mania",
+        "prompt": "Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills"
+      },
+      "usage": "Actual project evidence; evidence/sources.json links inputs"
+    },
+    {
+      "path": "fonts/InstrumentSerif-Italic.ttf",
+      "origin": "Vendored InstrumentSerif from existing repository OFL assets",
+      "license": "fonts/InstrumentSerif-OFL.txt",
+      "usage": "Local typography"
+    },
+    {
+      "path": "fonts/Inter-Variable.ttf",
+      "origin": "Vendored Inter from existing repository OFL assets",
+      "license": "fonts/Inter-OFL.txt",
+      "usage": "Local typography"
+    },
+    {
+      "path": "fonts/JetBrainsMono-Variable.ttf",
+      "origin": "Vendored JetBrainsMono from existing repository OFL assets",
+      "license": "fonts/JetBrainsMono-OFL.txt",
+      "usage": "Local typography"
+    },
+    {
+      "path": "narration-analysis.json",
+      "origin": "Generated analysis for this film",
+      "generator": {
+        "tool": "scripts/voice.mjs",
+        "model": "FFmpeg EBU R128",
+        "prompt": "Measure the original audio stem"
+      },
+      "usage": "Reproduction and measurement record"
+    },
+    {
+      "path": "narration.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    },
+    {
+      "path": "score-analysis.json",
+      "origin": "Generated analysis for this film",
+      "generator": {
+        "tool": "scripts/score.mjs",
+        "model": "FFmpeg EBU R128",
+        "prompt": "Measure the original audio stem"
+      },
+      "usage": "Reproduction and measurement record"
+    },
+    {
+      "path": "score.wav",
+      "origin": "Original code composition for Proof",
+      "generator": {
+        "tool": "Node.js / scripts/score.mjs",
+        "model": "Deterministic stereo synthesis, seed 731, 120 BPM",
+        "prompt": "Optical bench: evolving minor ninth harmony, syncopated five-note FM motif, dry drum arrangement, suspended-to-major final resolution"
+      },
+      "usage": "Original score"
+    },
+    {
+      "path": "vendor/CustomEase.min.js",
+      "origin": "Copied from installed gsap 3.15.0 package; original headers preserved",
+      "license": "vendor/GSAP-LICENSE.txt",
+      "usage": "Deterministic paused timeline and verified plugins"
+    },
+    {
+      "path": "vendor/DrawSVGPlugin.min.js",
+      "origin": "Copied from installed gsap 3.15.0 package; original headers preserved",
+      "license": "vendor/GSAP-LICENSE.txt",
+      "usage": "Deterministic paused timeline and verified plugins"
+    },
+    {
+      "path": "vendor/MorphSVGPlugin.min.js",
+      "origin": "Copied from installed gsap 3.15.0 package; original headers preserved",
+      "license": "vendor/GSAP-LICENSE.txt",
+      "usage": "Deterministic paused timeline and verified plugins"
+    },
+    {
+      "path": "vendor/SplitText.min.js",
+      "origin": "Copied from installed gsap 3.15.0 package; original headers preserved",
+      "license": "vendor/GSAP-LICENSE.txt",
+      "usage": "Deterministic paused timeline and verified plugins"
+    },
+    {
+      "path": "vendor/gsap.min.js",
+      "origin": "Copied from installed gsap 3.15.0 package; original headers preserved",
+      "license": "vendor/GSAP-LICENSE.txt",
+      "usage": "Deterministic paused timeline and verified plugins"
+    },
+    {
+      "path": "voice-takes/line-1.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    },
+    {
+      "path": "voice-takes/line-2.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    },
+    {
+      "path": "voice-takes/line-3.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    },
+    {
+      "path": "voice-takes/line-4.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    },
+    {
+      "path": "voice-takes/line-5.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    },
+    {
+      "path": "voice-takes/line-6.wav",
+      "origin": "Generated locally for Proof",
+      "generator": {
+        "tool": "HyperFrames 0.8.145 tts",
+        "model": "Kokoro-82M / kokoro-v1.0",
+        "voice": "bm_george",
+        "speed": 0.84,
+        "prompt": "A film can look right, and still be wrong. So this film checks its own sound, and masters the result. Its cuts sit on the score’s beat grid. A planted one frame glitch is caught in the draft, then removed. Every number you see leads back to this film’s evidence. The motion is checked forwards and backwards, in both layouts."
+      },
+      "usage": "Original narration take / assembly; scripts/voice.mjs"
+    }
+  ]
+}

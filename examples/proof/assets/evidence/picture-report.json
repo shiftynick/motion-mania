@@ -1,0 +1,157 @@
+{
+  "ok": true,
+  "command": "picture",
+  "project": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project",
+  "results": [
+    {
+      "ok": true,
+      "format": "landscape",
+      "file": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project/out/landscape.mp4",
+      "rate": 30,
+      "transients": [
+        {
+          "frame": 24,
+          "at": 0.8,
+          "type": "pop",
+          "isolatedChange": 126.59,
+          "entering": 126.59,
+          "leaving": 126.92,
+          "neighbourChange": 4.45,
+          "baseline": 5.27,
+          "adjacentToCut": false
+        }
+      ],
+      "blank": [],
+      "holds": [
+        {
+          "from": 3.53,
+          "to": 4.23,
+          "seconds": 0.7,
+          "shots": [
+            "The challenge"
+          ],
+          "final": false,
+          "intended": false
+        },
+        {
+          "from": 21.23,
+          "to": 22.5,
+          "seconds": 1.27,
+          "shots": [
+            "The missing frame"
+          ],
+          "final": false,
+          "intended": true
+        },
+        {
+          "from": 24.77,
+          "to": 25.37,
+          "seconds": 0.6,
+          "shots": [
+            "Trace the claim"
+          ],
+          "final": false,
+          "intended": false
+        },
+        {
+          "from": 27.5,
+          "to": 28.47,
+          "seconds": 0.97,
+          "shots": [
+            "Trace the claim"
+          ],
+          "final": false,
+          "intended": false
+        },
+        {
+          "from": 36.37,
+          "to": 40,
+          "seconds": 3.63,
+          "shots": [
+            "The invitation"
+          ],
+          "final": true,
+          "intended": true
+        }
+      ],
+      "heldSeconds": 7.17,
+      "dark": [
+        {
+          "from": 28.67,
+          "to": 28.83,
+          "minLuma": 7.5
+        }
+      ],
+      "medianLuma": 15.1,
+      "shots": [
+        {
+          "index": 1,
+          "name": "The challenge",
+          "from": 0,
+          "to": 5,
+          "heldSeconds": 0.7,
+          "meanLuma": 14.6
+        },
+        {
+          "index": 2,
+          "name": "Measured sound",
+          "from": 5,
+          "to": 11,
+          "heldSeconds": 0,
+          "meanLuma": 16.8
+        },
+        {
+          "index": 3,
+          "name": "The pulse",
+          "from": 11,
+          "to": 16,
+          "heldSeconds": 0,
+          "meanLuma": 26.2
+        },
+        {
+          "index": 4,
+          "name": "The missing frame",
+          "from": 16,
+          "to": 23,
+          "heldSeconds": 1.27,
+          "meanLuma": 13.9
+        },
+        {
+          "index": 5,
+          "name": "Trace the claim",
+          "from": 23,
+          "to": 29,
+          "heldSeconds": 1.57,
+          "meanLuma": 11.1
+        },
+        {
+          "index": 6,
+          "name": "Both layouts",
+          "from": 29,
+          "to": 35,
+          "heldSeconds": 0,
+          "meanLuma": 16.6
+        },
+        {
+          "index": 7,
+          "name": "The invitation",
+          "from": 35,
+          "to": 40,
+          "heldSeconds": 3.63,
+          "meanLuma": 11.5
+        }
+      ],
+      "warnings": [
+        "Possible one-frame pop at 0.8s (frame 24). Inspect adjacent frames for an immediate-render mistake or an intentional flash.",
+        "Picture is frozen from 3.53s to 4.23s (0.7s, The challenge). Give it a reason to hold (mark the shot's \"hold\" in the storyboard), keep something alive, or shorten it.",
+        "Picture is frozen from 24.77s to 25.37s (0.6s, Trace the claim). Give it a reason to hold (mark the shot's \"hold\" in the storyboard), keep something alive, or shorten it.",
+        "Picture is frozen from 27.5s to 28.47s (0.97s, Trace the claim). Give it a reason to hold (mark the shot's \"hold\" in the storyboard), keep something alive, or shorten it.",
+        "The film is mostly dark (median luma 15.1%); near-black ranges are listed but not flagged."
+      ],
+      "chart": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project/reviews/picture-landscape-430oLw/activity.png",
+      "scope": "Frames compared 0.1s apart on a 160px grayscale copy at 30 fps. Frozen means no 8×8 block changes by 1/255 on average; near-black means mean luma below 7.8%. Single-frame spikes use native-rate adjacent frames, a >3× local baseline and >12/255 block-change floor, with resembling neighbours in the affected block; declared cut edges are omitted from the local baseline. Opening-state candidates compare frame 0 with two following frames; they have no preceding-frame evidence. Nearly uniform means grayscale standard deviation below 1/255 for at least two frames, excluding near-black. Yellow chart markers show pop candidates. Loop checks estimate signed pixel motion, not object trajectories. Grayscale sampling can miss tiny or colour-only defects; the final frame still needs inspection. Evidence only: one small moving detail keeps a frame from counting as frozen, and a moving frame can still feel slow.",
+      "creativeReview": "pending",
+      "report": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project/reviews/picture-landscape-430oLw/report.json"
+    }
+  ]
+}

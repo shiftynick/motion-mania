@@ -1,0 +1,173 @@
+{
+  "format": "landscape",
+  "ok": true,
+  "file": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project/out/landscape.mp4",
+  "hasAudio": true,
+  "target": {
+    "integrated": -14,
+    "truePeak": -1,
+    "tolerance": 0.5
+  },
+  "loudness": {
+    "integrated": -14,
+    "range": 5.9,
+    "samplePeak": -1.5,
+    "truePeak": -1.5
+  },
+  "checks": [
+    {
+      "name": "integratedLoudness",
+      "ok": true,
+      "measured": -14,
+      "target": "-14 ±0.5 LUFS"
+    },
+    {
+      "name": "truePeak",
+      "ok": true,
+      "measured": -1.5,
+      "target": "<= -1 dBTP"
+    }
+  ],
+  "advice": "Within the loudness target.",
+  "silenceThresholdDb": -50,
+  "silences": [],
+  "endingLevelDb": -64.4,
+  "shots": [
+    {
+      "index": 1,
+      "name": "The challenge",
+      "from": 0,
+      "to": 5,
+      "levelDb": -14.5,
+      "sound": "A low opening pulse and glass harmonic; first phrase has room to breathe."
+    },
+    {
+      "index": 2,
+      "name": "Measured sound",
+      "from": 5,
+      "to": 11,
+      "levelDb": -12.8,
+      "sound": "Bass and dry percussion enter. Voice band carve preserves the low pulse."
+    },
+    {
+      "index": 3,
+      "name": "The pulse",
+      "from": 11,
+      "to": 16,
+      "levelDb": -13.3,
+      "sound": "Full syncopated groove; a clean kit tick marks each plate."
+    },
+    {
+      "index": 4,
+      "name": "The missing frame",
+      "from": 16,
+      "to": 23,
+      "levelDb": -14.3,
+      "sound": "The groove thins to a heartbeat; a dry tick on detection and a soft landing on repair."
+    },
+    {
+      "index": 5,
+      "name": "Trace the claim",
+      "from": 23,
+      "to": 29,
+      "levelDb": -13.3,
+      "sound": "Arpeggio returns in a higher register with one bright source-lock accent."
+    },
+    {
+      "index": 6,
+      "name": "Both layouts",
+      "from": 29,
+      "to": 35,
+      "levelDb": -12.2,
+      "sound": "The largest harmonic lift; rhythmic elements peel away into the resolution."
+    },
+    {
+      "index": 7,
+      "name": "The invitation",
+      "from": 35,
+      "to": 40,
+      "levelDb": -20.3,
+      "sound": "Suspended harmony resolves to major; no narration; a long clean decay."
+    }
+  ],
+  "cuts": [
+    {
+      "cut": 5,
+      "accentAt": 5,
+      "offsetMs": 0,
+      "riseDb": 14.3
+    },
+    {
+      "cut": 11,
+      "accentAt": 11,
+      "offsetMs": 0,
+      "riseDb": 10.4
+    },
+    {
+      "cut": 16,
+      "accentAt": null,
+      "offsetMs": null,
+      "riseDb": null
+    },
+    {
+      "cut": 23,
+      "accentAt": 23,
+      "offsetMs": 0,
+      "riseDb": 19.3
+    },
+    {
+      "cut": 29,
+      "accentAt": 29,
+      "offsetMs": 0,
+      "riseDb": 13.8
+    },
+    {
+      "cut": 35,
+      "accentAt": null,
+      "offsetMs": null,
+      "riseDb": null
+    }
+  ],
+  "waveform": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project/reviews/audio-landscape-kQyycX/waveform.png",
+  "warnings": [],
+  "scope": "Loudness from ffmpeg ebur128; levels, silences, and cut accents from a mono 8 kHz envelope. Evidence only: listening is still required.",
+  "mastering": {
+    "before": {
+      "integrated": -15.5,
+      "range": 6.1,
+      "samplePeak": -2.6,
+      "truePeak": -2.5
+    },
+    "after": {
+      "integrated": -14,
+      "range": 5.9,
+      "samplePeak": -1.5,
+      "truePeak": -1.5
+    },
+    "target": {
+      "integrated": -14,
+      "truePeak": -1,
+      "tolerance": 0.5
+    },
+    "gainDb": 1.5,
+    "checks": [
+      {
+        "name": "integratedLoudness",
+        "ok": true,
+        "measured": -14,
+        "target": "-14 ±0.5 LUFS"
+      },
+      {
+        "name": "truePeak",
+        "ok": true,
+        "measured": -1.5,
+        "target": "<= -1 dBTP"
+      }
+    ],
+    "video": "stream-copy",
+    "method": "two-pass loudnorm; 192 kHz limiter with makeup gain disabled; 0.5 dB encoding headroom; measured AAC delivery",
+    "warnings": []
+  },
+  "audioReview": "pending",
+  "report": "/home/shifty/Work/motion-mania/examples/proof/.motion/controlled-project/reviews/audio-landscape-kQyycX/report.json"
+}

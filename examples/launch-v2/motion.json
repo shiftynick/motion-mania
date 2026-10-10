@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "Motion Mania — make the next thing move",
-  "engine": "hyperframes@0.8.81",
+  "engine": "hyperframes@0.8.145",
   "duration": 15,
   "fps": 30,
   "audioRequired": true,

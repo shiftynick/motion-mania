@@ -1,0 +1,14 @@
+{
+  "name": "motion-mania-marketplace",
+  "owner": {
+    "name": "Motion Mania contributors"
+  },
+  "plugins": [
+    {
+      "name": "motion-mania",
+      "source": "./",
+      "description": "A skill for product films with rendered review evidence."
+    }
+  ],
+  "description": "A product-film skill with local rendering and review evidence."
+}

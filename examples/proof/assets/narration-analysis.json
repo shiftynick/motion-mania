@@ -1,0 +1,45 @@
+{
+  "voice": "bm_george",
+  "speed": 0.84,
+  "lines": [
+    {
+      "at": 0.38,
+      "text": "A film can look right, and still be wrong.",
+      "duration": 3.242667
+    },
+    {
+      "at": 5.38,
+      "text": "So this film checks its own sound, and masters the result.",
+      "duration": 4.8
+    },
+    {
+      "at": 11.38,
+      "text": "Its cuts sit on the score’s beat grid.",
+      "duration": 3.072
+    },
+    {
+      "at": 16.38,
+      "text": "A planted one frame glitch is caught in the draft, then removed.",
+      "duration": 4.885333
+    },
+    {
+      "at": 23.38,
+      "text": "Every number you see leads back to this film’s evidence.",
+      "duration": 4.266667
+    },
+    {
+      "at": 29.38,
+      "text": "The motion is checked forwards and backwards, in both layouts.",
+      "duration": 4.458667
+    }
+  ],
+  "before": {
+    "integrated": -21.4,
+    "truePeak": -3.5
+  },
+  "gain": 3.3999999999999986,
+  "after": {
+    "integrated": -18.2,
+    "truePeak": -4.3
+  }
+}

@@ -24,6 +24,7 @@ tl.to('#hero',{x:0,y:portrait?px(60):px(110),scaleX:1,scaleY:1,rotation:0,backgr
 tl.to('#code-face',{opacity:1,duration:.2},2.5);
 tl.fromTo('#code-heading h1',{y:30*u},{y:0,duration:.4,ease:'power3.out'},2.5);
 tl.fromTo('.code-row',{opacity:0,x:25*u},{opacity:1,x:0,duration:.16,stagger:.12,ease:'power2.out'},2.7);
+// motion-mania-ignore linear_spatial_ease: the caret blinks at a fixed cadence
 tl.fromTo('.code-caret',{scaleX:0},{scaleX:1,duration:.1,repeat:7,yoyo:true,ease:'none'},3.25);
 tl.to('#code-face',{opacity:0,scale:.94,duration:.25},4.2);
 tl.to('#motion-face',{opacity:1,duration:.25},4.35);
@@ -63,6 +64,6 @@ tl.to('#wipe',{scale:1,duration:.6,ease:'power3.inOut'},11.65);
 tl.set('.center-layer',{opacity:0},12.05);
 tl.fromTo('.brand-line span',{yPercent:110},{yPercent:0,duration:.65,stagger:.14,ease:'power4.out'},12);
 tl.fromTo('.signoff',{opacity:0,y:35*u},{opacity:1,y:0,duration:.5,ease:'power3.out'},12.8);
-tl.fromTo('.signoff-arrow',{x:-25*u,y:25*u},{x:0,y:0,duration:.5,ease:'power3.out'},13.15);
+tl.fromTo('.signoff-arrow',{x:-25*u,y:0},{x:0,y:0,duration:.5,ease:'power3.out'},13.15);
 window.__timelines=window.__timelines||{};
 window.__timelines['motion-mania']=tl;

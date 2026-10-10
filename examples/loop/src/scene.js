@@ -116,7 +116,9 @@ tl.set('#brief .doc', { opacity: 1 }, 0);
 tl.set(frame, { ...rect(at.benefit), opacity: 0, backgroundColor: 'rgba(255, 90, 43, 0)', scale: 1, transformOrigin: `${docCenter.x - at.benefit.x}px ${docCenter.y - at.benefit.y}px` }, 0);
 tl.set(twin, { ...rect(at.verdict), opacity: 0 }, 0);
 $$('#brief .line').slice(3).forEach((line, i) => tl.fromTo(line, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.45, ease: 'power1.out' }, 0.3 + i * 0.5));
+// motion-mania-ignore linear_spatial_ease: synchronized slow camera push while reading the brief
 tl.fromTo('#brief .doc', { scale: 1 }, { scale: pushed(PUSH_END), duration: PUSH_END, ease: 'none' }, 0);
+// motion-mania-ignore linear_spatial_ease: selection frame follows the same deliberate camera push
 tl.fromTo(frame, { scale: pushed(1.45) }, { scale: pushed(PUSH_END), duration: PUSH_END - 1.45, ease: 'none', immediateRender: false }, 1.45);
 tl.to(frame, { opacity: 1, backgroundColor: 'rgba(255, 90, 43, .12)', duration: 0.35, ease: 'power2.out' }, 1.45);
 tl.to('#brief .doc', { x: -40, opacity: 0, duration: 0.3, ease: 'power2.in' }, 5.6);

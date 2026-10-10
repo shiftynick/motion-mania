@@ -1,0 +1,33 @@
+{
+  "controlledDraft": "reviews/controlled-draft.mp4",
+  "plant": {
+    "at": 0.8,
+    "duration": 0.03333333333333333,
+    "frame": 24,
+    "method": "Isolated project copy: rose region opacity for one frame; final source never contains these sets"
+  },
+  "reports": {
+    "picture": "picture-report.json",
+    "master": "master-report.json",
+    "grid": "plan-report.json"
+  },
+  "crop": {
+    "x": 984,
+    "y": 240,
+    "width": 864,
+    "height": 634,
+    "reason": "Ring only; remove nested titles and captions"
+  },
+  "frames": {
+    "before": 0.766666667,
+    "defect": 0.8,
+    "after": 0.833333333,
+    "repaired": 0.8,
+    "layouts": 3.7
+  },
+  "claims": {
+    "sound": "master-report.json: mastering.before / mastering.after",
+    "pulse": "plan-report.json: beatGrid",
+    "defect": "picture-report.json: results[0].transients"
+  }
+}

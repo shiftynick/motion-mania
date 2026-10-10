@@ -58,6 +58,7 @@ tl.fromTo(stage, { scale: 1 }, { scale: 1.1, duration: CUT - 0.05, ease: 'power1
 tl.fromTo('.alarm', { opacity: 0 }, { opacity: 1, duration: 2, ease: 'power2.in' }, 3.95);
 for (let k = 0; k < 24; k++) {
   const amount = (k + 1) / 24 * 14;
+  // motion-mania-ignore linear_spatial_ease: fixed arithmetic drives the intentional storm shake
   tl.to(stage, { x: (k % 2 ? 1 : -1) * amount * (0.6 + 0.4 * ((k * 7) % 5) / 4), y: (k % 3 - 1) * amount * 0.6, duration: 0.05, ease: 'none' }, 4.75 + k * 0.05);
 }
 tl.to(stage, { x: 0, y: 0, scale: 1, duration: 0.6, ease: 'power2.out' }, CUT);

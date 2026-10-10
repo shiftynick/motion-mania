@@ -16,6 +16,14 @@ npm run check
 
 `npm test` runs fast unit tests. `npm run test:integration` creates a disposable consumer repository and actually captures, verifies, and renders a film, including export failure recovery. `npm run test:package` installs the npm tarball in a temporary consumer directory and checks its CLI, skill, starter, and browser capture. Rendering tests require the external tools; do not skip them for release changes.
 
+## Exercise the review loop
+
+[test/fixtures/flawed](test/fixtures/flawed/README.md) is an intentionally defective six-second film. It renders in both formats; `defects.json` records the planted problems and capture times. Use it to evaluate a check or a fresh critic, then compare findings with the answer key. Keep the answer key out of the critic's context. The fixture is outside the npm `files` allowlist. One integration regression checks the intended automated findings and proves that settled layout errors still fail; it does not require the fixture to become a passing production film.
+
+For skill changes, keep `SKILL.md` short and put depth in references. Treat motion numbers as starting values, and validate plugin recipes with real forward/reverse seek comparisons and frame inspection. Note which plugins and settings were tested. Preserve the demo as an example, not a required style.
+
+The same `skills/motion-mania/` directory feeds the npm copy command, the skills CLI, and the Claude Code plugin. Keep its `metadata.version` and `.claude-plugin/plugin.json` version aligned with `package.json` at release time. Validate distribution manifests with `claude plugin validate .claude-plugin/plugin.json` and `claude plugin validate .claude-plugin/marketplace.json`. Repository plugin manifests do not ship in the npm tarball.
+
 ## Change the toolkit
 
 Keep creative direction in the skill, deterministic mechanics in the CLI, and the rendering engine behind the existing adapter. Successful rendering must never be described as creative approval. Commands return machine-readable results; progress belongs on stderr. Preserve existing projects and their last usable export on failure.

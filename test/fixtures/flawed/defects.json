@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "duration": 6,
+  "fps": 30,
+  "beatGrid": {
+    "bpm": 120,
+    "offset": 0
+  },
+  "defects": [
+    {
+      "id": "immediate-render-pop",
+      "to": 0.03333333333333333,
+      "frames": [
+        0,
+        0.03333333333333333,
+        0.06666666666666667
+      ],
+      "description": "READY is painted early by a future fromTo, then disappears on frame 1; it belongs at 1s.",
+      "from": 0
+    },
+    {
+      "id": "linear-spatial-move",
+      "to": 1.8,
+      "frames": [
+        1,
+        1.2,
+        1.4,
+        1.6,
+        1.8
+      ],
+      "description": "The box moves equal distances in equal time; ease none on a spatial move.",
+      "from": 1
+    },
+    {
+      "id": "dead-cut-gap",
+      "to": 2.4,
+      "frames": [
+        1.966667,
+        2,
+        2.2,
+        2.4,
+        2.7
+      ],
+      "description": "Outgoing content is gone; incoming content remains invisible for twelve frames after the cut.",
+      "from": 2
+    },
+    {
+      "id": "reading-time",
+      "to": 4.5,
+      "frames": [
+        4.2,
+        4.233333,
+        4.3,
+        4.466667,
+        4.5
+      ],
+      "description": "Sixteen words are held for eight frames (0.267s).",
+      "from": 4.233333
+    },
+    {
+      "id": "vertical-safe-area",
+      "to": 6,
+      "formats": [
+        "vertical"
+      ],
+      "frames": [
+        5.2
+      ],
+      "description": "Approve and share today sits 2% from the bottom, outside the brief\u2019s bottom 20% safe area.",
+      "from": 4.5
+    },
+    {
+      "id": "unsourced-figure",
+      "to": 6,
+      "frames": [
+        5.2
+      ],
+      "description": "97% fewer mistakes has no supporting source.",
+      "from": 4.5
+    },
+    {
+      "id": "invented-version",
+      "to": 6,
+      "frames": [
+        5.2
+      ],
+      "description": "Motion Mania v9.9.9 is an invented release stamp.",
+      "from": 4.5
+    },
+    {
+      "id": "off-beat-cut",
+      "to": 4.233333,
+      "frames": [
+        4.2,
+        4.233333
+      ],
+      "description": "Cut on frame 127, 0.233333s after the 4s beat and 0.266667s before the 4.5s beat.",
+      "from": 4.233333
+    }
+  ],
+  "renderObservations": [
+    {
+      "id": "portrait-encoded-frame-one-blank",
+      "planted": false,
+      "reproducedInIntegration": false,
+      "formats": [
+        "vertical"
+      ],
+      "to": 0.06666666666666667,
+      "description": "An earlier run observed a blank encoded portrait frame 1. Fresh integration renders with HyperFrames 0.8.145 retain the hook on frames 0–4 in snapshots and encodes in both formats; READY disappears after frame 0 as planted. The extra blank frame was not reproduced and its cause was not established.",
+      "from": 0.03333333333333333
+    }
+  ]
+}

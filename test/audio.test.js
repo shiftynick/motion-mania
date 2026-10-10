@@ -60,7 +60,7 @@ test('envelope finds silent gaps and energy rises near cuts', () => {
 });
 
 test('manifest loudness targets are optional but validated', () => {
-  const base = { schemaVersion: 1, name: 'x', engine: 'hyperframes@0.8.81', duration: 2, fps: 30, formats: { a: { width: 64, height: 64 } } };
+  const base = { schemaVersion: 1, name: 'x', engine: 'hyperframes@0.8.145', duration: 2, fps: 30, formats: { a: { width: 64, height: 64 } } };
   assert.doesNotThrow(() => validateManifest({ ...base, loudness: { integrated: -16, truePeak: -1.5 } }));
   for (const loudness of [{ integrated: -2 }, { truePeak: 1 }, { tolerance: 0 }, { gain: 3 }, null, []]) assert.throws(() => validateManifest({ ...base, loudness }), /loudness/);
 });
@@ -93,4 +93,37 @@ test('a mix with almost no loudness variation is called out', async t => {
   await run('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'sine=frequency=440:duration=12', '-af', 'volume=0.3,afade=t=out:st=11.5:d=0.5', file], { quiet: true });
   const result = await analyzeAudio(file, { manifest: { duration: 12, fps: 30 }, output: dir, label: 'tone' });
   assert.ok(result.warnings.some(w => w.includes('flat wall')), JSON.stringify(result.warnings));
+});
+
+test('silence threshold follows quiet programme without raising the normal bound', async () => {
+  const { silenceThreshold } = await import('../src/audio.js');
+  assert.equal(silenceThreshold({ integrated: -14 }, { db: [-20, -22, -120] }), -50);
+  assert.equal(silenceThreshold({ integrated: -40 }, { db: [-52, -55, -120] }), -76);
+  assert.deepEqual(silences({ window: 0.5, db: [-55, -55, -120, -120] }, { threshold: -76 }), [{ from: 1, to: 2 }]);
+  assert.equal(silenceThreshold({ integrated: null }, { db: [-120] }), -50);
+  assert.equal(silenceThreshold({ integrated: -90 }, { db: [-95] }), -90);
+});
+
+test('mastering uses measured values, oversampled limiting, and disables makeup gain', async () => {
+  const { parseNormalization, masteringFilter } = await import('../src/audio.js');
+  const measured = parseNormalization('log\n{"input_i":"-20","input_tp":"-4","input_lra":"2","input_thresh":"-30","target_offset":"0.1"}\n');
+  const filter = masteringFilter(defaultLoudness, measured);
+  assert.match(filter, /measured_I=-20/);
+  assert.match(filter, /TP=-1.5/);
+  assert.match(masteringFilter({ ...defaultLoudness, truePeak: -10 }, measured), /TP=-9:.*alimiter=limit=0.298/);
+  assert.match(filter, /aresample=192000,alimiter=.*level=disabled:latency=1/);
+  assert.throws(() => parseNormalization('{"input_i":"-inf","input_tp":"-inf","input_lra":"0","input_thresh":"-70","target_offset":"inf"}'), /silent/);
+  assert.throws(() => parseNormalization('no measurements'), /measurements/);
+});
+
+test('mastering refuses missing audio and preserves the input on failure', async t => {
+  const { masterAudio } = await import('../src/audio.js');
+  const dir = await mkdtemp(path.join(os.tmpdir(), 'motion-master-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'silent.mp4');
+  await run('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=s=64x64:d=0.5', '-c:v', 'libx264', file], { quiet: true });
+  const before = await readFile(file);
+  await assert.rejects(masterAudio(file, {}), /no audio/);
+  assert.deepEqual(await readFile(file), before);
+  await assert.rejects(masterAudio(path.join(dir, 'voice.wav'), {}), /rendered MP4/);
 });

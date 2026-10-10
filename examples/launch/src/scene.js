@@ -5,9 +5,10 @@ tl.fromTo('.hook .word', { y: 55, opacity: 1 }, { y: 0, opacity: 1, duration: 0.
 tl.fromTo('.intro', { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 0.65);
 tl.fromTo('.hook-mark span', { scaleY: 0 }, { scaleY: 1, stagger: 0.15, duration: 0.7, ease: 'back.out(1.2)' }, 0.4);
 tl.to('.hook-mark span', { scaleY: 0.55, stagger: 0.12, duration: 0.35, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 1.2);
-tl.fromTo('.build h1 span', { x: -70, opacity: 0.65 }, { x: 0, opacity: 1, duration: 0.5, stagger: 0.14, ease: 'power3.out' }, 3);
+tl.fromTo('.build h1 span', { x: -35, opacity: 0.65 }, { x: 0, opacity: 1, duration: 0.5, stagger: 0.14, ease: 'power3.out' }, 3);
 tl.fromTo('.file', { y: 80, rotation: 5, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.65, stagger: 0.3, ease: 'power3.out' }, 3.25);
 tl.fromTo('.rule', { scaleX: 0 }, { scaleX: 1, transformOrigin: 'left', duration: 0.5, stagger: 0.1 }, 3.9);
+// motion-mania-ignore linear_spatial_ease: the playhead represents elapsed time
 tl.fromTo('.playhead', { x: 0 }, { x: document.querySelector('.timeline').getBoundingClientRect().width - 2, duration: 2, ease: 'none' }, 4.3);
 tl.fromTo('.review h1 span', { y: 24 }, { y: 0, duration: 0.25, stagger: 0.12, ease: 'power3.out' }, 6.5);
 tl.fromTo('.frame', { y: 100, rotation: -4, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.65, stagger: 0.14, ease: 'power3.out' }, 6.85);

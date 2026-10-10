@@ -1,6 +1,7 @@
 import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { hf } from './process.js';
+import { measuredNarration } from './narration-timing.js';
 
 const round = value => Number(value.toFixed(3));
 const escapeHtml = text => String(text).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -71,14 +72,15 @@ export function compareNarration(shots, captions) {
   if (!shots?.some(s => typeof s.narration === 'string' && s.narration.trim())) return null;
   const heard = captions.groups.flatMap(g => g.words).map(w => ({ at: (w.start + (w.end ?? w.start)) / 2, tokens: tokens(w.text) }));
   const warnings = [];
-  const results = shots.map(shot => {
+  const results = shots.map((shot, index) => {
     const expected = tokens(shot.narration ?? ''), got = heard.filter(w => w.at >= shot.from && w.at < shot.to).flatMap(w => w.tokens);
     const similarity = expected.length + got.length ? Number((2 * lcs(expected, got) / (expected.length + got.length)).toFixed(2)) : 1;
     if (!expected.length && got.length) warnings.push(`Shot ${shot.index ?? ''} (${shot.name}): ${got.length} spoken words but no planned narration; narration may be drifting across the cut.`);
     else if (similarity < 0.8) warnings.push(`Shot ${shot.index ?? ''} (${shot.name}): heard words match the narration script at ${Math.round(similarity * 100)}%; check timing drift, misrecognition, or an outdated script.`);
-    return { index: shot.index, name: shot.name, expectedWords: expected.length, heardWords: got.length, similarity };
+    return { index: shot.index ?? index + 1, name: shot.name, expectedWords: expected.length, heardWords: got.length, similarity };
   });
-  return { shots: results, warnings };
+  const measured = measuredNarration(shots, captions);
+  return { shots: results.map(s => ({ ...s, ...(measured.shots.find(m => m.index === s.index) ?? {}) })), warnings: [...warnings, ...measured.warnings] };
 }
 
 export async function readCaptions(project) {

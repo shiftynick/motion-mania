@@ -23,9 +23,11 @@ npx motion-mania@latest browser
 
 npx motion-mania@latest init ./videos/launch
 npx motion-mania@latest plan --project ./videos/launch --json
-npx motion-mania@latest review --project ./videos/launch --json
+npx motion-mania@latest lint --project ./videos/launch --format all --json
+npx motion-mania@latest verify --project ./videos/launch --format all --json
+npx motion-mania@latest review --project ./videos/launch --format all --draft --json
 npx motion-mania@latest render --project ./videos/launch --format all --json
-npx motion-mania@latest audio --project ./videos/launch --format all --json
+npx motion-mania@latest audio --project ./videos/launch --format all --master --json
 npx motion-mania@latest picture --project ./videos/launch --format all --json
 ```
 
@@ -37,17 +39,35 @@ For reproducible work, use `npx motion-mania@0.3.0 …`, or add it to your proje
 
 ## Give your agent the skill
 
-Copy the complete skill to a directory your agent discovers. The command refuses to replace an existing nonempty directory.
+Install the repository skill with the [skills CLI](https://github.com/vercel-labs/skills), which discovers `skills/motion-mania/SKILL.md` and its references:
+
+```sh
+npx skills add shiftynick/motion-mania --skill motion-mania
+# Choose the host and project/personal scope in the installer.
+# Later, refresh the installed repository skill:
+npx skills update motion-mania
+```
+
+For Claude Code, the repository also contains a [plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces) using the same skill files:
+
+```text
+/plugin marketplace add shiftynick/motion-mania
+/plugin install motion-mania@motion-mania-marketplace
+```
+
+The plugin supplies the skill; the CLI and rendering dependencies are installed separately. Local discovery and plugin installation were tested from a checkout; GitHub installation requires a revision containing these manifests. Plugin updates follow the host's marketplace settings, not npm updates.
+
+You can still copy a release's complete skill to an explicit host-supported location. This command refuses to replace an existing nonempty directory:
 
 ```sh
 # Example: a personal Codex skill directory
 npx motion-mania@latest skill ~/.codex/skills/motion-mania
 
-# Or choose a host-supported project/personal location explicitly
+# Or choose a project/personal location explicitly
 npx motion-mania@latest skill ./my-agent-skills/motion-mania
 ```
 
-Skill discovery depends on the agent host. Installing the CLI does not automatically register a skill. The installed skill explains how to invoke the CLI via npx or a global installation; it includes creative direction, the authoring contract, and review guidance.
+This copy is a snapshot; reinstall to a new directory and replace it deliberately when upgrading. Skill discovery depends on the agent host. Installing the CLI does not automatically register a skill. The skill explains CLI invocation through npx or a global installation and includes creative direction, motion starting values, the authoring contract, and review guidance.
 
 Example prompt:
 
@@ -55,10 +75,10 @@ Example prompt:
 
 ## Production loop
 
-1. **Brief and plan:** identify the audience, observable product benefit, brand assets, shot intent, sound direction, and any narration. `plan` checks timing, narration pace, unsourced figures, and asset provenance, and surfaces missing decisions.
-2. **Author:** edit local HTML/CSS and a paused GSAP timeline. HyperFrames renders the composition.
-3. **Review and revise:** inspect exact frames, whole-film sheets, phone-size previews, adjacent-frame strips, a waveform, and a frame-activity chart, both marked with the cuts. Record specific changes by timestamp. Ideally, a fresh critic agent that didn't build the film reviews each round, and each new critique carries the previous round's revisions forward for verification ([independent review](skills/motion-mania/references/independent-review.md)).
-4. **Verify and export:** check runtime/layout behavior, sampled seek stability, encoded media metadata, frozen or near-black stretches, and loudness (default -14 LUFS, -1 dBTP). Technical success is separate from creative approval.
+1. **Brief and plan:** identify the audience, observable benefit, brand assets, shot intent, and narration. `plan` checks reading floors, copy provenance, beat alignment, and measured narration timing; choose settled `reviewAt` frames and any motion assertions.
+2. **Author:** edit local HTML/CSS and a paused GSAP timeline; run `lint` early. Use `sound` for seeded cues and `beats` for a measured music grid. HyperFrames renders the composition.
+3. **Review and revise:** run `verify` and `review --draft` in both formats. Inspect keyframes, phone safe-area guides, transition strips, waveform, and activity/pop/flash candidates. Record changes by timestamp; a fresh critic carries previous revisions forward ([independent review](skills/motion-mania/references/independent-review.md)).
+4. **Export and listen:** `render` preflights delivery metadata; `audio --master` measures and masters to the target (default -14 LUFS, -1 dBTP); `picture` checks the final encode. Listen and watch it. Technical success is separate from creative approval.
 
 For a voiceover, write each shot's line in the storyboard, produce the voice with any tool you choose, then import a word-timed transcript with `captions`. Motion Mania renders it as animated captions and compares what was said with the script. See [narration and captions](skills/motion-mania/references/narration.md).
 
@@ -71,12 +91,19 @@ For a voiceover, write each shot's line in the storyboard, produce the voice wit
 | `browser` | Download or locate the pinned backend's browser |
 | `doctor` | Check Node.js, FFmpeg, FFprobe, and browser availability |
 | `plan` | Validate storyboard timing; surface missing goals, focal points, transitions, and sound intent |
+| `lint` | Check authored source and HyperFrames lint; report local waivers |
 | `frame --at 4.2` | Capture one exact timestamp |
-| `review [--around 3,6.5] [--draft]` | Generate contact sheets, shot keyframes, transition strips, critique notes that carry forward the previous round's revisions, and an optional measured draft MP4 |
-| `verify` | Run HyperFrames checks and compare three sampled forward/reverse seeks |
-| `render [--quality draft\|looks\|delivery]` | Encode and validate an MP4 before replacing the previous export |
+| `review [--around 3,6.5] [--draft]` | Generate contact sheets, shot keyframes, transition strips, critique notes that carry forward the previous round's revisions, vertical safe-area guides and sampled text collisions, and an optional measured draft MP4 |
+| `review --against ref.mp4 [--at 1,4,8]` | Add a labelled reference/ours sheet and detected cut pacing; study grammar, never content or identity |
+| `capture <url>` | Capture site colours, fonts, assets, and screenshots; propose brand values without changing `brand.json`; reuse needs authorization |
+| `variants [--quality looks] [--at 1]` | Batch-render `variants.json` with normal delivery checks and a labelled comparison sheet; stills do not choose a winner |
+| `verify [--caption-zone band]` | Gate settled-frame layout, motion assertions and runtime contracts; advise on transition geometry; compare three sampled forward/reverse seeks |
+| `render [--quality draft\|looks\|delivery]` | Encode and preflight an MP4; stream-copy repair faststart/missing SDR tags before replacing the previous export |
 | `audio [--input file]` | Measure loudness and true peak against the target; report silences, cut accents, and abrupt endings; draw a waveform |
-| `picture [--input file]` | Find frozen holds and near-black frames per shot; draw a frame-activity chart |
+| `audio --master [--input file]` | Master the MP4 to its loudness target, copy video, and report measured before/after |
+| `sound --input cues.json [--output assets/cues.wav]` | Synthesize seeded sound effects, align their peaks to cues, and record provenance |
+| `beats --input music.wav` | Detect tempo and beat grid; report first-beat offset and energy moments |
+| `picture [--input file]` | Find holds, dark/empty stretches, opening-state and one-frame pops/flashes, and optional loop-seam defects; draw an activity chart |
 | `captions --input transcript.json` | Import a JSON, SRT, or VTT transcript as burned-in, word-highlighted captions |
 | `prepare` | Create a prepared composition snapshot for HyperFrames Studio |
 | `--version` | Print the installed version |
@@ -126,7 +153,7 @@ Checks cover unit behavior, a real cross-repository review/render cycle, export 
 
 ## Scope and limitations
 
-This is an early release with one backend. It does not orchestrate models, generate voices or media, transcribe speech, master audio, judge creative quality automatically, offer a separate editing UI, or render in the cloud. Bring generated or external media with its provenance recorded. Three sampled seek comparisons are not exhaustive or a cross-machine reproducibility guarantee. Loudness, waveform, and metadata checks do not replace listening. A screenshot does not establish smooth playback, and frozen-frame detection does not judge pacing.
+This is an early release with one backend. It synthesizes seeded sound effects and masters audio, but does not orchestrate models, generate visual media, call a speech service, judge creative quality automatically, offer a separate editing UI, or render in the cloud. The pinned backend offers local TTS and transcription; see [narration and captions](skills/motion-mania/references/narration.md). Bring generated or external media with its provenance recorded. Three sampled seek comparisons are not exhaustive or a cross-machine reproducibility guarantee. Loudness, waveform, and metadata checks do not replace listening. A screenshot does not establish smooth playback, and frozen-frame detection does not judge pacing.
 
 Projects contain executable HTML/JavaScript. Treat unfamiliar projects as code and use isolation when appropriate; see [SECURITY.md](SECURITY.md). The CLI disables HyperFrames usage telemetry and automatic snapshot model analysis. Authored project code may still make network requests.
 

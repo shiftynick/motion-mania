@@ -82,6 +82,18 @@ test('subprocess arguments remain literal rather than executing shell syntax', a
   await assert.rejects(readFile(marker), /ENOENT/);
 });
 
+test('subprocesses disable backend updates even when the parent enables them', async () => {
+  const previous = process.env.HYPERFRAMES_NO_UPDATE_CHECK;
+  process.env.HYPERFRAMES_NO_UPDATE_CHECK = '0';
+  try {
+    const r = await run(process.execPath, ['-e', 'process.stdout.write(process.env.HYPERFRAMES_NO_UPDATE_CHECK)'], { quiet: true });
+    assert.equal(r.stdout, '1');
+  } finally {
+    if (previous === undefined) delete process.env.HYPERFRAMES_NO_UPDATE_CHECK;
+    else process.env.HYPERFRAMES_NO_UPDATE_CHECK = previous;
+  }
+});
+
 test('CLI rejects unknown or misplaced options with parseable error JSON', async t => {
   const cwd = await temporary(t);
   const cli = path.resolve('src/cli.js');

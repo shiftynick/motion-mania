@@ -1,0 +1,16 @@
+{
+  "bpm": 120,
+  "beatOffset": 0,
+  "seed": 731,
+  "before": {
+    "integrated": -25.2,
+    "range": 10.3,
+    "truePeak": -8.6
+  },
+  "gain": 4.199999999999999,
+  "after": {
+    "integrated": -21,
+    "range": 10.3,
+    "truePeak": -4.4
+  }
+}

@@ -3,11 +3,19 @@ import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import sharp from 'sharp';
 import { backendVersion, hf, probe, run } from './process.js';
-import { buildProject, withBuild, writeJson } from './project.js';
+import { buildProject as buildSource, withBuild as withSourceBuild, writeJson } from './project.js';
+import { verificationFindings, writeMotionAssertions } from './motion-assertions.js';
+import { groupLintAdvice } from './lint.js';
 import { readStoryboard, critiqueTemplate } from './storyboard.js';
 import { analyzeAudio } from './audio.js';
 import { analyzePicture } from './picture.js';
+import { preflightDelivery } from './delivery.js';
+import { checkSafeArea, safeAreaMargins, safeAreaOverlay } from './safe-area.js';
 import { captionSampleTimes, readCaptions } from './captions.js';
+import { compareReference, referenceCritique } from './reference.js';
+
+const buildProject = async (project, format, destination) => writeMotionAssertions(project, await buildSource(project, format, destination));
+const withBuild = (project, format, action) => withSourceBuild(project, format, async build => action(await writeMotionAssertions(project, build)));
 
 export function parseTimes(value, duration) {
   const times = String(value).split(',').map(s => s.trim() === '' ? NaN : Number(s));
@@ -30,7 +38,7 @@ export async function snapshot(directory, output, times) {
   return files.map((f, i) => ({ time: times[i], path: path.join(output, f) }));
 }
 
-async function sheet(frames, file, { width = 240, columns = 5 } = {}) {
+async function sheet(frames, file, { width = 240, columns = 5, safeArea } = {}) {
   const first = await sharp(frames[0].path).metadata();
   const height = Math.round(width * first.height / first.width), label = 30, gap = 10;
   const cols = Math.min(columns, frames.length), rows = Math.ceil(frames.length / cols);
@@ -38,6 +46,7 @@ async function sheet(frames, file, { width = 240, columns = 5 } = {}) {
   for (const [i, frame] of frames.entries()) {
     const left = gap + i % cols * (width + gap), top = gap + Math.floor(i / cols) * (height + label + gap);
     composites.push({ input: await sharp(frame.path).resize(width, height).png().toBuffer(), left, top });
+    if (safeArea) composites.push({ input: safeAreaOverlay(width, height, safeArea), left, top });
     const svg = `<svg width="${width}" height="${label}"><rect width="100%" height="100%" fill="#191b19"/><text x="10" y="21" fill="#f3f0e7" font-size="15" font-family="sans-serif">${frame.time.toFixed(3)}s</text></svg>`;
     composites.push({ input: Buffer.from(svg), left, top: top + height });
   }
@@ -92,7 +101,7 @@ export async function previousReview(parent, format) {
   return reviewed ?? latest;
 }
 
-export async function review(project, format, { around, draft = false } = {}) {
+export async function review(project, format, { around, draft = false, against, referenceTimes } = {}) {
   const storyboard = await readStoryboard(project, { optional: true });
   const captions = await readCaptions(project);
   const parent = path.join(project.root, 'reviews');
@@ -104,19 +113,23 @@ export async function review(project, format, { around, draft = false } = {}) {
     const frames = await snapshot(build, path.join(output, 'frames'), times.all);
     const at = list => list.map(t => frames.find(f => f.time === t));
     const contact = await sheet(at(times.overview), path.join(output, 'contact-sheet.png'));
-    const phone = await sheet(at(times.overview), path.join(output, 'phone-preview.png'), { width: 360, columns: 3 });
+    const dimensions = project.manifest.formats[format];
+    const margins = dimensions.height > dimensions.width ? safeAreaMargins(project.manifest, dimensions) : undefined;
+    const phone = await sheet(at(times.overview), path.join(output, 'phone-preview.png'), { width: 360, columns: 3, safeArea: margins });
+    const safeArea = margins ? await checkSafeArea(build, output, margins, times.overview, project.manifest.duration, dimensions) : undefined;
     const strips = [];
     for (const [i, sequence] of times.strips.entries()) strips.push(await sheet(at(sequence), path.join(output, `transition-${i + 1}.png`), { width: 200, columns: 9 }));
-    let draftPath, audio, picture;
+    let draftPath, audio, picture, delivery;
     if (draft) {
       draftPath = path.join(output, 'draft.mp4');
-      await renderBuild(build, draftPath, project, format, 'draft');
+      ({ delivery } = await renderBuild(build, draftPath, project, format, 'draft'));
       audio = await analyzeAudio(draftPath, { manifest: project.manifest, storyboard, output, label: `${format} draft` });
       picture = await analyzePicture(draftPath, { manifest: project.manifest, storyboard, output, label: `${format} draft` });
     }
-    const report = { ok: true, format, createdAt: new Date().toISOString(), manifest: project.manifest, contact, phone, strips, frames, storyboard, transitionTimes: around ?? storyboard?.automaticTransitions ?? [], ...(captions ? { captions: { groups: captions.groups, warnings: captions.warnings } } : {}), ...(draftPath ? { draft: draftPath, audio, picture } : {}), ...(previous ? { previousCritique: previous.critique } : {}), creativeReview: 'pending', audioReview: 'pending', notes: 'Open the images and play the draft. Successful capture is not creative approval.' };
+    const reference = against ? await compareReference(project, format, build, output, against, { times: referenceTimes, storyboard }) : undefined;
+    const report = { ok: true, format, ...(reference ? { reference } : {}), createdAt: new Date().toISOString(), manifest: project.manifest, contact, phone, ...(safeArea ? { safeArea } : {}), strips, frames, storyboard, transitionTimes: around ?? storyboard?.automaticTransitions ?? [], ...(captions ? { captions: { groups: captions.groups, warnings: captions.warnings } } : {}), ...(draftPath ? { draft: draftPath, audio, picture, delivery } : {}), ...(previous ? { previousCritique: previous.critique } : {}), creativeReview: 'pending', audioReview: 'pending', notes: 'Open the images and play the draft. Successful capture is not creative approval.' };
     await writeJson(path.join(output, 'report.json'), report);
-    await writeFile(path.join(output, 'critique.md'), critiqueTemplate(storyboard, format, { audio, picture, previous }));
+    await writeFile(path.join(output, 'critique.md'), critiqueTemplate(storyboard, format, { audio, picture, safeArea, previous }) + (reference ? referenceCritique(reference) : ''));
     return { ...report, report: path.join(output, 'report.json'), critique: path.join(output, 'critique.md') };
   });
 }
@@ -138,10 +151,11 @@ async function renderBuild(build, output, project, format, quality) {
   const temp = path.join(path.dirname(output), `.${path.basename(output)}-${randomUUID()}.mp4`);
   try {
     await hf(['render', build, '--output', temp, '--fps', String(project.manifest.fps), '--quality', quality, '--workers', '1', '--no-browser-gpu', '--strict']);
+    const delivery = await preflightDelivery(temp, project.manifest, project.manifest.formats[format]);
     const metadata = validateMedia(await probe(temp), project.manifest, format);
     // Rename on the same filesystem: preserve the previous good export on any failure.
     await rename(temp, output);
-    return metadata;
+    return { ...metadata, delivery, warnings: delivery.warnings };
   } finally { await rm(temp, { force: true }); }
 }
 
@@ -161,17 +175,21 @@ async function pixelHash(file) {
   return createHash('sha256').update(`${info.width}x${info.height}:`).update(data).digest('hex');
 }
 
-export async function verify(project, format) {
+export async function verify(project, format, { captionZone } = {}) {
   const parent = path.join(project.root, 'reviews');
   await mkdir(parent, { recursive: true });
   const output = await mkdtemp(path.join(parent, `verify-${format}-`));
   return withBuild(project, format, async build => {
-    const check = await hf(['check', build, '--json'], { quiet: true, allowFailure: true });
+    const board = await readStoryboard(project, { optional: true });
+    const settledTimes = board?.shots.map(s => s.reviewAt) ?? Array.from({ length: 9 }, (_, i) => Number(((i + 0.5) / 9 * project.manifest.duration).toFixed(6)));
+    const check = await hf(['check', build, '--at', settledTimes.join(','), '--at-transitions', '--max-issues', '10000', '--no-browser-gpu', ...(captionZone ? ['--caption-zone', captionZone] : []), '--json'], { quiet: true, allowFailure: true });
     await writeFile(path.join(output, 'backend-check.json'), check.stdout);
     await writeFile(path.join(output, 'backend-check.log'), check.stderr);
     let payload;
     try { payload = JSON.parse(check.stdout); } catch { throw new Error(`HyperFrames returned invalid check JSON; inspect ${output}`); }
-    if (check.code !== 0 || !payload.ok || !payload.layout?.samples?.length) return { ok: false, format, report: path.join(output, 'backend-check.json'), reason: 'HyperFrames check failed or did not inspect frames; inspect its report.' };
+    const findings = groupLintAdvice(verificationFindings(payload, settledTimes)), motion = payload.motion;
+    const incomplete = payload.browserSkipped || !payload.layout?.samples?.length || payload.layout.truncated || (check.code !== 0 && payload.ok !== false);
+    if (incomplete || payload.error || findings.some(f => f.severity === 'error')) return { ok: false, format, settledTimes, report: path.join(output, 'backend-check.json'), findings, motion, transitionSamples: payload.layout?.transitionSamples, transitionSamplesDropped: payload.layout?.transitionSamplesDropped, reason: findings.filter(f => f.severity === 'error').map(f => `[${f.code}] ${f.selector ? `${f.selector}: ` : ''}${f.message}`).join('; ') || payload.error || 'HyperFrames check did not completely inspect frames; inspect its report.' };
     const duration = project.manifest.duration;
     const times = [0.25, 0.5, 0.85].map(f => Number((duration * f).toFixed(6)));
     const forward = await snapshot(build, path.join(output, 'forward'), times);
@@ -182,7 +200,7 @@ export async function verify(project, format) {
       const firstHash = await pixelHash(frame.path), secondHash = await pixelHash(other.path);
       comparisons.push({ time: frame.time, equal: firstHash === secondHash, firstHash, secondHash });
     }
-    const report = { ok: comparisons.every(c => c.equal), format, comparisons, backendCheck: path.join(output, 'backend-check.json'), scope: 'Three sampled frames, fresh browser sessions, forward versus reverse seek order on this machine. Not a full-film or cross-machine guarantee.' };
+    const report = { ok: comparisons.every(c => c.equal), format, settledTimes, comparisons, findings, motion, transitionSamples: payload.layout.transitionSamples, transitionSamplesDropped: payload.layout.transitionSamplesDropped, backendCheck: path.join(output, 'backend-check.json'), scope: 'Layout errors gate at storyboard reviewAt frames (shot midpoint by default; nine uniform midpoints without a storyboard). Other sampled geometry is transition advice; explicit caption zones, motion assertions and runtime/contract errors still gate. Choose settled reviewAt frames and inspect transitions. Three fresh-session forward/reverse seek comparisons; not a full-film or cross-machine guarantee.' };
     await writeJson(path.join(output, 'report.json'), report);
     return { ...report, report: path.join(output, 'report.json') };
   });

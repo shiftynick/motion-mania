@@ -3,14 +3,14 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 const require = createRequire(import.meta.url);
-export const backendVersion = '0.8.81';
+export const backendVersion = '0.8.145';
 export const backendPath = path.join(path.dirname(require.resolve('hyperframes/package.json')), 'bin/hyperframes.mjs');
 
 // All subprocesses use argument arrays. Backend chatter never contaminates JSON stdout.
 export function run(command, args, { cwd, quiet = false, allowFailure = false, timeout = 600_000 } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
-      cwd, shell: false, env: { ...process.env, HYPERFRAMES_NO_TELEMETRY: '1', DO_NOT_TRACK: '1' },
+      cwd, shell: false, env: { ...process.env, HYPERFRAMES_NO_TELEMETRY: '1', DO_NOT_TRACK: '1', HYPERFRAMES_NO_UPDATE_CHECK: '1' },
       stdio: ['ignore', 'pipe', 'pipe'],
     });
     let stdout = '', stderr = '', expired = false;

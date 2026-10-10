@@ -80,11 +80,12 @@ html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background:
   .note { width: 27rem; }
   .ring, .shock { width: 44rem; height: 44rem; margin: -22rem 0 0 -22rem; top: 46%; }
   .panel { right: auto; left: 50%; margin-left: -19em; top: 22%; font-size: 1.5rem; }
-  .h-held, .h-wait { top: 9%; font-size: 7.8rem; padding: 0 6%; }
-  .h-first { left: 0; right: 0; top: 9%; width: auto; text-align: center; font-size: 8rem; }
+  .h-held, .h-wait { top: 14%; font-size: 7.8rem; padding: 0 6%; }
+  .h-first { left: 0; right: 0; top: 14%; width: auto; text-align: center; font-size: 8rem; }
   #film { --mm-caption-size: 2.8rem; }
   .ghost, .gold-card { top: 46%; font-size: 1.5rem; width: 36rem; }
   .gold-card { width: 42rem; }
   .through-label { top: 46%; margin-top: 8.5rem; font-size: 1.9rem; }
+  .footer { bottom: 20%; padding: 0 6%; }
   .word { font-size: 19rem; }
 }

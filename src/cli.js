@@ -3,10 +3,15 @@ import { readFile } from 'node:fs/promises';
 import { hf } from './process.js';
 import { parseArgs } from 'node:util';
 import { plan } from './storyboard.js';
+import { lint } from './lint.js';
 import { initProject, installSkill, loadProject, selectFormats } from './project.js';
 import { captureFrame, doctor, parseTimes, prepare, render, review, verify } from './operations.js';
 import { audioReport } from './audio.js';
+import { soundReport } from './sound.js';
+import { beatsReport } from './beats.js';
 import { pictureReport } from './picture.js';
+import { captureBrand } from './brand-capture.js';
+import { renderVariants } from './variants.js';
 import { importCaptions } from './captions.js';
 import { readStoryboard } from './storyboard.js';
 
@@ -18,17 +23,24 @@ const help = `Motion Mania ${version} — HyperFrames production helpers
   motion-mania browser                           Download/locate the pinned browser
   motion-mania doctor                            Check required local dependencies
   motion-mania plan                              Check storyboard timing and creative intent
+  motion-mania lint                              Static source rules plus HyperFrames lint
   motion-mania frame --at 4.2                     Capture an exact timestamp
   motion-mania review [--around 3,6.5] [--draft]   Contact sheets, strips, optional MP4
+  motion-mania capture <url>                      Capture brand candidates; authorization required
+  motion-mania variants [--at 1]                  Render named variants and a labelled sheet
   motion-mania verify                            Backend checks + sampled seek stability
-  motion-mania render [--quality looks]           Encode and validate an MP4
-  motion-mania audio [--input file]               Loudness, silences, cut accents, waveform
-  motion-mania picture [--input file]             Frozen holds, near-black frames, activity chart
+  motion-mania render [--quality looks]           Encode, preflight, and validate an MP4
+  motion-mania audio [--input file] [--master]    Measure or master the delivered MP4
+  motion-mania sound --input cues.json            Synthesize a seeded sound-effect stem
+  motion-mania beats --input music.wav            Detect tempo, beat grid, and energy moments
+  motion-mania picture [--input file]             Holds, near-black, pops/flashes, optional loop seam
   motion-mania captions --input words.json        Import a transcript as burned-in captions
   motion-mania prepare                           Build a directory for HyperFrames Studio
 
+review --against <video> adds reference grammar evidence; --at selects comparison times.
 Shared options: --project <directory> (default .), --format <name|all>, --json
 Quality: draft | looks | delivery. init refuses nonempty directories.
+verify accepts --caption-zone <fractional-band>; see the command reference.
 audio and picture measure out/<format>.mp4 unless --input is given (default target -14 LUFS, -1 dBTP).
 captions accepts .json/.srt/.vtt transcripts; --max-words <n> (default 5), --replace.
 Edit src/, assets/, and motion.json; generated work lives in .motion/, reviews/, out/.
@@ -39,17 +51,17 @@ const raw = process.argv.slice(2);
 const wantsJson = raw.includes('--json');
 try {
   const { values, positionals } = parseArgs({ args: raw, allowPositionals: true, strict: true, options: {
-    project: { type: 'string' }, format: { type: 'string' }, at: { type: 'string' }, around: { type: 'string' },
-    quality: { type: 'string' }, draft: { type: 'boolean' }, input: { type: 'string' }, 'max-words': { type: 'string' }, replace: { type: 'boolean' }, json: { type: 'boolean' }, help: { type: 'boolean', short: 'h' }, version: { type: 'boolean', short: 'v' },
+    against: { type: 'string' }, 'caption-zone': { type: 'string' }, project: { type: 'string' }, format: { type: 'string' }, at: { type: 'string' }, around: { type: 'string' },
+    master: { type: 'boolean' }, output: { type: 'string' }, quality: { type: 'string' }, draft: { type: 'boolean' }, input: { type: 'string' }, 'max-words': { type: 'string' }, replace: { type: 'boolean' }, json: { type: 'boolean' }, help: { type: 'boolean', short: 'h' }, version: { type: 'boolean', short: 'v' },
   } });
   const command = positionals[0];
   if (values.version) { process.stdout.write(wantsJson ? JSON.stringify({ version }) + '\n' : version + '\n'); }
   else if (values.help || !command) { process.stdout.write(help); }
   else {
-    const allowed = { init: [], skill: [], browser: [], doctor: [], plan: ['project'], frame: ['project','format','at'], review: ['project','format','around','draft'], verify: ['project','format'], render: ['project','format','quality'], prepare: ['project','format'], audio: ['project','format','input'], picture: ['project','format','input'], captions: ['project','input','max-words','replace'] };
+    const allowed = { init: [], skill: [], browser: [], doctor: [], plan: ['project'], lint: ['project','format'], frame: ['project','format','at'], review: ['project','format','around','draft','against','at'], capture: ['project'], variants: ['project','format','quality','at'], verify: ['project','format','caption-zone'], render: ['project','format','quality'], prepare: ['project','format'], audio: ['project','format','input','master'], sound: ['project','input','output'], beats: ['project','input'], picture: ['project','format','input'], captions: ['project','input','max-words','replace'] };
     if (!allowed[command]) throw new Error(`Unknown command: ${command}`);
     for (const key of Object.keys(values)) if (!['json','help', ...allowed[command]].includes(key)) throw new Error(`--${key} is not supported by ${command}`);
-    if (positionals.length !== (['init', 'skill'].includes(command) ? 2 : 1)) throw new Error(['init', 'skill'].includes(command) ? `Usage: motion-mania ${command} <directory>` : 'Unexpected positional argument');
+    if (positionals.length !== (['init', 'skill', 'capture'].includes(command) ? 2 : 1)) throw new Error(['init', 'skill', 'capture'].includes(command) ? `Usage: motion-mania ${command} <${command === 'capture' ? 'url' : 'directory'}>` : 'Unexpected positional argument');
     let result;
     if (command === 'init') result = await initProject(positionals[1]);
     else if (command === 'skill') result = await installSkill(positionals[1]);
@@ -61,8 +73,12 @@ try {
     else if (command === 'doctor') result = await doctor();
     else {
       const project = await loadProject(values.project ?? '.');
-      if (command === 'plan') {
+      if (command === 'capture') {
+        result = { command, project: project.root, ...await captureBrand(project, positionals[1]) };
+      } else if (command === 'plan') {
         result = await plan(project);
+      } else if (command === 'sound' || command === 'beats') {
+        result = { command, project: project.root, ...await (command === 'sound' ? soundReport(project, values.input, values.output) : beatsReport(project, values.input)) };
       } else if (command === 'captions') {
         if (values.input === undefined) throw new Error('captions requires --input <transcript.json|.srt|.vtt>');
         const maxWords = values['max-words'] === undefined ? 5 : Number(values['max-words']);
@@ -71,19 +87,23 @@ try {
       } else {
         const formats = selectFormats(project, values.format);
         if (['audio', 'picture'].includes(command) && values.input !== undefined && formats.length > 1) throw new Error('--input analyzes one file; choose a single --format for its label');
+        if (command === 'review' && values.at !== undefined && values.against === undefined) throw new Error('review --at requires --against; use --around for transition strips');
         if (command === 'frame' && values.at === undefined) throw new Error('frame requires --at <seconds>');
         const at = command === 'frame' ? parseTimes(values.at, project.manifest.duration) : [];
+        if (command === 'variants' && values.at !== undefined && parseTimes(values.at, project.manifest.duration).length !== 1) throw new Error('variants accepts one comparison timestamp');
         if (at.length > 1) throw new Error('frame accepts one timestamp; use review for multiple frames');
         const around = values.around === undefined ? undefined : parseTimes(values.around, project.manifest.duration);
         const results = [];
         for (const format of formats) {
           const handlers = {
             frame: () => captureFrame(project, format, at[0]),
-            review: () => review(project, format, { around, draft: values.draft }),
-            verify: () => verify(project, format),
+            review: () => review(project, format, { around, draft: values.draft, against: values.against, referenceTimes: values.at === undefined ? undefined : parseTimes(values.at, project.manifest.duration) }),
+            variants: () => renderVariants(project, format, values.quality, values.at === undefined ? undefined : parseTimes(values.at, project.manifest.duration)[0]),
+            verify: () => verify(project, format, { captionZone: values['caption-zone'] }),
+            lint: () => lint(project, format),
             render: () => render(project, format, values.quality),
             prepare: () => prepare(project, format),
-            audio: () => audioReport(project, format, values.input),
+            audio: () => audioReport(project, format, values.input, { master: values.master }),
             picture: () => pictureReport(project, format, values.input),
           };
           results.push(await handlers[command]());

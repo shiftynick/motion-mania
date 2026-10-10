@@ -1,0 +1,15 @@
+import {readdir,readFile,writeFile} from 'node:fs/promises';import path from 'node:path';import {fileURLToPath} from 'node:url';
+const dir=fileURLToPath(new URL('../assets/',import.meta.url));
+async function walk(d){let files=[];for(const e of await readdir(d,{withFileTypes:true}))files.push(...e.isDirectory()?await walk(path.join(d,e.name)):[path.join(d,e.name)]);return files;}
+const narration=JSON.parse(await readFile(new URL('../storyboard.json',import.meta.url)));const prompt=narration.shots.filter(s=>s.narration).map(s=>s.narration).join(' ');
+const assets=[];
+for(const file of await walk(dir)){const p=path.relative(dir,file);if(p==='manifest.json'||p.endsWith('OFL.txt')||p==='vendor/GSAP-LICENSE.txt')continue;
+if(p.startsWith('fonts/')){const font=p.startsWith('fonts/Instrument')?'InstrumentSerif':p.startsWith('fonts/Inter-')?'Inter':'JetBrainsMono';assets.push({path:p,origin:`Vendored ${font} from existing repository OFL assets`,license:`fonts/${font}-OFL.txt`,usage:'Local typography'});}
+else if(p.startsWith('vendor/'))assets.push({path:p,origin:'Copied from installed gsap 3.15.0 package; original headers preserved',license:'vendor/GSAP-LICENSE.txt',usage:'Deterministic paused timeline and verified plugins'});
+else if(p==='narration.wav'||p.startsWith('voice-takes/'))assets.push({path:p,origin:'Generated locally for Proof',generator:{tool:'HyperFrames 0.8.145 tts',model:'Kokoro-82M / kokoro-v1.0',voice:'bm_george',speed:0.84,prompt},usage:'Original narration take / assembly; scripts/voice.mjs'});
+else if(p==='score.wav')assets.push({path:p,origin:'Original code composition for Proof',generator:{tool:'Node.js / scripts/score.mjs',model:'Deterministic stereo synthesis, seed 731, 120 BPM',prompt:'Optical bench: evolving minor ninth harmony, syncopated five-note FM motif, dry drum arrangement, suspended-to-major final resolution'},usage:'Original score'});
+else if(p==='cues.wav')assets.push({path:p,origin:'Original seeded Motion Mania sound-kit synthesis',generator:{tool:'motion-mania sound / cues.json',model:'sound-kit deterministic synthesis seed 731',prompt:'Sparse optical accents at the picture actions; measured absolute cue peaks'},usage:'Designed effect stem'});
+else if(p.startsWith('evidence/'))assets.push({path:p,origin:'Measured / captured from Proof controlled draft and own layout captures',generator:{tool:'scripts/evidence.mjs, Motion Mania picture/audio/plan/frame, FFmpeg',model:'hyperframes@0.8.145 and working-tree Motion Mania',prompt:'Extract the film’s real waveform, controlled one-frame defect candidate, draft/master measurements, beat-grid result, and exact rendered stills'},usage:'Actual project evidence; evidence/sources.json links inputs'});
+else assets.push({path:p,origin:'Generated analysis for this film',generator:{tool:p.startsWith('narration')?'scripts/voice.mjs':'scripts/score.mjs',model:'FFmpeg EBU R128',prompt:'Measure the original audio stem'},usage:'Reproduction and measurement record'});
+}
+await writeFile(path.join(dir,'manifest.json'),JSON.stringify({assets},null,2)+'\n');

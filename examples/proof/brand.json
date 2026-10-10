@@ -1,0 +1,8 @@
+{
+  "name": "Proof / Motion Mania",
+  "palette": {"ink":"#090f22","blue":"#3978ff","ice":"#dcecff","white":"#f3f7ff","muted":"#a3b4d2","signal":"#c5ff75","defect":"#ff7195"},
+  "fonts":{"display":"Inter","editorial":"Instrument Serif","evidence":"JetBrains Mono"},
+  "motion":{"signatureEase":"proofMove / cubic-bezier(0.65,0,0.35,1)","tiers":[0.2,0.45,0.8],"entrance":"A ruled edge opens, then type settles through its mask"},
+  "voice":"An exact, composed engineer; connected sentences, no sales announcer",
+  "provenance":"Original film identity, original vector geometry. The product name is Motion Mania. No supplied or third-party brand assets."
+}

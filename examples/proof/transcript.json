@@ -1,0 +1,367 @@
+{
+  "engine": "faster-whisper 1.2.1",
+  "model": "small.en",
+  "language": "en",
+  "words": [
+    {
+      "text": "A",
+      "start": 0.05,
+      "end": 0.53,
+      "probability": 0.6192
+    },
+    {
+      "text": "film",
+      "start": 0.53,
+      "end": 0.91,
+      "probability": 0.9945
+    },
+    {
+      "text": "can",
+      "start": 0.91,
+      "end": 1.17,
+      "probability": 0.9958
+    },
+    {
+      "text": "look",
+      "start": 1.17,
+      "end": 1.41,
+      "probability": 0.9972
+    },
+    {
+      "text": "right",
+      "start": 1.41,
+      "end": 1.87,
+      "probability": 0.9975
+    },
+    {
+      "text": "and",
+      "start": 1.87,
+      "end": 2.41,
+      "probability": 0.9487
+    },
+    {
+      "text": "still",
+      "start": 2.41,
+      "end": 2.71,
+      "probability": 0.999
+    },
+    {
+      "text": "be",
+      "start": 2.71,
+      "end": 2.97,
+      "probability": 0.9996
+    },
+    {
+      "text": "wrong.",
+      "start": 2.97,
+      "end": 3.33,
+      "probability": 0.9993
+    },
+    {
+      "text": "So",
+      "start": 5.23,
+      "end": 5.61,
+      "probability": 0.9922
+    },
+    {
+      "text": "this",
+      "start": 5.61,
+      "end": 5.83,
+      "probability": 0.9149
+    },
+    {
+      "text": "film",
+      "start": 5.83,
+      "end": 6.23,
+      "probability": 0.9992
+    },
+    {
+      "text": "checks",
+      "start": 6.23,
+      "end": 6.61,
+      "probability": 0.9958
+    },
+    {
+      "text": "its",
+      "start": 6.61,
+      "end": 6.87,
+      "probability": 0.979
+    },
+    {
+      "text": "own",
+      "start": 6.87,
+      "end": 7.13,
+      "probability": 0.9944
+    },
+    {
+      "text": "sound",
+      "start": 7.13,
+      "end": 7.77,
+      "probability": 0.9984
+    },
+    {
+      "text": "and",
+      "start": 7.77,
+      "end": 8.37,
+      "probability": 0.9292
+    },
+    {
+      "text": "masters",
+      "start": 8.37,
+      "end": 8.91,
+      "probability": 0.9529
+    },
+    {
+      "text": "the",
+      "start": 8.91,
+      "end": 9.37,
+      "probability": 0.9927
+    },
+    {
+      "text": "result.",
+      "start": 9.37,
+      "end": 9.91,
+      "probability": 0.9959
+    },
+    {
+      "text": "Its",
+      "start": 11.41,
+      "end": 11.63,
+      "probability": 0.7856
+    },
+    {
+      "text": "cuts",
+      "start": 11.63,
+      "end": 11.95,
+      "probability": 0.9463
+    },
+    {
+      "text": "sit",
+      "start": 11.95,
+      "end": 12.33,
+      "probability": 0.9867
+    },
+    {
+      "text": "on",
+      "start": 12.33,
+      "end": 12.83,
+      "probability": 0.9959
+    },
+    {
+      "text": "the",
+      "start": 12.83,
+      "end": 12.99,
+      "probability": 0.9978
+    },
+    {
+      "text": "score's",
+      "start": 12.99,
+      "end": 13.55,
+      "probability": 0.8311
+    },
+    {
+      "text": "beat",
+      "start": 13.55,
+      "end": 13.77,
+      "probability": 0.9654
+    },
+    {
+      "text": "grid.",
+      "start": 13.77,
+      "end": 14.19,
+      "probability": 0.9668
+    },
+    {
+      "text": "A",
+      "start": 16.31,
+      "end": 16.53,
+      "probability": 0.9969
+    },
+    {
+      "text": "planted",
+      "start": 16.53,
+      "end": 16.89,
+      "probability": 0.9869
+    },
+    {
+      "text": "one",
+      "start": 16.89,
+      "end": 17.27,
+      "probability": 0.9204
+    },
+    {
+      "text": "-frame",
+      "start": 17.27,
+      "end": 17.77,
+      "probability": 0.6262
+    },
+    {
+      "text": "glitch",
+      "start": 17.77,
+      "end": 18.13,
+      "probability": 0.9937
+    },
+    {
+      "text": "is",
+      "start": 18.13,
+      "end": 18.49,
+      "probability": 0.9981
+    },
+    {
+      "text": "caught",
+      "start": 18.49,
+      "end": 18.77,
+      "probability": 0.9987
+    },
+    {
+      "text": "in",
+      "start": 18.77,
+      "end": 18.99,
+      "probability": 0.999
+    },
+    {
+      "text": "the",
+      "start": 18.99,
+      "end": 19.13,
+      "probability": 0.9989
+    },
+    {
+      "text": "draft,",
+      "start": 19.13,
+      "end": 19.59,
+      "probability": 0.9503
+    },
+    {
+      "text": "then",
+      "start": 20.03,
+      "end": 20.33,
+      "probability": 0.9989
+    },
+    {
+      "text": "removed.",
+      "start": 20.33,
+      "end": 21.01,
+      "probability": 0.9987
+    },
+    {
+      "text": "Every",
+      "start": 23.4,
+      "end": 23.66,
+      "probability": 0.9979
+    },
+    {
+      "text": "number",
+      "start": 23.66,
+      "end": 23.92,
+      "probability": 0.9993
+    },
+    {
+      "text": "you",
+      "start": 23.92,
+      "end": 24.18,
+      "probability": 0.9981
+    },
+    {
+      "text": "see",
+      "start": 24.18,
+      "end": 24.64,
+      "probability": 0.9996
+    },
+    {
+      "text": "lades",
+      "start": 24.64,
+      "end": 25.38,
+      "probability": 0.6184
+    },
+    {
+      "text": "back",
+      "start": 25.38,
+      "end": 25.7,
+      "probability": 0.9995
+    },
+    {
+      "text": "to",
+      "start": 25.7,
+      "end": 26.0,
+      "probability": 0.9989
+    },
+    {
+      "text": "this",
+      "start": 26.0,
+      "end": 26.22,
+      "probability": 0.998
+    },
+    {
+      "text": "film's",
+      "start": 26.22,
+      "end": 26.8,
+      "probability": 0.9891
+    },
+    {
+      "text": "evidence.",
+      "start": 26.8,
+      "end": 27.3,
+      "probability": 0.9985
+    },
+    {
+      "text": "The",
+      "start": 28.64,
+      "end": 29.52,
+      "probability": 0.7114
+    },
+    {
+      "text": "motion",
+      "start": 29.52,
+      "end": 29.86,
+      "probability": 0.9605
+    },
+    {
+      "text": "is",
+      "start": 29.86,
+      "end": 30.22,
+      "probability": 0.9977
+    },
+    {
+      "text": "checked",
+      "start": 30.22,
+      "end": 30.58,
+      "probability": 0.9969
+    },
+    {
+      "text": "forwards",
+      "start": 30.58,
+      "end": 31.12,
+      "probability": 0.9965
+    },
+    {
+      "text": "and",
+      "start": 31.12,
+      "end": 31.44,
+      "probability": 0.9946
+    },
+    {
+      "text": "backwards",
+      "start": 31.44,
+      "end": 31.88,
+      "probability": 0.9914
+    },
+    {
+      "text": "in",
+      "start": 31.88,
+      "end": 32.58,
+      "probability": 0.9076
+    },
+    {
+      "text": "both",
+      "start": 32.58,
+      "end": 32.9,
+      "probability": 0.9991
+    },
+    {
+      "text": "layouts.",
+      "start": 32.9,
+      "end": 33.44,
+      "probability": 0.9938
+    }
+  ]
+}

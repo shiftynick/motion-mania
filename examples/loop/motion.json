@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "name": "The loop — Motion Mania, start to finish",
-  "engine": "hyperframes@0.8.81",
+  "engine": "hyperframes@0.8.145",
   "duration": 36,
   "fps": 30,
   "audioRequired": true,

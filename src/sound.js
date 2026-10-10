@@ -1,4 +1,7 @@
-import { writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { renderCues, wavBuffer } from './sound-kit.js';
 
 // Original, deterministic 120 BPM demo score. No model API or external music.
 // Soft saturation keeps peaks under the ceiling while the rendered mix lands near -14 LUFS.
@@ -38,4 +41,30 @@ export async function synthesize(file, duration = 15) {
     wav.writeInt16LE(Math.round(Math.tanh(signal[i] * 5) * fade * 29000), 44 + i * 2);
   }
   await writeFile(file, wav);
+}
+
+export { effect, effects, peakIndex, renderCues, wavBuffer } from './sound-kit.js';
+
+export async function soundReport(project, input, output = 'assets/cues.wav') {
+  if (!input) throw new Error('sound requires --input <cues.json>');
+  const sheet = JSON.parse(await readFile(path.resolve(input), 'utf8'));
+  const assets = path.join(project.root, 'assets'), file = path.resolve(project.root, output), relative = path.relative(assets, file);
+  if (!relative || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative) || path.extname(file).toLowerCase() !== '.wav') throw new Error('--output must be a WAV inside the project assets/ directory.');
+  const result = renderCues(sheet, { duration: project.manifest.duration, fps: project.manifest.fps });
+  const manifestFile = path.join(assets, 'manifest.json');
+  let manifest;
+  try { manifest = JSON.parse(await readFile(manifestFile, 'utf8')); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; manifest = { assets: [] }; }
+  if (!Array.isArray(manifest.assets)) throw new Error('assets/manifest.json must contain an assets array.');
+  const asset = { path: relative.split(path.sep).join('/'), origin: 'Original deterministic synthesis by Motion Mania', generator: { tool: 'motion-mania sound', model: 'sound-kit-v1', prompt: JSON.stringify({ ...sheet, duration: project.manifest.duration, fps: project.manifest.fps }) }, usage: 'Sound-effect cue stem' };
+  manifest.assets = [...manifest.assets.filter(a => a.path !== asset.path), asset];
+  await mkdir(path.dirname(file), { recursive: true });
+  const temp = `${file}-${randomUUID()}.tmp`, manifestTemp = `${manifestFile}-${randomUUID()}.tmp`;
+  try {
+    await writeFile(temp, wavBuffer(result.samples, result.rate));
+    await writeFile(manifestTemp, JSON.stringify(manifest, null, 2) + '\n');
+    await rename(temp, file);
+    await rename(manifestTemp, manifestFile);
+  } finally { await rm(temp, { force: true }); await rm(manifestTemp, { force: true }); }
+  return { ok: true, output: file, duration: result.samples.length / result.rate, rate: result.rate, cues: result.cues, gainDb: result.gainDb, warnings: result.warnings, provenance: manifestFile, scope: 'Each isolated effect peak is aligned to its cue minus leadFrames/fps; overlapping effects can move the combined peak. Listen to the rendered mix.' };
 }

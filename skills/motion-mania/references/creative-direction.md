@@ -14,15 +14,15 @@ If a direction is uncertain, compare two brief concepts in the working notes, ch
 
 Study supplied references for type scale, spacing, composition, cut rhythm, object continuity, and sound. Extract a few principles and record them in the brief. Use references the agent has actually inspected; do not cite unseen videos as stylistic evidence.
 
-Choose a type hierarchy, palette, repeated shape/material, and motion behavior that suit the product. The orange demo is not a default brand for every film. Aim for one dominant subject per shot, with secondary information read after it. Negative space should direct attention rather than merely fill an empty template.
+Choose a type hierarchy, palette, repeated shape/material, and motion behavior that suit the product. Start the palette with one primary, one accent, and a few neutrals tinted toward the primary hue. For changing gradients, interpolate in OKLCH to keep intermediate colours from becoming muddy; inspect gamut clipping in the render. A few percent of fine grain can hide banding. Generate it deterministically from pixel coordinates and the playhead, not an advancing random generator. The orange demo is not a default brand for every film. Aim for one dominant subject per shot, with secondary information read after it. Negative space should direct attention rather than merely fill an empty template. Fix the motion identity up front with [motion starting values](motion-numbers.md): one signature ease, a three-tier duration palette, and one entrance pattern.
 
-Render a hook, a representative proof shot, and the ending before polishing the whole film. Check the supplied copy in the actual font and both target aspect ratios. Recompose portrait deliberately; scaling a wide composition often shrinks the subject or distorts type.
+Render a hook, a representative proof shot, and the ending before polishing the whole film. The opening should show its core message immediately, with secondary details arriving afterward; a stagger should not make the viewer wait to learn what the film says. Check the supplied copy in the actual font and both target aspect ratios. Recompose portrait deliberately; scaling a wide composition often shrinks the subject or distorts type.
 
 ## Connect the shots
 
-Use a recurring element only when it helps tell the story: code panel → rendered composition → selected review frame → export. Preserve a recognisable position, color, shape, or movement across the change. A transition should move attention toward the next idea.
+Use a recurring element only when it helps tell the story: code panel → rendered composition → selected review frame → export. Preserve a recognisable position, color, shape, or movement across the change. A transition should move attention toward the next idea and carry the outgoing shot’s exit. Avoid clearing every object before starting the next entrance; get something of the incoming scene on stage within a couple of frames of the cut, unless an empty beat has a stated purpose.
 
-Vary the pacing: arrival, readable hold, departure. Keep decisive transitions short enough to feel purposeful, and allocate settled reading time to important copy. Don't animate every object continuously. A still ending can give the brand or action room to register.
+Declare an energy arc in the brief: for example a clear opening, a rising proof sequence, a deliberate rest, and a resolved ending. Vary the pacing: arrival, readable hold, departure. Keep decisive transitions short enough to feel purposeful, and allocate settled reading time to important copy. Don't animate every object continuously. A still ending can give the brand or action room to register. Give each shot one camera or layout move, and avoid repeating the same move in consecutive shots. Emphasis can be a highlight, drawn underline, or circle rather than another scale or colour change; [GSAP plugins](gsap-plugins.md) includes a tested SVG drawing path.
 
 Mechanisms that connect shots well:
 
@@ -30,7 +30,7 @@ Mechanisms that connect shots well:
 - **One persistent actor.** A selected card, cursor, frame, or shape keeps its identity across shots. A sequence of unrelated reveals feels like a slideshow, however well each one is animated. Hand it over at the exact pixel position, so the last frame of one shot and the first frame of the next agree.
 - **Change speed; don't drift.** A move between positions should land where the viewer can read, then leave quickly; at a constant rate it does neither. A slow push on a held frame is different: it keeps the frame alive while the viewer reads.
 - **Hard cuts work when something matches.** Subject, scale, direction, or material continues across the cut, and motion carries on after it.
-- **Cause, then effect.** A click produces a state, a scan produces results, an input produces an output. Every animated action should visibly produce something.
+- **Cause, then effect.** A click produces a state, a scan produces results, an input produces an output. Every animated action should visibly produce something. A UI demo needs a designed cursor, a readable click gesture, and feedback in the affected control; an invisible click breaks the causal sequence.
 - **Layer the motion.** One primary move, supporting staggers on secondary elements, and small tertiary details, overlapping. Starting and stopping the whole frame on every beat reads as mechanical.
 
 These are a vocabulary, not a required style. A calm film may rely on held frames; say so in the storyboard with the shot's `hold` field, and `review --draft` will report frozen stretches only where no hold was intended.

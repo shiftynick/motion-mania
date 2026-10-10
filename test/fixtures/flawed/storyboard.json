@@ -1,0 +1,53 @@
+{
+  "bpm": 120,
+  "shots": [
+    {
+      "to": 2,
+      "name": "Hook",
+      "copy": "Review before export.",
+      "action": "Show the stated message.",
+      "goal": "Show teams why review matters.",
+      "focalPoint": "Headline",
+      "transition": "Cut to the next message.",
+      "sound": "Intentional silence",
+      "reviewAt": 1.4,
+      "from": 0
+    },
+    {
+      "to": 4.233333,
+      "name": "Proof",
+      "copy": "Catch what you missed.",
+      "action": "Show the stated message.",
+      "goal": "Show teams why review matters.",
+      "focalPoint": "Headline",
+      "transition": "Cut to the next message.",
+      "sound": "Intentional silence",
+      "reviewAt": 3,
+      "from": 2
+    },
+    {
+      "to": 4.5,
+      "name": "Reading",
+      "copy": "Inspect every transition and compare the next render with the findings before you deliver the film.",
+      "action": "Show the stated message.",
+      "goal": "Show teams why review matters.",
+      "focalPoint": "Headline",
+      "transition": "Cut to the next message.",
+      "sound": "Intentional silence",
+      "reviewAt": 4.3,
+      "from": 4.233333
+    },
+    {
+      "to": 6,
+      "name": "Claim",
+      "copy": "97% fewer mistakes. Motion Mania v9.9.9",
+      "action": "Show the stated message.",
+      "goal": "Show teams why review matters.",
+      "focalPoint": "Headline",
+      "transition": "Cut to the next message.",
+      "sound": "Intentional silence",
+      "reviewAt": 5.2,
+      "from": 4.5
+    }
+  ]
+}

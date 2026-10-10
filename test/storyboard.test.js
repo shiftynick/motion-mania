@@ -130,3 +130,60 @@ test('provenance warnings cover unlisted, missing, external, and generated asset
   const planned = await plan(project);
   assert.ok(planned.warnings.some(w => w.includes('stray.wav')));
 });
+
+test('per-line reading floors sum while comfortable targets remain heuristics', async () => {
+  const { readingTime } = await import('../src/storyboard.js');
+  const short = readingTime(['Hi', 'Go']);
+  assert.deepEqual(short.lines.map(l => l.floor), [.7, .7]);
+  assert.equal(short.floor, 1.4);
+  assert.equal(short.lines[0].comfortable, 1.8);
+  assert.deepEqual(readingTime('Hi. Go!\nDone.').lines.map(l => l.text), ['Hi.', 'Go!', 'Done.']);
+  assert.equal(readingTime('abcdefghijklmnopq').floor, 1.25);
+  const changed = structuredClone(board);
+  changed.shots[0].copy = ['Hi', 'Go'];
+  const report = analyzeStoryboard(changed, manifest);
+  assert.ok(report.warnings.some(w => w.includes('0.40s short') && w.includes('heuristic')));
+  changed.shots[0].copy = [42];
+  assert.throws(() => analyzeStoryboard(changed, manifest), /copy/);
+});
+
+test('beat grid accepts subdivisions and offset, rounds each cumulative beat once, and allows deliberate cuts', async () => {
+  const { beatCut } = await import('../src/storyboard.js');
+  assert.equal(beatCut(.125, 120, 0, 30).offsetFrames, 0);
+  assert.equal(beatCut(.25, 120, 0, 30).offsetFrames, 0);
+  assert.equal(beatCut(.625, 120, .125, 30).offsetFrames, 0);
+  assert.equal(beatCut(60 / 137 * 100, 137, 0, 30).nearestFrame, Math.round(60 / 137 * 100 * 30));
+  assert.notEqual(beatCut(60 / 137 * 100, 137, 0, 30).nearestFrame, Math.round(60 / 137 / 4 * 30) * 400);
+  const changed = structuredClone(board);
+  changed.bpm = 60;
+  changed.beatOffset = .1;
+  let report = analyzeStoryboard(changed, manifest);
+  assert.equal(report.beatGrid[0].nearestBeat, 1.1);
+  assert.equal(report.beatGrid[0].offsetFrames, -3);
+  assert.ok(report.warnings.some(w => w.includes('offset -3 frames')));
+  changed.shots[1].offBeat = 'Title deliberately anticipates the accent';
+  report = analyzeStoryboard(changed, manifest);
+  assert.equal(report.beatGrid.length, 0);
+  changed.shots[1].offBeat = 1;
+  assert.throws(() => analyzeStoryboard(changed, manifest), /offBeat/);
+  for (const bpm of [0, -1, '120', Infinity]) assert.throws(() => analyzeStoryboard({ ...board, bpm }, manifest), /bpm/);
+  assert.throws(() => analyzeStoryboard({ ...board, beatOffset: 'zero' }, manifest), /beatOffset/);
+  // A one-frame offset is within the documented rounding tolerance.
+  assert.equal(beatCut(.5 + 1 / 30, 60, 0, 30).offsetFrames, 1);
+});
+
+test('motion assertions and visual anchors reject malformed declarations', () => {
+  const changed = structuredClone(board);
+  changed.shots[1].assertions = [{ kind: 'appearsBy', selector: '#title', bySec: .5 }, { kind: 'before', a: '#title', b: '#cta' }, { kind: 'staysInFrame', selector: '#title' }, { kind: 'keepsMoving', withinSelector: '#actor', maxStaticSec: 2 }];
+  changed.shots[1].anchor = { text: 'result', at: 2.5 };
+  assert.doesNotThrow(() => analyzeStoryboard(changed, manifest));
+  for (const assertions of [null, [{ kind: 'unknown' }], [{ kind: 'appearsBy', selector: '#title', bySec: 3 }], [{ kind: 'staysInFrame', selector: '' }], [{ kind: 'before', a: '#title' }], [{ kind: 'keepsMoving', withinSelector: '*' }], [{ kind: 'keepsMoving', maxStaticSec: 0 }], [{ kind: 'staysInFrame', selector: '#title', fromSec: 1 }]]) {
+    changed.shots[1].assertions = assertions;
+    assert.throws(() => analyzeStoryboard(changed, manifest), /assertion/);
+  }
+  delete changed.shots[1].assertions;
+  for (const anchor of [{ text: '', at: 2 }, { text: 'result', at: 4 }, { text: 'result', at: 2, before: -1 }]) {
+    changed.shots[1].anchor = anchor;
+    assert.throws(() => analyzeStoryboard(changed, manifest), /anchor/);
+  }
+});

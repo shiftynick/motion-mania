@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Upgrade the pinned HyperFrames renderer to 0.8.145, including compatible lint, checks, caption import, and seek capture.
+- Add source `lint`, local waivers, storyboard motion assertions, reading floors, grouped copy provenance, beat-grid advice, and measured narration timing. `verify` gates settled inspection frames and retains transition geometry as advice.
+- Add seeded `sound` cues, `beats` analysis, adaptive silence measurement, and two-pass `audio --master` with video stream copy.
+- Add picture pop/flash and opening-state detection, empty-gap advice, optional loop-seam checks, grouped portrait safe-area evidence, and delivery preflight with validated SDR metadata/faststart repair.
+- Add reference-video review comparisons, URL brand capture proposals, and variant renders with labelled comparison sheets.
+- Integrate the production workflow into the skill; add motion starting values, GSAP plugin recipes, sound guidance, Claude Code plugin manifests, and a planted-defect regression fixture.
+- Fix clipped example entrances and portrait copy placement; reduce repeated structural and provenance advice without hiding raw evidence.
+
 ## 0.3.0
 
 - `picture` command: finds frozen stretches (block-based frame difference, so slow pushes and small moving details count as motion) and near-black frames, with per-shot held time and an activity chart marked with shots. `review --draft` includes the same analysis.

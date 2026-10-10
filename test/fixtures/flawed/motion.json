@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "name": "Planted review defects",
+  "engine": "hyperframes@0.8.145",
+  "duration": 6,
+  "fps": 30,
+  "audioRequired": false,
+  "formats": {
+    "vertical": {
+      "width": 720,
+      "height": 1280
+    },
+    "landscape": {
+      "width": 1280,
+      "height": 720
+    }
+  }
+}

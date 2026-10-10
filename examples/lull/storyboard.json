@@ -53,7 +53,8 @@
       "focalPoint": "The lull wordmark.",
       "transition": "Hold to the end.",
       "sound": "Intentional silence from the voice; the final chord and a low bell resolve and fade.",
-      "reviewAt": 26
+      "reviewAt": 26,
+      "hold": "Closing wordmark reading pause, followed by a small scale push"
     }
   ]
 }
