@@ -120,4 +120,6 @@ The revision agent was stopped before it rendered final exports or wrote this en
 
 Final exports were then produced from the revised source with `plan`, `lint`, `verify`, `render --quality delivery`, `audio --master`, `audio`, `picture` (all `--format all`) and `scripts/posters.mjs`. Results: `plan` passes with no warnings and all six cuts at zero-frame offset on the 120 BPM grid; `verify` passes in both formats with matching forward/reverse captures; `lint` passes with three structural advisories per format; both exports measured -15.5 LUFS / -2.5 dBTP before mastering and -14.0 LUFS / -1.5 dBTP after; `picture` finds no pops, flashes or blank ranges.
 
-Remaining: `picture` warns about unmarked still stretches at 3.53–4.23s (landscape only), 24.77–25.37s and 27.5–28.47s. They read as pauses on the headline and on the report excerpt, but the storyboard does not mark them as holds. Audio has not been auditioned and the film has not been watched in real time by any reviewer; loudness measurements do not establish how it sounds.
+Remaining: `picture` warns about unmarked still stretches at 3.53–4.23s (landscape only), 24.77–25.37s and 27.5–28.47s. They read as pauses on the headline and on the report excerpt, but the storyboard does not mark them as holds.
+
+Audition: the maintainer listened to the final export after release and found the audio fine. No agent auditioned it.
