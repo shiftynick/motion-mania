@@ -97,3 +97,27 @@ After these, reran final `audio --format all` and `picture --format all`, extrac
 
 
 An intermediate `lint --project examples/proof --format all --json` snapshot also warned `overlapping_gsap_tweens` on `.ribbon-holder` rotation over 4.55–4.60s. The final continuous drift ends at 4.45s before the flattening begins at 4.55s; final lint contains only the two documented structural advisories. This was resolved in authoring rather than waived.
+
+
+## Round 3: independent critic, revision, and final exports
+
+This round supersedes the shot descriptions and bundle names in "Final results and handoff" above, which describe the film before it.
+
+A fresh critic that had not built the film reviewed the round 2 exports cold. Its one-sentence reading from frames alone matched the brief's message; the intended audience (developers using coding agents) was less clear. Verdict: technically clean, not yet the strongest film in the repository. Its re-run of `audio` and `picture` agreed with the builder's figures. Findings:
+
+| Range | Finding | Status after revision |
+| --- | --- | --- |
+| 5–40s | Evidence labels, report key and install command too small at phone size | FIXED: labels and command enlarged; verified on whole-film contact sheets, not on a phone |
+| 23–35s | Source and seek shots asserted without showing | FIXED: the source shot shows the `master-report.json` excerpt with a line from its `integrated` value to the on-screen figure; the seek shot scrubs real frames of this film forwards and backwards with timestamps |
+| 0–5s | Opening stated a challenge without staging one | FIXED: a controlled-test defect interrupts the ring inside the first seconds |
+| 16, 23, 29s | Transitions dissolved content instead of carrying it | FIXED per the reviser's transition strips (aperture into specimen, boundary into report, report into preview frame); not re-inspected independently |
+| 13.8–15.6s, 24.8–34.4s | Visible energy stalled | PARTLY: the seek shot now changes visibly; `picture` still finds short still stretches in the source shot (below) |
+| Portrait, 23–29s landscape | Negative space weakened the subject | PARTLY: landscape shots use the full frame; portrait still leaves the area below the caption band quiet |
+| 11–16s | Pulse sequence read as a generic motion test; repeated title layout | FIXED: the film's own ribbon changes shape on the pulse and the shot reports its measured cut count; title layouts vary |
+| 20.4–20.6s | Whole specimen dimmed during the repair | NOT VERIFIED |
+
+The revision agent was stopped before it rendered final exports or wrote this entry, so the statuses above are the orchestrating agent's reading of whole-film contact sheets of the final exports plus the reviser's last progress note. No second cold critic has judged the revised film.
+
+Final exports were then produced from the revised source with `plan`, `lint`, `verify`, `render --quality delivery`, `audio --master`, `audio`, `picture` (all `--format all`) and `scripts/posters.mjs`. Results: `plan` passes with no warnings and all six cuts at zero-frame offset on the 120 BPM grid; `verify` passes in both formats with matching forward/reverse captures; `lint` passes with three structural advisories per format; both exports measured -15.5 LUFS / -2.5 dBTP before mastering and -14.0 LUFS / -1.5 dBTP after; `picture` finds no pops, flashes or blank ranges.
+
+Remaining: `picture` warns about unmarked still stretches at 3.53–4.23s (landscape only), 24.77–25.37s and 27.5–28.47s. They read as pauses on the headline and on the report excerpt, but the storyboard does not mark them as holds. Audio has not been auditioned and the film has not been watched in real time by any reviewer; loudness measurements do not establish how it sounds.
