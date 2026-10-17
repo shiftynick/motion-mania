@@ -256,9 +256,24 @@ test('credits combine BY assets; plan warnings flag restrictions and required cr
   assert.ok(credits.text.includes(assets[0].attribution));
   assert.match(credits.text, /Share credit/);
   assert.equal(credits.assets[1].missingAttribution, true);
+  const all = await mediaCredits(p, { all: true });
+  assert.deepEqual(all.assets.map(a => [a.path, a.required]), [['music.mp3', true], ['whoosh.mp3', false]]);
   assert.ok(warnings.some(w => /restricted.mp3.*NonCommercial/.test(w)));
   assert.ok(warnings.some(w => /restricted.mp3.*NoDerivatives/.test(w)));
   assert.ok(warnings.some(w => /music.mp3.*include the recorded credit/.test(w)));
   assert.ok(warnings.some(w => /share.mp3.*ShareAlike/.test(w)));
   assert.ok(!warnings.some(w => /whoosh.mp3/.test(w)));
+});
+
+test('a multi-word search with no full match retries words separately, ranking items that match more words first', async () => {
+  const queries = [];
+  const result = await searchMedia('ambient ocean', { type: 'audio', category: 'music', fetch: async url => {
+    const q = new URL(url).searchParams.get('q'); queries.push(q);
+    const results = { ambient: [{ ...music, id: 'a' }, { ...music, id: 'both' }], ocean: [{ ...music, id: 'both' }, { ...music, id: 'o' }] }[q] ?? [];
+    return json({ results });
+  } });
+  assert.deepEqual(queries, ['ambient ocean', 'ambient', 'ocean']);
+  assert.deepEqual(result.candidates.map(c => c.id.split(':').pop()), ['both', 'a', 'o']);
+  assert.deepEqual(result.filter.queryFallback, ['ambient', 'ocean']);
+  assert.match(result.warnings.join(' '), /No result matched every word/);
 });

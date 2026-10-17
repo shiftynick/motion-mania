@@ -35,7 +35,7 @@ The starter is a working **15-second Motion Mania demo**. It does not invent a f
 
 `npx` installs the package and its dependencies when needed. Install FFmpeg separately through your OS package manager. `browser` delegates browser setup to the pinned HyperFrames version; `HYPERFRAMES_BROWSER_PATH` can select an existing binary. If Sharp tries to compile against an incompatible system libvips, set `SHARP_IGNORE_GLOBAL_LIBVIPS=1` when installing or running through npx.
 
-For reproducible work, use `npx motion-mania@0.5.0 …`, or add it to your project with `npm install --save-dev --save-exact motion-mania@0.5.0`. A global install with `npm install -g motion-mania` is also supported.
+For reproducible work, use `npx motion-mania@0.5.1 …`, or add it to your project with `npm install --save-dev --save-exact motion-mania@0.5.1`. A global install with `npm install -g motion-mania` is also supported.
 
 ## Give your agent the skill
 
@@ -98,7 +98,7 @@ For a voiceover, write each shot's line in the storyboard, produce the voice wit
 | `capture <url>` | Capture site colours, fonts, assets, and screenshots; propose brand values without changing `brand.json`; reuse needs authorization |
 | `media search <query> --type audio\|image\|video` | Find media licensed for commercial use and modification; optional `--category music\|sfx`, `--limit 1..20` |
 | `media fetch <id> --project DIR [--name file]` | Download to `assets/media/` with licence, attribution, and SHA-256 provenance; refuse overwrites |
-| `media credits --project DIR` | Combine credits for every recorded BY asset for end credits or a description |
+| `media credits --project DIR [--all]` | Combine credits for every recorded BY asset (`--all`: every asset imported with `media fetch`) for end credits or a description |
 | `keys set <provider> [--validate]` | Store a user API key from stdin or a hidden prompt; currently `pexels` |
 | `keys list`, `keys remove <provider>`, `keys path` | Show masked keys and their source, remove a stored key, or locate the credentials file |
 | `variants [--quality looks] [--at 1]` | Batch-render `variants.json` with normal delivery checks and a labelled comparison sheet; stills do not choose a winner |

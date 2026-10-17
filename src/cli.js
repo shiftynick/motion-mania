@@ -31,7 +31,7 @@ const help = `Motion Mania ${version} — HyperFrames production helpers
   motion-mania capture <url>                      Capture brand candidates; authorization required
   motion-mania media search <query> --type audio|image|video  Find licensed media
   motion-mania media fetch <id> --project <dir>    Import media with licence and attribution
-  motion-mania media credits --project <dir>      Combined credits for recorded BY assets
+  motion-mania media credits --project <dir>      Combined credits for recorded BY assets (--all: every asset)
   motion-mania keys set <provider> [--validate]    Store a key from stdin or a hidden prompt
   motion-mania keys list | remove <provider> | path  Inspect or remove user credentials
   motion-mania variants [--at 1]                  Render named variants and a labelled sheet
@@ -62,7 +62,7 @@ const wantsJson = raw.includes('--json');
 try {
   const { values, positionals } = parseArgs({ args: raw, allowPositionals: true, strict: true, options: {
     against: { type: 'string' }, 'caption-zone': { type: 'string' }, project: { type: 'string' }, format: { type: 'string' }, at: { type: 'string' }, around: { type: 'string' },
-    type: { type: 'string' }, category: { type: 'string' }, limit: { type: 'string' }, name: { type: 'string' }, 'allow-restricted': { type: 'boolean' }, validate: { type: 'boolean' },
+    type: { type: 'string' }, category: { type: 'string' }, limit: { type: 'string' }, name: { type: 'string' }, 'allow-restricted': { type: 'boolean' }, validate: { type: 'boolean' }, all: { type: 'boolean' },
     master: { type: 'boolean' }, output: { type: 'string' }, quality: { type: 'string' }, draft: { type: 'boolean' }, input: { type: 'string' }, 'max-words': { type: 'string' }, replace: { type: 'boolean' }, json: { type: 'boolean' }, help: { type: 'boolean', short: 'h' }, version: { type: 'boolean', short: 'v' },
   } });
   const command = positionals[0];
@@ -71,7 +71,7 @@ try {
   else {
     const allowed = { init: [], skill: [], browser: [], doctor: [], plan: ['project'], lint: ['project','format'], frame: ['project','format','at'], review: ['project','format','around','draft','against','at'], capture: ['project'], variants: ['project','format','quality','at'], verify: ['project','format','caption-zone'], render: ['project','format','quality'], prepare: ['project','format'], audio: ['project','format','input','master'], sound: ['project','input','output'], beats: ['project','input'], picture: ['project','format','input'], captions: ['project','input','max-words','replace'] };
     if (command === 'media') {
-      const subcommands = { search: ['type', 'category', 'limit', 'allow-restricted'], fetch: ['project', 'type', 'name', 'allow-restricted'], credits: ['project'] };
+      const subcommands = { search: ['type', 'category', 'limit', 'allow-restricted'], fetch: ['project', 'type', 'name', 'allow-restricted'], credits: ['project', 'all'] };
       if (!subcommands[positionals[1]]) throw new Error('Usage: motion-mania media search <query> --type audio|image|video | fetch <id> --project DIR | credits --project DIR');
       allowed.media = subcommands[positionals[1]];
       if (positionals.length !== (positionals[1] === 'credits' ? 2 : 3)) throw new Error(`Unexpected or missing argument for media ${positionals[1]}`);
@@ -94,7 +94,7 @@ try {
       if (positionals[1] === 'search') result = await searchMedia(positionals[2], options);
       else {
         const project = await loadProject(values.project);
-        result = positionals[1] === 'fetch' ? await fetchMedia(project, positionals[2], options) : await mediaCredits(project);
+        result = positionals[1] === 'fetch' ? await fetchMedia(project, positionals[2], options) : await mediaCredits(project, { all: values.all });
       }
     }
     else if (command === 'browser') {

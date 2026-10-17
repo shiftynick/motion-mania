@@ -69,18 +69,35 @@ export async function searchMedia(query, { type, category, limit = 10, allowRest
     if (category) url.searchParams.set('category', category === 'sfx' ? 'sound_effect' : 'music');
   }
   const options = { fetch: fetcher, apiKey }, warnings = [];
-  let data = await apiJson(url, provider, options), categoryFilter = category ? url.searchParams.get('category') : null;
-  if (category === 'sfx' && data.results?.length === 0) {
-    url.searchParams.delete('category');
-    url.searchParams.set('source', 'freesound');
-    data = await apiJson(url, provider, options);
-    categoryFilter = 'source=freesound (uncategorized sound-effect fallback)';
-    warnings.push('Openverse returned no sound_effect category matches; searched Freesound instead because many sound effects have no category.');
+  const once = async q => {
+    const u = new URL(url); u.searchParams.set(type === 'video' ? 'query' : 'q', q);
+    let data = await apiJson(u, provider, options), categoryFilter = category ? u.searchParams.get('category') : null;
+    if (category === 'sfx' && data.results?.length === 0) {
+      u.searchParams.delete('category');
+      u.searchParams.set('source', 'freesound');
+      data = await apiJson(u, provider, options);
+      categoryFilter = 'source=freesound (uncategorized sound-effect fallback)';
+      if (!warnings.length) warnings.push('Openverse returned no sound_effect category matches; searched Freesound instead because many sound effects have no category.');
+    }
+    const items = type === 'video' ? data.videos : data.results;
+    if (!Array.isArray(items)) throw new Error(`${provider} returned an invalid search response.`);
+    return { items, categoryFilter };
+  };
+  let { items, categoryFilter } = await once(query), queryFallback = null;
+  // Openverse requires every word to match; retry the longest words separately and rank items found by more of them first.
+  const words = [...new Set(query.toLowerCase().split(/\s+/).filter(w => w.length > 2))].sort((a, b) => b.length - a.length).slice(0, 3);
+  if (!items.length && type !== 'video' && words.length > 1) {
+    const hits = new Map();
+    for (const word of words) for (const [rank, item] of (await once(word)).items.entries()) {
+      const hit = hits.get(item.id) ?? { item, count: 0, rank };
+      hit.count++; hit.rank = Math.min(hit.rank, rank); hits.set(item.id, hit);
+    }
+    items = [...hits.values()].sort((a, b) => b.count - a.count || a.rank - b.rank).map(hit => hit.item);
+    queryFallback = words;
+    warnings.push(`No result matched every word of "${query}"; showing results for ${words.map(w => `"${w}"`).join(', ')} separately, those matching more words first.`);
   }
-  const items = type === 'video' ? data.videos : data.results;
-  if (!Array.isArray(items)) throw new Error(`${provider} returned an invalid search response.`);
   const candidates = items.map(item => type === 'video' ? parsePexels(item) : parseOpenverse(item, type)).filter(item => licenseAllowed(item.license, allowRestricted)).slice(0, limit);
-  return { ok: true, command: 'media search', query, type, category: category ?? null, limit, provider, filter: { ...filter(allowRestricted), ...(type === 'video' ? { licenses: ['Pexels'] } : {}), category: categoryFilter }, candidates, warnings };
+  return { ok: true, command: 'media search', query, type, category: category ?? null, limit, provider, filter: { ...filter(allowRestricted), ...(type === 'video' ? { licenses: ['Pexels'] } : {}), category: categoryFilter, ...(queryFallback ? { queryFallback } : {}) }, candidates, warnings };
 }
 
 export function mediaIdentifier(id, type) {
@@ -200,9 +217,11 @@ export async function fetchMedia(project, id, { type, name, allowRestricted = fa
   finally { await rm(temp, { force: true }); }
 }
 
-export async function mediaCredits(project) {
+const meaningfulLicense = value => typeof value === 'string' && value.trim().length > 0;
+
+export async function mediaCredits(project, { all = false } = {}) {
   const manifest = JSON.parse(await readFile(path.join(project.root, 'assets/manifest.json'), 'utf8'));
   if (!Array.isArray(manifest.assets)) throw new Error('assets/manifest.json must contain an assets array');
-  const assets = manifest.assets.filter(asset => classifyLicense(asset.license).attributionRequired).map(asset => ({ path: asset.path, license: asset.license, attribution: asset.attribution || attributionText(asset), missingAttribution: !asset.attribution }));
-  return { ok: true, command: 'media credits', project: project.root, assets, text: assets.map(asset => asset.attribution).join('\n\n'), note: 'Includes every recorded BY asset, whether used or not. Place credits in the film or description; add actual modifications and honour ShareAlike where applicable.' };
+  const assets = manifest.assets.filter(asset => all ? meaningfulLicense(asset.mediaId) : classifyLicense(asset.license).attributionRequired).map(asset => ({ path: asset.path, license: asset.license, required: classifyLicense(asset.license).attributionRequired, attribution: asset.attribution || attributionText(asset), missingAttribution: !asset.attribution }));
+  return { ok: true, command: 'media credits', project: project.root, assets, text: assets.map(asset => asset.attribution).join('\n\n'), note: (all ? 'Includes every asset imported with media fetch, whether used or not; required marks licences that oblige credit.' : 'Includes every recorded BY asset, whether used or not; add --all to include credit-optional assets.') + ' Place credits in the film or description; add actual modifications and honour ShareAlike where applicable.' };
 }

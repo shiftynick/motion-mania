@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1
+
+- `media search` retries a multi-word Openverse query word by word when no item matches every word, ranking items that match more words first.
+- `media credits --all` includes credit-optional imports such as CC0 and Pexels media; each credit reports whether attribution is `required`.
+
 ## 0.5.0
 
 - Add persistent user API keys with hidden stdin entry, optional validation, masked listing, private atomic storage, and environment overrides for Pexels video.
