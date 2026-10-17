@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { backendVersion } from './process.js';
 import { synthesize } from './sound.js';
 import { analyzeCaptions, injectCaptions } from './captions.js';
+import { classifyLicense } from './media-licenses.js';
 
 const require = createRequire(import.meta.url);
 const starter = fileURLToPath(new URL('../templates/starter/', import.meta.url));
@@ -158,7 +159,10 @@ export async function provenanceWarnings(project) {
     if (typeof entry?.path !== 'string' || !files.includes(entry.path)) { warnings.push(`Provenance entry ${name} does not match a file in assets/.`); continue; }
     if (!entry.origin) warnings.push(`assets/${name}: record its origin.`);
     if (entry.sourceUrl && !entry.license) warnings.push(`assets/${name}: external source without a license.`);
-    if (/^CC[ -]BY/i.test(entry.license ?? '') && !entry.attribution) warnings.push(`assets/${name}: ${entry.license} requires attribution.`);
+    const policy = classifyLicense(entry.license);
+    if (policy.nonCommercial) warnings.push(`assets/${name}: ${entry.license} is NonCommercial; do not use in a commercial film.`);
+    if (policy.noDerivatives) warnings.push(`assets/${name}: ${entry.license} is NoDerivatives; do not share trimmed, mixed, graded, or synchronized film derivatives.`);
+    if (policy.attributionRequired) warnings.push(`assets/${name}: ${entry.license} requires attribution${entry.attribution ? '; include the recorded credit in the film or description (media credits --project DIR)' : '; record attribution and include it in the film or description'}.${policy.shareAlike ? ' ShareAlike applies to adaptations; check the final film’s licence.' : ''}`);
     if (entry.generator && (!entry.generator.model || !entry.generator.prompt)) warnings.push(`assets/${name}: generated media should record generator.model and generator.prompt.`);
   }
   return warnings;

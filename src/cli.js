@@ -14,6 +14,8 @@ import { captureBrand } from './brand-capture.js';
 import { renderVariants } from './variants.js';
 import { importCaptions } from './captions.js';
 import { readStoryboard } from './storyboard.js';
+import { searchMedia, fetchMedia, mediaCredits } from './media.js';
+import { keysCommand } from './keys.js';
 
 const { version } = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 const help = `Motion Mania ${version} — HyperFrames production helpers
@@ -27,6 +29,11 @@ const help = `Motion Mania ${version} — HyperFrames production helpers
   motion-mania frame --at 4.2                     Capture an exact timestamp
   motion-mania review [--around 3,6.5] [--draft]   Contact sheets, strips, optional MP4
   motion-mania capture <url>                      Capture brand candidates; authorization required
+  motion-mania media search <query> --type audio|image|video  Find licensed media
+  motion-mania media fetch <id> --project <dir>    Import media with licence and attribution
+  motion-mania media credits --project <dir>      Combined credits for recorded BY assets
+  motion-mania keys set <provider> [--validate]    Store a key from stdin or a hidden prompt
+  motion-mania keys list | remove <provider> | path  Inspect or remove user credentials
   motion-mania variants [--at 1]                  Render named variants and a labelled sheet
   motion-mania verify                            Backend checks + sampled seek stability
   motion-mania render [--quality looks]           Encode, preflight, and validate an MP4
@@ -43,6 +50,9 @@ Quality: draft | looks | delivery. init refuses nonempty directories.
 verify accepts --caption-zone <fractional-band>; see the command reference.
 audio and picture measure out/<format>.mp4 unless --input is given (default target -14 LUFS, -1 dBTP).
 captions accepts .json/.srt/.vtt transcripts; --max-words <n> (default 5), --replace.
+media search: --category music|sfx (audio), --limit 1..20 (default 10), --allow-restricted.
+media fetch/credits require --project; fetch accepts --name and --allow-restricted.
+keys supports pexels; PEXELS_API_KEY overrides the user credentials file.
 Edit src/, assets/, and motion.json; generated work lives in .motion/, reviews/, out/.
 No model API is invoked. review produces evidence, not a creative verdict.
 `;
@@ -52,6 +62,7 @@ const wantsJson = raw.includes('--json');
 try {
   const { values, positionals } = parseArgs({ args: raw, allowPositionals: true, strict: true, options: {
     against: { type: 'string' }, 'caption-zone': { type: 'string' }, project: { type: 'string' }, format: { type: 'string' }, at: { type: 'string' }, around: { type: 'string' },
+    type: { type: 'string' }, category: { type: 'string' }, limit: { type: 'string' }, name: { type: 'string' }, 'allow-restricted': { type: 'boolean' }, validate: { type: 'boolean' },
     master: { type: 'boolean' }, output: { type: 'string' }, quality: { type: 'string' }, draft: { type: 'boolean' }, input: { type: 'string' }, 'max-words': { type: 'string' }, replace: { type: 'boolean' }, json: { type: 'boolean' }, help: { type: 'boolean', short: 'h' }, version: { type: 'boolean', short: 'v' },
   } });
   const command = positionals[0];
@@ -59,12 +70,33 @@ try {
   else if (values.help || !command) { process.stdout.write(help); }
   else {
     const allowed = { init: [], skill: [], browser: [], doctor: [], plan: ['project'], lint: ['project','format'], frame: ['project','format','at'], review: ['project','format','around','draft','against','at'], capture: ['project'], variants: ['project','format','quality','at'], verify: ['project','format','caption-zone'], render: ['project','format','quality'], prepare: ['project','format'], audio: ['project','format','input','master'], sound: ['project','input','output'], beats: ['project','input'], picture: ['project','format','input'], captions: ['project','input','max-words','replace'] };
+    if (command === 'media') {
+      const subcommands = { search: ['type', 'category', 'limit', 'allow-restricted'], fetch: ['project', 'type', 'name', 'allow-restricted'], credits: ['project'] };
+      if (!subcommands[positionals[1]]) throw new Error('Usage: motion-mania media search <query> --type audio|image|video | fetch <id> --project DIR | credits --project DIR');
+      allowed.media = subcommands[positionals[1]];
+      if (positionals.length !== (positionals[1] === 'credits' ? 2 : 3)) throw new Error(`Unexpected or missing argument for media ${positionals[1]}`);
+      if (['fetch', 'credits'].includes(positionals[1]) && !values.project) throw new Error(`media ${positionals[1]} requires --project DIR`);
+    }
+    if (command === 'keys') {
+      const subcommands = { set: ['validate'], list: [], remove: [], path: [] };
+      if (!Object.hasOwn(subcommands, positionals[1]) || positionals.length !== (['set', 'remove'].includes(positionals[1]) ? 3 : 2)) throw new Error('Usage: motion-mania keys set <provider> [--validate] | list | remove <provider> | path; supply keys only through stdin or the hidden prompt.');
+      allowed.keys = subcommands[positionals[1]];
+    }
     if (!allowed[command]) throw new Error(`Unknown command: ${command}`);
-    for (const key of Object.keys(values)) if (!['json','help', ...allowed[command]].includes(key)) throw new Error(`--${key} is not supported by ${command}`);
-    if (positionals.length !== (['init', 'skill', 'capture'].includes(command) ? 2 : 1)) throw new Error(['init', 'skill', 'capture'].includes(command) ? `Usage: motion-mania ${command} <${command === 'capture' ? 'url' : 'directory'}>` : 'Unexpected positional argument');
+    for (const key of Object.keys(values)) if (!['json','help', ...allowed[command]].includes(key)) throw new Error(`--${key} is not supported by ${command}${command === 'media' ? ` ${positionals[1]}` : ''}`);
+    if (!['media', 'keys'].includes(command) && positionals.length !== (['init', 'skill', 'capture'].includes(command) ? 2 : 1)) throw new Error(['init', 'skill', 'capture'].includes(command) ? `Usage: motion-mania ${command} <${command === 'capture' ? 'url' : 'directory'}>` : 'Unexpected positional argument');
     let result;
     if (command === 'init') result = await initProject(positionals[1]);
     else if (command === 'skill') result = await installSkill(positionals[1]);
+    else if (command === 'keys') result = await keysCommand(positionals[1], positionals[2], { validate: values.validate });
+    else if (command === 'media') {
+      const options = { type: values.type, category: values.category, limit: values.limit, name: values.name, allowRestricted: values['allow-restricted'] };
+      if (positionals[1] === 'search') result = await searchMedia(positionals[2], options);
+      else {
+        const project = await loadProject(values.project);
+        result = positionals[1] === 'fetch' ? await fetchMedia(project, positionals[2], options) : await mediaCredits(project);
+      }
+    }
     else if (command === 'browser') {
       await hf(['browser', 'ensure']);
       const browser = await hf(['browser', 'path'], { quiet: true });
@@ -115,6 +147,7 @@ try {
     if (!result.ok) process.exitCode = 1;
   }
 } catch (error) {
+  if (raw.includes('keys') && error.code?.startsWith('ERR_PARSE_ARGS')) error = new Error('Invalid keys arguments; use keys set <provider> [--validate], list, remove <provider>, or path. Supply the key through stdin or the hidden prompt.');
   const result = { ok: false, error: error.message };
   (wantsJson ? process.stdout : process.stderr).write(wantsJson ? JSON.stringify(result) + '\n' : `Motion Mania: ${error.message}\n`);
   process.exitCode = 1;

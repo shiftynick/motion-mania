@@ -14,6 +14,11 @@ All operations report JSON on stdout; `--json` also requests structured error ou
 | `review --around 3,6.5 --draft` | Capture uniform samples plus storyboard keyframes; cuts get automatic strips unless --around selects them; show vertical safe-area guides and sampled text collisions; optionally encode a measured draft |
 | `review --against ref.mp4 [--at 1,4,8]` | Add reference/ours stills, detected reference cuts and storyboard pacing to the review and critique; no creative similarity verdict |
 | `capture <url>` | Download site evidence with vision disabled, record provenance, and propose brand values; ownership and reuse authorization remain with the site owner |
+| `media search <query> --type audio\|image\|video` | Search Openverse audio/images or Pexels video; default to commercial use and modification |
+| `media fetch <id> --project DIR [--type audio\|image\|video] [--name file]` | Import provider media into `assets/media/`, atomically record provenance, refuse overwrites |
+| `media credits --project DIR` | Combine attribution for all recorded BY assets |
+| `keys set <provider> [--validate]` | Store a user API key from stdin or a hidden prompt; currently `pexels` |
+| `keys list`, `keys remove <provider>`, `keys path` | Show masked keys and their source, remove a stored key, or locate the credentials file |
 | `variants [--quality looks] [--at 1]` | Render named composition-variable sets with normal delivery validation and a labelled comparison sheet; preserve previous runs |
 | `verify [--caption-zone band]` | Gate settled-frame layout, motion assertions and runtime contracts; advise on transition geometry; compare three forward/reverse seeks |
 | `render --quality looks` | Encode an MP4, preflight dimensions/fps/duration, H.264/yuv420p, BT.709 TV tags, faststart, and AAC; repair missing SDR tags/faststart by stream copy, then atomically replace the named export |
@@ -78,7 +83,51 @@ Change the starter's dimensions to 1080×1920 and 1920×1080 for full HD, then i
 }
 ```
 
-Generated media should record the generator's `model` and `prompt` so it can be reproduced or replaced. External media needs a `license`; CC BY licenses also need `attribution`, which must appear in the film or its description. Use only media the user is authorized to use; a checker cannot establish rights, and a Creative Commons label on a download page is not proof of the uploader's authority.
+Generated media should record the generator's `model` and `prompt` so it can be reproduced or replaced. External media needs a `license`; CC BY licenses also need `attribution`, which must appear in the film or its description. `plan` lists attribution-required assets even when the credit is recorded, warns about NonCommercial and NoDerivatives licences, and calls out ShareAlike obligations. These remain warnings, not failures. Use only media the user is authorized to use; a checker cannot establish rights, and a Creative Commons label on a download page is not proof of the uploader's authority.
+
+## API keys
+
+```sh
+motion-mania keys set pexels             # Hidden prompt; get a free key at https://www.pexels.com/api/
+motion-mania keys set pexels --validate  # Optional single provider request
+motion-mania keys list --json
+motion-mania keys path --json
+motion-mania keys remove pexels --json
+```
+
+`keys set <provider> [--validate]` reads stdin when piped, otherwise prompts without echo. Keys are never accepted as arguments. Empty keys and unknown providers fail; currently only `pexels` is supported. Validation reports acceptance, leaves an existing key intact on HTTP 401/403, and stores the key as unverified on network failure or other provider errors. Without `--validate`, no request is made. `keys list` reports each provider's `configured`, effective `source` (`environment`, `file`, or `null`), and `masked` key (last four characters; short keys are fully masked). `keys remove` affects only the file; environment overrides remain active. All commands return JSON; `keys path` returns the location in `path`.
+
+Credentials live outside film projects at `$XDG_CONFIG_HOME/motion-mania/credentials.json`, falling back to `~/.config/motion-mania/credentials.json` on Linux/macOS or `%APPDATA%\motion-mania\credentials.json` on Windows (`~/AppData/Roaming` if APPDATA is unset). Relative XDG paths are ignored. The file is a plaintext JSON object with `schemaVersion: 1` and keys by provider name, such as `pexels`; unversioned provider maps are also accepted. Writes are atomic, with directory mode 0700 and file mode 0600 on POSIX; reading a group/other-readable file warns on stderr. `PEXELS_API_KEY` takes precedence over the stored Pexels key for CI or one-off overrides. Keys are used only in API Authorization headers, never recorded in film manifests or command output.
+
+## Media search and import
+
+```sh
+motion-mania media search "whoosh" --type audio --category sfx --limit 5 --json
+motion-mania media search "ambient" --type audio --category music --json
+motion-mania media search "mountains" --type image --json
+motion-mania media fetch openverse:audio:<uuid> --project ./film --name whoosh.mp3 --json
+motion-mania media credits --project ./film --json
+# Video: save a free Pexels key once (or set PEXELS_API_KEY).
+motion-mania keys set pexels
+motion-mania media search "ocean" --type video --json
+motion-mania media fetch pexels:video:<number> --project ./film --json
+```
+
+`media search <query> --type audio|image|video [--category music|sfx] [--limit N] [--allow-restricted] [--json]` accepts a 1–200 character query and a limit of 1–20 (default 10). Audio/images use [Openverse](https://api.openverse.org/v1/) without a key. `music` maps to its `music` category and `sfx` to `sound_effect`; if the latter returns no matches, a second request searches Freesound because many sound effects have no category. `filter.category` and `warnings` disclose this fallback. One page is requested, with no automatic retries or bulk pagination. Anonymous response headers observed on 2026-10-17 advertise 20 requests/minute and 200/day; limits can change. HTTP 429 errors report numeric `Retry-After` seconds when supplied. Requests use a descriptive `motion-mania` User-Agent with the repository URL.
+
+The default allowlist is CC0, Public Domain Mark, CC BY and CC BY-SA; unknown licences and special sampling licences are excluded. The API receives an explicit `license=by,by-sa,cc0,pdm` filter, and results are checked locally too. Commercial use and modification must both be allowed: trimming, mixing, grading, and synchronizing music in a film can create adaptations. `--allow-restricted`, on search and fetch, explicitly includes indexed restricted licences for personal projects. It does **not** grant commercial rights to NC works or permission to share ND derivatives. BY requires credit, and BY-SA can impose ShareAlike on adaptations. Read the linked licence and verify the source's authority before using a work.
+
+Video uses the [documented Pexels API](https://www.pexels.com/api/documentation/) and fails before networking without a key. Run `motion-mania keys set pexels` once, or supply `PEXELS_API_KEY` as an override ([API keys](#api-keys)). The key is used only in the API Authorization header and is never printed or recorded. The Pexels licence is **not Creative Commons**: entries use `license: "Pexels"`, `licenseVersion: null`, and `licenseUrl: "https://www.pexels.com/license/"`, and state that attribution is appreciated but not required. Its other restrictions still apply. Video selection uses the largest MP4 whose dimensions are both at most 1920px, falling back to the smallest available MP4. A live invalid-key check returns HTTP 401; successful search/import calls use fixtures from its published example response.
+
+Search JSON contains `ok`, `command`, `query`, `type`, `category`, `limit`, `provider`, `filter`, `candidates`, and `warnings`. `filter` reports `commercialUse`, `modification`, `allowRestricted`, `licenses`, `note`, and the applied `category`. Each candidate contains `id`, `type`, `title`, `creator`, `creatorUrl`, `source`, `provider`, `sourceProvider`, `license`, `licenseVersion`, `licenseUrl`, `sourceUrl` (landing page), `fileUrl`, `fileType`, `duration` (seconds), `width`, `height` (pixels), `previewUrl`, `previewOnly`, `category`, `licensePolicy`, and `warnings`. Unknown metadata is `null`; image file types are inferred from file URLs where necessary, and Jamendo's `mp32` is normalized to `mp3`. `licensePolicy` includes `code`, `known`, `nonCommercial`, `noDerivatives`, `attributionRequired`, `shareAlike`, `commercialUse`, `modification`, and `filmSafe`. Freesound files supplied through Openverse are **MP3 previews**, not original WAV/FLAC downloads; `previewOnly` and warnings say so.
+
+`media fetch <id> --project DIR [--type audio|image|video] [--name file] [--allow-restricted] [--json]` resolves the provider's detail endpoint again, checking its current licence and metadata. Prefer the qualified ID returned by search: `openverse:audio:<uuid>`, `openverse:image:<uuid>`, or `pexels:video:<number>`. Raw provider IDs require `--type`. `--project` is required for fetch and credits. `--name` accepts a single filename of 1–180 letters/digits/dots/underscores/hyphens, starting with a letter or digit; it cannot contain directories. Default names include provider, type, ID and extension.
+
+Downloads use the detail response's file URL, with public-address checks, a 120-second timeout and a 250 MiB maximum. Redirects must keep the same host or use known provider/CDN domains (Freesound, Jamendo, or Pexels/Vimeo); HTTPS cannot downgrade to HTTP. Unknown redirect hosts fail visibly. Local output directories and the manifest cannot be symlinks. Files are streamed to an exclusive temporary file, published atomically without replacing existing files, then recorded using the atomic manifest writer; manifest failure rolls back the new file. Existing files and provenance entries are never replaced. As with other provenance commands, run imports serially when sharing a project with another writer.
+
+Fetch JSON contains `ok`, `command`, `project`, `output`, `bytes`, `asset`, `filter`, and `warnings`. The manifest's `asset` has an assets-relative `path`, `origin`, `mediaId`, `type`, `title`, `sourceUrl`, `creator`, `creatorUrl`, `license`, `licenseVersion`, `licenseUrl`, `provider`, `source`, `sourceProvider`, `retrievedAt` (ISO UTC), `sha256`, `fileUrl`, `fileType`, `duration`, `width`, `height`, `previewOnly`, `modifications`, and ready-to-use `attribution`. No edits have been made at import: update the credit with actual subsequent modifications.
+
+`media credits --project DIR [--json]` returns `ok`, `command`, `project`, `assets`, `text`, and `note`. Each asset has `path`, `license`, `attribution`, and `missingAttribution`. `text` combines all recorded BY credits with blank lines for end credits or a description, including BY-SA and restricted BY variants; it does not attempt to detect which assets the film uses. Legacy entries without attribution receive a fallback credit and `missingAttribution: true`; complete their metadata before delivery. CC0/PDM and Pexels credits are optional and are not in this combined BY list.
 
 ## Reference comparison
 

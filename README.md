@@ -35,7 +35,7 @@ The starter is a working **15-second Motion Mania demo**. It does not invent a f
 
 `npx` installs the package and its dependencies when needed. Install FFmpeg separately through your OS package manager. `browser` delegates browser setup to the pinned HyperFrames version; `HYPERFRAMES_BROWSER_PATH` can select an existing binary. If Sharp tries to compile against an incompatible system libvips, set `SHARP_IGNORE_GLOBAL_LIBVIPS=1` when installing or running through npx.
 
-For reproducible work, use `npx motion-mania@0.4.0 …`, or add it to your project with `npm install --save-dev --save-exact motion-mania@0.4.0`. A global install with `npm install -g motion-mania` is also supported.
+For reproducible work, use `npx motion-mania@0.5.0 …`, or add it to your project with `npm install --save-dev --save-exact motion-mania@0.5.0`. A global install with `npm install -g motion-mania` is also supported.
 
 ## Give your agent the skill
 
@@ -96,6 +96,11 @@ For a voiceover, write each shot's line in the storyboard, produce the voice wit
 | `review [--around 3,6.5] [--draft]` | Generate contact sheets, shot keyframes, transition strips, critique notes that carry forward the previous round's revisions, vertical safe-area guides and sampled text collisions, and an optional measured draft MP4 |
 | `review --against ref.mp4 [--at 1,4,8]` | Add a labelled reference/ours sheet and detected cut pacing; study grammar, never content or identity |
 | `capture <url>` | Capture site colours, fonts, assets, and screenshots; propose brand values without changing `brand.json`; reuse needs authorization |
+| `media search <query> --type audio\|image\|video` | Find media licensed for commercial use and modification; optional `--category music\|sfx`, `--limit 1..20` |
+| `media fetch <id> --project DIR [--name file]` | Download to `assets/media/` with licence, attribution, and SHA-256 provenance; refuse overwrites |
+| `media credits --project DIR` | Combine credits for every recorded BY asset for end credits or a description |
+| `keys set <provider> [--validate]` | Store a user API key from stdin or a hidden prompt; currently `pexels` |
+| `keys list`, `keys remove <provider>`, `keys path` | Show masked keys and their source, remove a stored key, or locate the credentials file |
 | `variants [--quality looks] [--at 1]` | Batch-render `variants.json` with normal delivery checks and a labelled comparison sheet; stills do not choose a winner |
 | `verify [--caption-zone band]` | Gate settled-frame layout, motion assertions and runtime contracts; advise on transition geometry; compare three sampled forward/reverse seeks |
 | `render [--quality draft\|looks\|delivery]` | Encode and preflight an MP4; stream-copy repair faststart/missing SDR tags before replacing the previous export |
@@ -153,7 +158,7 @@ Checks cover unit behavior, a real cross-repository review/render cycle, export 
 
 ## Scope and limitations
 
-This is an early release with one backend. It synthesizes seeded sound effects and masters audio, but does not orchestrate models, generate visual media, call a speech service, judge creative quality automatically, offer a separate editing UI, or render in the cloud. The pinned backend offers local TTS and transcription; see [narration and captions](skills/motion-mania/references/narration.md). Bring generated or external media with its provenance recorded. Three sampled seek comparisons are not exhaustive or a cross-machine reproducibility guarantee. Loudness, waveform, and metadata checks do not replace listening. A screenshot does not establish smooth playback, and frozen-frame detection does not judge pacing.
+This is an early release with one backend. It synthesizes seeded sound effects and masters audio, but does not orchestrate models, generate visual media, call a speech service, judge creative quality automatically, offer a separate editing UI, or render in the cloud. The pinned backend offers local TTS and transcription; see [narration and captions](skills/motion-mania/references/narration.md). `media` searches Openverse audio/images without a key; video requires a free [Pexels API key](https://www.pexels.com/api/), saved once with `motion-mania keys set pexels` outside film projects. `PEXELS_API_KEY` overrides the saved key. See [API keys](skills/motion-mania/references/commands.md#api-keys) for storage and validation. Searches exclude NonCommercial and NoDerivatives by default; `--allow-restricted` explicitly opts out for personal projects without removing those restrictions. Freesound downloads are MP3 previews. See [media commands](skills/motion-mania/references/commands.md#media-search-and-import) for licence obligations and recorded provenance. Three sampled seek comparisons are not exhaustive or a cross-machine reproducibility guarantee. Loudness, waveform, and metadata checks do not replace listening. A screenshot does not establish smooth playback, and frozen-frame detection does not judge pacing.
 
 Projects contain executable HTML/JavaScript. Treat unfamiliar projects as code and use isolation when appropriate; see [SECURITY.md](SECURITY.md). The CLI disables HyperFrames usage telemetry and automatic snapshot model analysis. Authored project code may still make network requests.
 

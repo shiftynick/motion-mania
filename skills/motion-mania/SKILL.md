@@ -2,14 +2,14 @@
 name: motion-mania
 description: Create and revise short product films, launch reels, and motion graphics using Motion Mania and HyperFrames, with rendered visual reviews, audio measurement, optional narration and captions, and portable source files. Not for interactive web/UI animation, editing existing footage, or Remotion projects.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # Motion Mania
 
 Use the installed `motion-mania` CLI for project setup, review artifacts, checks, and exports. HyperFrames is the renderer; the calling agent provides creative judgment. No separate model API is required.
 
-Run `motion-mania --help` and `motion-mania doctor --json` before the first production in an environment. If the command is unavailable, prefix each command with `npx --yes motion-mania@0.4.0` in place of `motion-mania`, or use `node /path/to/motion-mania/src/cli.js` from a toolkit checkout. Run `motion-mania browser` if doctor reports a missing browser. A copied SKILL.md alone does not include the renderer or CLI dependencies.
+Run `motion-mania --help` and `motion-mania doctor --json` before the first production in an environment. If the command is unavailable, prefix each command with `npx --yes motion-mania@0.5.0` in place of `motion-mania`, or use `node /path/to/motion-mania/src/cli.js` from a toolkit checkout. Run `motion-mania browser` if doctor reports a missing browser. A copied SKILL.md alone does not include the renderer or CLI dependencies.
 
 ## Establish the film
 
@@ -18,6 +18,8 @@ Read an existing project's brief, brand profile, storyboard, source, and most re
 Create a workspace with `motion-mania init ./videos/launch`. It contains a working Motion Mania demo: replace its copy, identity, storyboard, and soundtrack to fit the requested product. Preserve existing source and unrelated repository instructions.
 
 Inspect actual product assets or authorized screenshots; `capture <url>` can collect brand candidates from an authorized site without replacing `brand.json`. Record origins in `assets/manifest.json`, including model/prompt and external license/attribution ([asset provenance](references/commands.md#asset-provenance)). Distinguish recordings from explanatory diagrams. Study reference pacing and visual principles without copying identity or content; `review --against ref.mp4` supplies paired frames and cut pacing, not a similarity verdict.
+
+Use `media search "query" --type audio|image|video` and `media fetch <id> --project ./film` to gather licensed media with provenance; commercial use and modification are required by default, and video needs a free Pexels key saved with `motion-mania keys set pexels` (or `PEXELS_API_KEY` as an override). Include `media credits --project ./film` text in the film or description, describe edits, and check ShareAlike obligations; Freesound imports are MP3 previews ([media commands](references/commands.md#media-search-and-import)).
 
 Read [creative direction and revision](references/creative-direction.md) when developing a concept or improving a film. Establish an observable product benefit, an organizing visual idea, and a reason for each shot before polishing animation. Use [motion starting values](references/motion-numbers.md) to fix a consistent ease, duration palette, and entrance pattern; review decides when to depart from them.
 

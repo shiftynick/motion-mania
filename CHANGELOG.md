@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- Add persistent user API keys with hidden stdin entry, optional validation, masked listing, private atomic storage, and environment overrides for Pexels video.
+- Add `media search`, `media fetch`, and `media credits` for Openverse audio/images and optional Pexels video, with commercial/modification licence filtering, atomic imports, hashes, provenance and attribution.
+- Warn in `plan` about NonCommercial, NoDerivatives, required credits, and ShareAlike obligations; identify Freesound imports as MP3 previews.
+
 ## 0.4.0
 
 - Upgrade the pinned HyperFrames renderer to 0.8.145, including compatible lint, checks, caption import, and seek capture.
