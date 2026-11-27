@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+- Upgrade the pinned HyperFrames renderer to 0.9.102. `motion.json` must now declare `engine: "hyperframes@0.9.102"`; a project still pinned to 0.8.145 is rejected until its `engine` is updated.
+- Clear eleven dependency advisories, including two high-severity ones: hono 4.13.23 and @hono/node-server 2.1.11 through the renderer upgrade, zod 4.6.7 through puppeteer-core 25.19.0, and source-map-js 1.2.4.
+- Update gsap to 3.15.1.
+
 ## 0.5.1
 
 - `media search` retries a multi-word Openverse query word by word when no item matches every word, ranking items that match more words first.
