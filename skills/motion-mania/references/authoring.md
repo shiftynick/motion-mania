@@ -1,6 +1,6 @@
 # Authoring contract
 
-The installed toolkit pins HyperFrames 0.8.145. Its official references are [HyperFrames core](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes-core) and [CLI documentation](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes-cli). Upstream main may describe newer behavior; check the installed CLI's `--help` before relying on a new feature.
+The installed toolkit pins HyperFrames 0.9.102. Its official references are [HyperFrames core](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes-core) and [CLI documentation](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes-cli). Upstream main may describe newer behavior; check the installed CLI's `--help` before relying on a new feature.
 
 ## Source and build
 

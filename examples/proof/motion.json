@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1, "name": "Proof — Motion Mania", "engine": "hyperframes@0.8.145",
+  "schemaVersion": 1, "name": "Proof — Motion Mania", "engine": "hyperframes@0.9.102",
   "duration": 40, "fps": 30, "audioRequired": true,
   "loudness": {"integrated": -14, "truePeak": -1, "tolerance": 0.5},
   "safeArea": {"top": 0.13, "bottom": 0.19, "left": 0.06, "right": 0.06},

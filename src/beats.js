@@ -1,7 +1,7 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import { hf, probe, run } from './process.js';
+import { backendVersion, hf, probe, run } from './process.js';
 import { envelope } from './audio.js';
 import { writeJson } from './project.js';
 
@@ -48,7 +48,7 @@ export async function beatsReport(project, input) {
     const parent = path.join(project.root, 'reviews');
     await mkdir(parent, { recursive: true });
     const output = await mkdtemp(path.join(parent, 'beats-')), report = path.join(output, 'report.json');
-    const result = { ok: true, file, duration, ...summary, ...musicMoments(envelope(samples)), detector: 'hyperframes@0.8.145 beats', report };
+    const result = { ok: true, file, duration, ...summary, ...musicMoments(envelope(samples)), detector: `hyperframes@${backendVersion} beats`, report };
     await writeJson(report, result);
     return result;
   } finally { await rm(temp, { recursive: true, force: true }); }
