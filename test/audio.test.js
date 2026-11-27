@@ -60,7 +60,7 @@ test('envelope finds silent gaps and energy rises near cuts', () => {
 });
 
 test('manifest loudness targets are optional but validated', () => {
-  const base = { schemaVersion: 1, name: 'x', engine: 'hyperframes@0.8.145', duration: 2, fps: 30, formats: { a: { width: 64, height: 64 } } };
+  const base = { schemaVersion: 1, name: 'x', engine: 'hyperframes@0.9.102', duration: 2, fps: 30, formats: { a: { width: 64, height: 64 } } };
   assert.doesNotThrow(() => validateManifest({ ...base, loudness: { integrated: -16, truePeak: -1.5 } }));
   for (const loudness of [{ integrated: -2 }, { truePeak: 1 }, { tolerance: 0 }, { gain: 3 }, null, []]) assert.throws(() => validateManifest({ ...base, loudness }), /loudness/);
 });

@@ -16,7 +16,7 @@ Choose a register in the brief, for example "a patient engineer explaining a too
 
 ## Produce the voice
 
-Motion Mania does not call a speech service. Use whatever the environment provides: a recorded read, `npx hyperframes@0.8.145 tts` (local Kokoro voices), or a text-to-speech service the user has authorized. Record the tool, voice, and script revision in `assets/manifest.json`.
+Motion Mania does not call a speech service. Use whatever the environment provides: a recorded read, `npx hyperframes@0.9.102 tts` (local Kokoro voices), or a text-to-speech service the user has authorized. Record the tool, voice, and script revision in `assets/manifest.json`.
 
 Add the take as its own `<audio>` element with a unique `id`, local `src`, `data-start`, `data-duration`, and a track index. Lower the music's `data-volume` under speech so the voice is never masked, and carve the bed's occupied voice bands with a tested effect chain and automation lane; never carve the voice. See [sound design and delivery](sound.md#carve-the-bed-under-narration) for the working HyperFrames pattern and its limits. Re-time shots to the recorded take, not the other way round: the storyboard should reflect what is actually spoken.
 
@@ -24,7 +24,7 @@ Measure the combined rendered film with `audio`; `audio --master` can bring the 
 
 ## Captions
 
-Get word-level timings from speech recognition on the final voice take: `npx hyperframes@0.8.145 transcribe voice.wav --model small.en` (the pinned backend runs whisper.cpp locally; choose a model without `.en` for other languages), another local ASR tool, or a service that returns word timestamps. Then import:
+Get word-level timings from speech recognition on the final voice take: `npx hyperframes@0.9.102 transcribe voice.wav --model small.en` (the pinned backend runs whisper.cpp locally; choose a model without `.en` for other languages), another local ASR tool, or a service that returns word timestamps. Then import:
 
 ```sh
 motion-mania captions --project ./videos/launch --input transcript.json --json

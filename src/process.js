@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 
 const require = createRequire(import.meta.url);
-export const backendVersion = '0.8.145';
+export const backendVersion = '0.9.102';
 export const backendPath = path.join(path.dirname(require.resolve('hyperframes/package.json')), 'bin/hyperframes.mjs');
 
 // All subprocesses use argument arrays. Backend chatter never contaminates JSON stdout.
